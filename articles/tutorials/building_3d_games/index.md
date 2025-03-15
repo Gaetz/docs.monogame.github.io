@@ -61,6 +61,10 @@ In case you need a reference, you can find the complete code for this tutorial o
 
 The solution is organized with one project by step. In each project, the classes are duplicated, so you can find the state of each class at this specific step.
 
+## The game's assets
+
+All assets for the game are provided in a resource zipped folder. Make sure to unzip this folder somewhere on your computer before you start coding the project.
+
 # About this documentation
 
 ## Conventions Used in This Documentation
