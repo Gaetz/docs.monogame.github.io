@@ -199,7 +199,63 @@ We can now call the Draw function of the quad in the Draw function of the Player
   }
 ```
 
-If you run the game now, you will be able to move the target with the mouse or the right thumbstick of the gamepad. The player will not rotate yet, but we will deal with that now.
+Now we need to create our PlayerAim objecto from the Game1 class.
+
+## Managing the PlayerAim
+
+We will now create a PlayerAim object in the Game1 class. We will load it in the LoadContent function, update it in the Update function, and draw it in the Draw function.
+
+```csharp
+public class Game1 : Game
+{
+  ...
+  private Player player;
+  private PlayerAim playerAim;
+  ...
+  protected override void LoadContent()
+  {
+    _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+    playerAim = new PlayerAim();
+    playerAim.Load(Content, GraphicsDevice);
+
+    player = new Player(playerAim);
+    player.Load(Content);
+  }
+
+  protected override void Update(GameTime gameTime)
+  {
+    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+      Exit();
+
+    double dt = gameTime.ElapsedGameTime.TotalSeconds;
+    playerAim.Update(dt);
+    player.Update(dt);
+
+    base.Update(gameTime);
+  }
+
+  protected override void Draw(GameTime gameTime)
+  {
+    GraphicsDevice.Clear(Color.CornflowerBlue);
+
+    GraphicsDevice.BlendState = BlendState.Opaque;
+    player.Draw(view, projection);
+
+    GraphicsDevice.BlendState = BlendState.NonPremultiplied;
+    playerAim.Draw(view, projection);
+
+    base.Draw(gameTime);
+  }
+}
+```
+
+Note that:
+- The player's constructo now takes a PlayerAim object as a parameter.
+- When drawing the PlayerAim, we set the BlendState to NonPremultiplied to ensure transarency.
+
+We will now update the Player so that it rotates toward its PlayerAim.
+
 
 ## Creating and showing the target
 
