@@ -157,6 +157,11 @@ class Projectile : Entity
   private float speed;
   private bool fromPlayer;
 
+  public bool FromPlayer
+  {
+    get { return fromPlayer; }
+  }
+
   public Projectile(Vector3 position, Quaternion orientation, float speed, bool fromPlayer = true) : base()
   {
     this.position = position;
