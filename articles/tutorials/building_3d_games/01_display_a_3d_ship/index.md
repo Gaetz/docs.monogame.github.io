@@ -69,7 +69,7 @@ We will fill this variable by loading the file fron the content manager:
 We will position the player ship thanks to a Vector3, to manage its position and a Quaternion, to manage rotations. Those two variables will allow us to compute a world transform Matrix, which will hold the final space coordinates of our ship.
 
 ```csharp
-    internal class Player
+    class Player
     {
         private Model model;
         private Vector3 position;
@@ -192,6 +192,12 @@ Vector3 crossProduct = Vector3.Cross(a, b);
 
 In this case, the cross product will give us the forward vector, which is perpendicular to the up and right vectors. The two vectors we have chosen do not have to be normalized, except if you want the cross product result to be normalized.
 
+** Application of Vector3 in Game Development:** Vectors are used for a lot of 3D calculations in games:
+- Object positions (like the ship's position in the code)
+- Movement directions and velocity
+- Forces (gravity, thrust)
+- Surface normals (for lighting calculations)
+
 ### Orientation with Quaternions
 
 The orientation variable will hold the rotation of the ship. We will use Quaternions to represent rotations.
@@ -219,3 +225,351 @@ Before discussing quaternions, it's important to understand why we don't just us
 - Numerical Stability: Accumulated errors can cause issues over time
 
 #### What is a Quaternion?
+
+A quaternion is a four-dimensional number system represented as:
+```
+q = w + xi + yj + zk
+```
+
+Where:
+- w is the real component
+- x, y, z are imaginary components
+- i, j, k are special operators with properties like i² = j² = k² = ijk = -1
+
+In code, a quaternion is often represented as a vector with 4 dimensions (x, y, z, w).
+
+#### Mathematical properties
+
+**1. Quaternion.Identity:** Represents "no rotation" (like in your code)
+```
+Identity = (0, 0, 0, 1)
+```
+
+**2. Normalization:** Like vectors, quaternions must be normalized for rotation. Using a non-normalized quaternion can cause unexpected rotations.
+```
+|q| = √(w² + x² + y² + z²)
+q̂ = q/|q|
+```
+
+```csharp
+orientation.Normalize();
+```
+
+**3. Quaternion Multiplication:** Combines rotations. This is the key to quaternions' efficiency, because it .
+```
+q1 * q2 = (w1w2 - x1x2 - y1y2 - z1z2) + (w1x2 + x1w2 + y1z2 - z1y2)i + (w1y2 - x1z2 + y1w2 + z1x2)j + (w1z2 + x1y2 - y1x2 + z1w2)k
+```
+
+Monogame allows us to multiply quaternions:
+
+```csharp
+orientation = orientation * Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.Pi);
+```
+
+**4. Converting to a Rotation Matrix:** When we have computed the final orientation of our object with quaternions, we can convert it to a rotation matrix to apply it to our object.
+
+We will discuss matrices just below.
+```
+Matrix rotationMatrix = Matrix.CreateFromQuaternion(orientation);
+```
+
+**Application of Quaternions in Game Development:** Quaternions are used for:
+- Representing object orientation (like your ship)
+- Smooth rotation interpolation (SLERP - Spherical Linear Interpolation)
+- Camera control
+- Character animation
+
+### Inserting the player in the world with the world matrix
+
+#### What is the World Matrix?
+
+A Matrix in an algebraic structure (a mathematical tool) that is used to represent linear applications, that is to say, the transformation of a vector in an other vector. In 3D graphics, matrices are used to represent specific applications, named transformations, like rotation, scaling, and translation.
+
+Each vertex of a 3D object is represented by a Vector3, with values set from its origin (the point (0, 0, 0) in blender for instance). To insert this 3d object in the game world, where the object is probably set at a specific position, rotation and scale (size change), we need to convert each vertex coordinate from the object space the world space. To achieve that, we multiply the vertex by a matrix, called the world matrix, that combine translation, rotation and scale operations. The result is a new Vector3, which is the transformed vertex.
+
+#### Computing the World Matrix
+
+In our code, our player stores a World matrix:
+```csharp
+    class Player
+    {
+        private Model model;
+        private Vector3 position;
+        private Quaternion orientation;
+        private Matrix world;
+        ...
+```
+
+Because position and rotation will constantly change, we need to update the world matrix every frame. We will compute this matrix in the Update function:
+
+```csharp
+    public void Update(double dt)
+    {
+        world = Matrix.CreateFromQuaternion(orientation) * Matrix.CreateTranslation(position);
+    }
+```
+
+As we have seen, we can create a rotation matrix from the orientation quaternion, and a translation matrix from a position vector. We can multiply those two matrices to get the final world matrix. In this case we do not use a scale matrix, but we will later.
+
+### Matrices in monogame
+
+A matrix in 3D graphics is typically a 4×4 grid of numbers that can represent a transformation. In the MonoGame framework, Matrix is this structure.
+
+#### Translation, rotation, and scale matrices
+
+**1. Translation Matrix:** Moves objects in 3D space
+
+```
+[1 0 0 X]
+[0 1 0 Y]
+[0 0 1 Z]
+[0 0 0 1]
+```
+Where X, Y, Z are the distances to move along each axis.
+
+MonoGame provides a way to create a translation matrix:
+
+```csharp
+Matrix translationMatrix = Matrix.CreateTranslation(10, 20, 30);
+```
+
+**2. Rotation Matrix:** Rotates objects. The matrix varies by axis.
+Rotation around X-axis:
+```
+[1  0       0       0]
+[0  cosθ    -sinθ   0]
+[0  sinθ    cosθ    0]
+[0  0       0       1]
+```
+Where θ is the angle of rotation.
+
+Rotation around Y-axis:
+```
+[cosθ   0   sinθ    0]
+[0      1   0       0]
+[-sinθ  0   cosθ    0]
+[0      0   0       1]
+```
+
+Rotation around Z-axis:
+```
+[cosθ   -sinθ   0   0]
+[sinθ   cosθ    0   0]
+[0      0       1   0]
+[0      0       0   1]
+```
+
+MonoGame provides a way to create a rotation matrix:
+
+```csharp
+Matrix rotationMatrix = Matrix.CreateFromAxisAngle(Vector3.Up, MathHelper.Pi);
+```
+
+Rotation matrices can be combined to create a rotation matrix that rotates around multiple axes. Nevertheless, quaternions are more efficient for this kind of operation and avoid the gimbal lock problem. As stated above, it is better to use quaternions to create complex rotations, then go back to matrices when needed.
+
+**3. Scale Matrix:** Changes the size of objects
+
+```
+[X 0 0 0]
+[0 Y 0 0]
+[0 0 Z 0]
+[0 0 0 1]
+```
+Where X, Y, Z are the scaling factors.
+
+MonoGame provides a way to create a scale matrix:
+
+```csharp
+Matrix scaleMatrix = Matrix.CreateScale(2, 3, 4);
+```
+
+#### Matrix multiplication and the World matrix
+
+Multiplying two matrices is a way to combine their transformations. There is a mathematical rules that are important to know: order is important!
+
+```
+A * B != B * A
+```
+
+The standard order is: Scale → Rotate → Translate. Not respecting this order can lead to unexpected results. For instance, if you translate before rotating, the object will rotate around the world's origin, not around its center.
+
+In the case of the world matrix, we combine the translation, rotation, and scale matrices to transform a vertex from object space to world space.
+
+The world matrix is the matrix that combines translation, rotation and scale matrices to transform a vertex from the object space to the world space. It is the matrix that is used to insert the object in the game world.
+
+In our code, and because we are not scaling the we will create it from the position and orientation of the player:
+
+```csharp
+    public void Update(double dt)
+    {
+        world = Matrix.CreateFromQuaternion(orientation) * Matrix.CreateTranslation(position);
+    }
+```
+
+That's it for the Player class. The only missing part is drawing, but we will get back to it later. We will now integrate our player in the Game1 class.
+
+# Using the Player in the Game1 class
+
+We will now integrate the player in the Game1 class. We will load the player in the LoadContent function, update it in the Update function. The draw part will have a chapter on its own.
+
+## Load the player
+
+First we need to add a member variable to the Game1 class to store the player:
+
+```csharp
+    class Game1 : Game
+    {
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        private Player player;
+        ...
+```
+
+Now we can create the player in the LoadContent function:
+
+```csharp
+    protected override void LoadContent()
+    {
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        player = new Player();
+        player.Load(Content);
+    }
+```
+
+Note that we pass the ContentManager (the Content variable) to the Load function of the player. This is because the player needs to load the model from the content manager. The Content variable comes from the Game class, from which Game1 inherit, and is automatically initialized by the Game class.
+
+## Update the player
+
+We will now update the player in the Update function. As you may have remarked in the Player class, the Update function takes a double parameter, dt, which is the time elapsed since the last frame. We need to create this parameter in the Update function of the Game1 class, and pass it to the Update function of the player.
+
+```csharp
+    protected override void Update(GameTime gameTime)
+    {
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            Exit();
+
+        double dt = gameTime.ElapsedGameTime.TotalSeconds;
+        player.Update(dt);
+
+        base.Update(gameTime);
+    }
+```
+
+Ok, we have a player in our game, that is updated every frame. We will now see how to draw it.
+
+# Basic 3D drawing with Monogame
+
+## The view and projection matrices
+
+We have seen that the world matrix is used to transform a vertex from the object space to the world space. But we cannot stop here. First, we need to see the world from the point of view of a camera. Then we need to project the 3D world "filmed" by this camera to your 2D screen. To achieve that, we need two other matrices: the view matrix and the projection matrix.
+
+The view matrix is used to transform a vertex from the world space to the camera space. Monogames provides us with a way to create a view matrix from a position, a target and an up vector. The position is the position of the camera, the target is the point the camera is looking at, and the up vector is the direction that is considered as up.
+
+```csharp
+private Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 100), new Vector3(0, 0, 0), Vector3.UnitY);
+```
+
+The projection matrix is used to transform a vertex from the camera space to the screen space. There are usually two ways to create a projection matrix: create a pespective projection matrix or an orthographic projection matrix. The perspective projection matrix is used to create a perspective effect, where objects that are far away are smaller than objects that are close. The orthographic projection matrix is used to create an isometric effect, where objects that are far away are the same size as objects that are close.
+
+In our case, we will use a perspective projection matrix. Monogame provides us with a way to create a perspective projection matrix from a field of view, an aspect ratio, a near plane and a far plane. The field of view is the angle of the camera's field of view, the aspect ratio is the ratio of the screen's width to the screen's height, the near plane is the distance from the camera to the near clipping plane, and the far plane is the distance from the camera to the far clipping plane.
+
+The near and far clipping planes are used to clip objects that are too close or too far from the camera. Objects that are too close or too far are not drawn. This is useful to improve performance, because objects that are not drawn are not processed by the GPU. The shape of the clipping volume is known as a frustum, which is a pyramid with the top cut off.
+
+Monogame provides us with a way to create a perspective projection matrix (and also an orthographic projection matrix, but we won't use it in this tutorial):
+
+```csharp
+private Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 480f, 1f, 10000f);
+```
+
+We update the Game1 class to store those two matrices:
+
+```csharp
+class Game1 : Game
+{
+    private GraphicsDeviceManager _graphics;
+    private SpriteBatch _spriteBatch;
+
+    private Player player;
+    private Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 100), new Vector3(0, 0, 0), Vector3.UnitY);
+    private Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 480f, 1f, 10000f);
+    ...
+```
+
+## Drawing the player with the world, view, projection matrices, and the BasicEffect
+
+We will now draw the player by defining its Draw function. We need to use the world, view, and projection matrices to transform the player's model from the object space to the screen space.
+
+The combination of the world, view and projection matrices is called the world-view-projection matrix, or model-view-projection matrix (MVP matrix). In 3D engines and AOIS, this matricx is computed in a program that run on the GPU and is called a shader. More specifically, it is needed to have at least a vertex shader to compute this matrix, and a fragment shader to compute the color of the pixel on the screen once we know the coordinates of each vertex on the screen.
+
+In Monogame, the BasicEffect class can play the role of both the vertex and fragment shader. It is a class that is used to draw 3D models with a basic effect, like a single color or a texture. We will use the BasicEffect class to draw the player's model.
+
+Here is the code for the Player's class Draw function:
+
+```csharp
+    public void Draw(Matrix view, Matrix projection)
+    {
+        foreach (ModelMesh mesh in model.Meshes)
+        {
+            foreach (BasicEffect effect in mesh.Effects)
+            {
+                effect.World = world;
+                effect.View = view;
+                effect.Projection = projection;
+            }
+
+            mesh.Draw();
+        }
+    }
+```
+
+As you can see, we loop through the model's meshes, and for each mesh, we loop through the basic effects. We set the world, view, and projection matrices of the effect to the world, view, and projection matrices of the player. We then draw the mesh.
+
+We will make a further use of the BasicEffect later in the tutorial. For now, let's integrate the player's Draw function in the Game1 class.
+
+
+## The GraphicsDevice
+
+In the Game1 class, you may have remarked the GraphicsDeviceManager member variable. The GraphicsDeviceManager is used to create the GraphicsDevice, which is used to draw the game. The GraphicsDevice is created when the Game class is initialized, and is accessible through the GraphicsDevice property of the Game class.
+
+We create the GraphicsDeviceManager in the Game1 constructor:
+
+```csharp
+    public Game1()
+    {
+        _graphics = new GraphicsDeviceManager(this);
+        Content.RootDirectory = "Content";
+        IsMouseVisible = true;
+    }
+```
+
+You have noticed the GraphicsDevice is used to initialize the spriteBatch in the LoadContent function:
+
+```csharp
+    protected override void LoadContent()
+    {
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        player = new Player();
+        player.Load(Content);
+    }
+```
+
+We won't use the spriteBatch to draw until the UI part of the tutorial, but it worth mentioning.
+
+## Drawing the player and using the GraphicsDevice
+
+Now we have everything ready, we will now integrate the player's Draw function in the Game1 class. We will also use the GraphicsDevice to clear the screen and draw the player.
+
+```csharp
+    protected override void Draw(GameTime gameTime)
+    {
+        GraphicsDevice.Clear(Color.CornflowerBlue);
+
+        player.Draw(view, projection);
+
+        base.Draw(gameTime);
+    }
+```
+
+If you launch the game, you should see the player's model displayed on the screen. The player's model should be at the center of the screen, and should be facing the camera. We will orientate it to the far plane of the camera and make it move in the next lesson!
