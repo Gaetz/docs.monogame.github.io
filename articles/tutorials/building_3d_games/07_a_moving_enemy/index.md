@@ -3,7 +3,7 @@ title: "Step 7: Enemy phases and lifecycle"
 description: Make the enemy enter the game, wait and exit.
 ---
 
-# Step 7: Enemy phases - Introduction
+# Step 7: Enemy phases
 
 We will now start to code one of the pleasure of shooters: the enemy choregraphy. In this chapter, we will focus on one enemy: it will enter the game, wait for a few seconds, and then exit. We will be able to choose which "side" of the screen the enemy will enter or exit by : left side, right side, bottom side, top side, player's back, horizon. This will be the first step to create a more complex system: waves of enemies coming and going.
 

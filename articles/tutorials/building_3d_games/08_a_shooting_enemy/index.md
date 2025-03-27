@@ -3,7 +3,7 @@ title: "Step 8: Enemy shooting during main phase"
 description: During main phase, the enemy will shoot some projectiles with timing.
 ---
 
-# Step 8: Enemies attack - Introduction
+# Step 8: Enemies attack
 
 Now that our enemies enter and exit the screen, it's time to make them shoot some projectiles. We will make them shoot during their main phase. We will choose how many projectiles they will shoot and the timing between each shot.
 
