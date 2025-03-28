@@ -452,7 +452,7 @@ We will finally modify our `Update` function to call the waves. We will add a ne
   }
 
   ...
-  public void UpdateWaves(double dt)
+  private void UpdateWaves(double dt)
   {
     waveTimer += (float)dt;
     if (currentWave < waves.Count && waveTimer >= waves[currentWave].time)

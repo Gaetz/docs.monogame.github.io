@@ -11,7 +11,7 @@ We will create a custom particle management system and use it to signal when eit
 
 ## The particle
 
-A particle is usually a simple 2d sprite or simple 3d model that is drawn repeatively by the GPU, so it does not consume too much resources. In our case, we will take profit of our trustfull `Quad` class to display a single particle. Additionnally, a particle is positionned and drawn in the game, so it will be an `Entity`. 
+A particle is usually a simple 2d sprite or simple 3d model that is drawn repeatively by the GPU, so it does not consume too much resources. In our case, we will take profit of our trustfull `Quad` class to display a single particle. Additionnally, a particle is positionned and drawn in the game, so it will be an `Entity`.
 
 Particles usually move, and can have several parameters. In our case, we will decide the particle has a movement velocity, a lifetime (duration after which it disappears), and age which will track the life duration, a color at start and an other at the end of its lifespan. The color will progressively shift between the two colors. We will create a property to check if the lifetime is over and to manage velocity.
 
@@ -43,7 +43,7 @@ internal class Particle : Entity
     public Particle(GraphicsDevice device, Vector3 position, float scale, float lifeTime, Color startColor, Color endColor) : base()
     {
         this.device = device;
-        
+
         BasicEffect effect = new BasicEffect(device);
         effect.VertexColorEnabled = false;
         effect.TextureEnabled = true;
@@ -80,11 +80,20 @@ internal class Particle : Entity
 The constructor will set up all member variables. Just notice that we create a `BasicEffect` for our particle's quad, that will have a one-pixel white texture: because the particle has only one color, we do not need to load an image file to create it. The color will shift between the starting and the ending color thanks to a `BasicEffect` member variable called `diffuseColor`.
 
 The `Update` function accomplish three things:
-- It changes the particle's age. 
-- It applies some modification on the velocity: first we multiply it by a number inferior to 1 in order to progressively slow it, then we apply a sort of gravity to make the particle accelerate downward. This will improve the feeling of our particles explosions. 
+- It changes the particle's age.
+- It applies some modification on the velocity: first we multiply it by a number inferior to 1 in order to progressively slow it, then we apply a sort of gravity to make the particle accelerate downward. This will improve the feeling of our particles explosions.
 - It compute a proportion of the elapsed lifetime (a number between 0 and 1), then it uses this number to linearly-interpolate (lerp) between the start color and the end color. When `lerpAmount` is at zero, the color is the start color, when it is one, it is the end color. Between those two moments, it has a proportionate mix of the two colors. This color is finally used to replace the `BasicEffect` diffuse color, so the texture color will be multiplied by this color. Because the texture color is white, the final result is the diffuse color itself.
 
 The `Draw` function just draws the `Quad`.
+
+Note that to call `quad.Effect`, we need to update the `Quad.cs` class to add a public property:
+
+```csharp
+public BasicEffect Effect
+{
+    get { return effect; }
+}
+```
 
 
 ## The particle system
@@ -109,8 +118,8 @@ internal class ParticleSystem
         get { return active; }
     }
 
-    public ParticleSystem(GraphicsDevice device, Vector3 position, float scale, float lifetime, float speed, Color startColor, Color endColor) 
-    { 
+    public ParticleSystem(GraphicsDevice device, Vector3 position, float scale, float lifetime, float speed, Color startColor, Color endColor)
+    {
         this.device = device;
         particles.Capacity = MAX_PARTICLES;
         for (int i = 0; i < MAX_PARTICLES; i++)
@@ -180,7 +189,7 @@ public class Game1 : Game
 {
     ...
     private List<ParticleSystem> particleSystems = new List<ParticleSystem>();
-    
+
     ...
     protected override void Update(GameTime gameTime)
     {
