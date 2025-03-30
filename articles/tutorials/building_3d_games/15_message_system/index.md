@@ -461,4 +461,4 @@ That's it! Now the dialog box is displayed correctly and the game is back to nor
 
 We have now a message system that can be used to display messages in the game. Even if text is not mandatory in games, narration can add a whole layer of involvement to players that are sensible to it. What is super cool is that the timing of the messages is independant from the timing of the waves. It could allow us to have our characters discuss while the player is fighting.
 
-We are nearing the end of this tutorial. In the next step, we will add a main menu and a game over screen, which will wrap up our entire game.
+We are nearing the end of this tutorial. In the next steps, we will add a main menu and a game over screen, which will wrap up our entire game.
