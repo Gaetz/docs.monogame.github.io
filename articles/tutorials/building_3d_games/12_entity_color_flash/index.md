@@ -23,7 +23,7 @@ internal class Entity
   ...
   protected float flashTimer = 0.0f;
   protected float flashDuration = 0.5f;
-  protected Color currentFlashColor = Color.White;
+  protected Color currentFlashColor = Color.Transparent;
   protected Color flashColor = Color.Red;
 
   ...
@@ -38,11 +38,11 @@ internal class Entity
   {
     if (flashTimer > 0.0f)
     {
-      currentFlashColor = Color.Lerp(Color.White, flashColor, flashTimer/flashDuration);
+      currentFlashColor = Color.Lerp(Color.Transparent, flashColor, flashTimer/flashDuration);
       flashTimer -= (float)dt;
       if (flashTimer <= 0.0f)
       {
-        currentFlashColor = Color.White;
+        currentFlashColor = Color.Transparent;
       }
     }
   }
@@ -128,7 +128,7 @@ And in `Game1.cs`:
 
 ## Drawing the flash
 
-Calling Flash this way is not enough. We need to change the `BasicEffect.diffuserColor` value to make it appear.
+Calling Flash this way is not enough. We need to change the `BasicEffect.emissiveColor` value to make it appear.
 
 This modification cannot happen anywhere: for GPU optimization reasons, the `BasicEffect` shader is shared across all the models that will be drawn with it. That's why we must modify this diffuse color just before drawing the entity. If we would modify the diffuse color in the `Update` method, it would be modified for all the models that are using this effect, so for instance all enemies would turn red.
 
@@ -141,7 +141,7 @@ In order to achieve this individual modification, we will override the `Entity.D
     {
       foreach (BasicEffect effect in mesh.Effects)
       {
-        effect.DiffuseColor = currentFlashColor.ToVector3();
+        effect.EmissiveColor = currentFlashColor.ToVector3();
       }
     }
     base.Draw(view, projection);
@@ -151,6 +151,8 @@ In order to achieve this individual modification, we will override the `Entity.D
 The code is the same for both classes. The diffuse color is stored as a Vector3, so we convert the `Color` to a `Vector3` using the `ToVector3` method.
 
 Now, when an enemy is hit, is will turn red for a short period of time.
+
+Note that this change on `emissiveColor` is working well with our `Ship` and `Saucer` models, which have integrated colors. For models with a texture, like our `BeachBall` model, you would rather change the `BasicEffect.diffuseColor`.
 
 ## Conclusion
 

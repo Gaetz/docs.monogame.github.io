@@ -198,6 +198,7 @@ internal class SceneMenu : Scene
         ship.Load(contentManager, "Ship");
         ship.Position = new Vector3(0, 0, 0);
         ship.Orientation = SHIP_DEFAULT_ORIENTATION;
+        ship.Scale = new Vector3(2.0f, 2.0f, 2.0f);
 
         playButton = contentManager.Load<Texture2D>("PlayButton");
         quitButton = contentManager.Load<Texture2D>("QuitButton");

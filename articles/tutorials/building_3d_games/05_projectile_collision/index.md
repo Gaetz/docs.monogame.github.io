@@ -5,13 +5,13 @@ description: Make the projectiles collide with a target, which will be a bluepri
 
 # Step 5: Projectile collisions - Introduction
 
-We will now make the projectiles collide with a target. The target will be a simple sphere. We will need to create a bounding box (an invisible mathematical cube) around both the projectile and the target. We will then check if these bounding boxes are colliding.
+We will now make the projectiles collide with a target. The target will be our enemy model. We will need to create a bounding box (an invisible mathematical cube) around both the projectile and the target. We will then check if these bounding boxes are colliding.
 
 Let's start by creating the target.
 
 ## The Enemy
 
-Add the BeachBall model to MGCB.
+Add the `Saucer.fbx` model to MGCB.
 
 ### An Enemy class blueprint
 
@@ -20,7 +20,7 @@ Create an Enemy.cs file. The Enemy will inherit from Enttity.
 ```csharp
 class Enemy : Entity
 {
-    private const float COLLIDER_SCALE = 4.0f;
+    private const float COLLIDER_SCALE = 30.0f;
     private BoundingBox boundingBox;
 
     public BoundingBox BoundingBox
@@ -31,7 +31,7 @@ class Enemy : Entity
     public Enemy(Vector3 position) : base()
     {
       this.position = position;
-      scale = new Vector3(10f, 10f, 10f);
+      scale = new Vector3(2f, 2f, 2f);
     }
 
     private BoundingBox CreateBoundingBox()
@@ -79,7 +79,7 @@ public class Game1 : Game
   {
     ...
     enemies.Add(new Enemy(new Vector3(0, 0, -500)));
-    enemies[0].Load(Content, "BeachBall");
+    enemies[0].Load(Content, "Saucer");
   }
 
   protected override void Update(GameTime gameTime)
