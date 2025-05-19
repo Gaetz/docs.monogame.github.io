@@ -83,6 +83,7 @@ class Player : Entity
   {
       base.Load(content, modelName);
       position = new Vector3(0.0f, 0.0f, -250.0f);
+      scale = new Vector3(2.0f, 2.0f, 2.0f);
   }
 
   ...

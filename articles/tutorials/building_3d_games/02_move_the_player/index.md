@@ -26,7 +26,7 @@ All input related code will be placed in a HandleInput function. Let's define it
     public void Update(double dt)
     {
         HandlingInput(dt);
-        world = Matrix.CreateFromQuaternion(orientation) * Matrix.CreateTranslation(position);
+        world = Matrix.CreateScale(scale) * Matrix.CreateFromQuaternion(orientation) * Matrix.CreateTranslation(position);
     }
 ```
 

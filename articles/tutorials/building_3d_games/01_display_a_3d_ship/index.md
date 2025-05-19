@@ -15,7 +15,7 @@ You are supposed to have read lessons 1, 2, 3 and 6 of the Monogame's 2D basic t
 
 # The Player class
 
-Create a Player class. I'll walk you through the 3D game programming concepts in this Player.cs file, focusing on the mathematical aspects while keeping things approachable for beginners. We will for now create the different member variables of this class, and iits Load and Update function.
+Create a Player class. I'll walk you through the 3D game programming concepts in this Player.cs file, focusing on the mathematical aspects while keeping things approachable for beginners. We will for now create the different member variables of this class, and its Load and Update function.
 
 Create the class squeletton in such a way:
 
@@ -25,6 +25,7 @@ class Player
     private Model model;
     private Vector3 position;
     private Quaternion orientation;
+    private Vector3 scale;
     private Matrix world;
 
     public void Load(ContentManager content)
@@ -66,7 +67,7 @@ We will fill this variable by loading the file fron the content manager:
 
 ## Positionning the player's ship
 
-We will position the player ship thanks to a Vector3, to manage its position and a Quaternion, to manage rotations. Those two variables will allow us to compute a world transform Matrix, which will hold the final space coordinates of our ship.
+We will position the player ship thanks to two Vector3, to manage its position and scale (its size), and a Quaternion, to manage rotations. Those three variables will allow us to compute a world transform Matrix, which will hold the final space coordinates of our ship. We will explain them just below.
 
 ```csharp
     class Player
@@ -74,13 +75,14 @@ We will position the player ship thanks to a Vector3, to manage its position and
         private Model model;
         private Vector3 position;
         private Quaternion orientation;
+        private Vector3 scale;
         private Matrix world;
         ...
 ```
 
 ### The position vector
 
-The Vector3 position contains the 3D world position of out ship. Before diving deeper, let's understand how 3D space works in games:
+The Vector3 position contains the 3D world position of our ship. Before diving deeper, let's understand how 3D space works in games:
 
 Vector3 contain 3 coordinates, x, y, z, along 3 axis:
 - X-axis: Runs horizontally (left to right)
@@ -108,6 +110,7 @@ At the bottom/middle vertically (y = 0)
 ### About Vector3 in Monogame
 
 #### Basic Definition
+
 A Vector3 represents either:
 - A point in 3D space (x, y, z coordinates)
 - A direction with magnitude (like velocity or force)
@@ -279,13 +282,23 @@ Matrix rotationMatrix = Matrix.CreateFromQuaternion(orientation);
 - Camera control
 - Character animation
 
+### Scale with Vector3
+
+Lastly, the scale is extension of a 3D element in the three x, y, and z directions. With the scale, you can expand or shrink a 3D element in those directiions.
+
+By defaut, the scale is `Vector3(1f, 1f, 1f)`, which mean 1 for x, y and z scales. If, for instance, you change the y scale to make it equal to 2 (`Vector3(1f, 2f, 1f)`), your 3d element will be stretched in the vertical direction, doubling its vertical size, while the other sizes will stay the same.
+
+In our case, we will make our ship's scale equal to `Vector3(2f, 2f, 2f)`, which will double its size, while conserving the proportions.
+
 ### Inserting the player in the world with the world matrix
 
 #### What is the World Matrix?
 
 A Matrix in an algebraic structure (a mathematical tool) that is used to represent linear applications, that is to say, the transformation of a vector in an other vector. In 3D graphics, matrices are used to represent specific applications, named transformations, like rotation, scaling, and translation.
 
-Each vertex of a 3D object is represented by a Vector3, with values set from its origin (the point (0, 0, 0) in blender for instance). To insert this 3d object in the game world, where the object is probably set at a specific position, rotation and scale (size change), we need to convert each vertex coordinate from the object space the world space. To achieve that, we multiply the vertex by a matrix, called the world matrix, that combine translation, rotation and scale operations. The result is a new Vector3, which is the transformed vertex.
+Why do we need to transform a vector in an other vector*?
+
+You have to understand that each vertex of a 3D object is represented by a Vector3, with values set from its origin (the point (0, 0, 0) in blender for instance). To insert this 3d object in the game world, where the object is probably set at a specific position, rotation and scale (size change), we need to convert each vertex coordinate from the object space the world space. To achieve that, we multiply the vertex by a matrix, called the world matrix, that combine translation, rotation and scale operations. The result is a new Vector3, which is the transformed vertex.
 
 #### Computing the World Matrix
 
@@ -296,20 +309,21 @@ In our code, our player stores a World matrix:
         private Model model;
         private Vector3 position;
         private Quaternion orientation;
+        private Vector3 scale;
         private Matrix world;
         ...
 ```
 
-Because position and rotation will constantly change, we need to update the world matrix every frame. We will compute this matrix in the Update function:
+Because position and rotation will constantly change, we need to update the world matrix every frame. We also have to take into account the effect of the scale. We will compute the World matrix in the Update function:
 
 ```csharp
     public void Update(double dt)
     {
-        world = Matrix.CreateFromQuaternion(orientation) * Matrix.CreateTranslation(position);
+        world = Matrix.CreateScale(scale) * Matrix.CreateFromQuaternion(orientation) * Matrix.CreateTranslation(position);
     }
 ```
 
-As we have seen, we can create a rotation matrix from the orientation quaternion, and a translation matrix from a position vector. We can multiply those two matrices to get the final world matrix. In this case we do not use a scale matrix, but we will later.
+As we have seen, we can create a scale matrix from the scale vector, a rotation matrix from the orientation quaternion, and a translation matrix from a position vector. We can multiply those three matrices to get the final world matrix.
 
 ### Matrices in monogame
 
