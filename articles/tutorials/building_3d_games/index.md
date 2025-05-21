@@ -16,18 +16,24 @@ Before we start coding, let's review what you need to know.
 
 ## Knowledge requirements
 
-You are supposed to be able to create a Monogame 2D game. Thus, I will suppose you have read the wonderul Aristurtle Monogame 2D tutorial. More precisely:
+> [!CAUTION]
+> Before starting this 3D tutorial, you should be able to create a Monogame 2D game. Thus, I will suppose you have read the wonderful Aristurtle's [Building 2D Games](https://docs.monogame.net/articles/tutorials/building_2d_games/). 
+
+Specifically, some chapters are important to understand before diving in the creation of 3D games with monogame.
 
 |   Sum up                |     Content                                                           |       Link                      |
 | ----------------------- | --------------------------------------------------------------------- | ------------------------------- |
-| What is Monogame?       | An high level view and a summary of Monogame's history and features   | Link to Aristurtle's lesson 01  |
-| How to install Monogame | Setting up and getting started with Monogame, whichever your platform | Link to Aristurtle's lesson 02  |
-| The Game1 class         | Understanding the game loop in the Game1 class                        | Link to Aristurtle's lesson 03  |
-| The Content pipeline    | How to load assets using the MGCB editor and the ContentManager class | Link to Aristurtle's lesson 06  |
-| Working with textures   | We will need to display textures in our game, for UI.                 | Link to Aristurtle's lesson 07  |
-| Handling input          | They way to use keyboard, mouse and controller in Monogame            | Link to Aristurtle's lesson 11  |
-| Input management        | How to actually use the previous lesson in a game                     | Link to Aristurtle's lesson 12  |
-| Sounds in Monogame      | How to use sound effects and music in your game                       | Link to Aristurtle's lesson 14  |
+| What is Monogame?       | An high level view and a summary of Monogame's history and features   | [2D games chapter 01](https://docs.monogame.net/articles/tutorials/building_2d_games/01_what_is_monogame/index.html)          |
+| How to install Monogame | Setting up and getting started with Monogame, whichever your platform | [2D games chapter 02](https://docs.monogame.net/articles/tutorials/building_2d_games/02_getting_started/index.html?tabs=windows)  |
+| The Game1 file         | Understanding the game loop in the Game1 class                         | [2D games chapter 03](https://docs.monogame.net/articles/tutorials/building_2d_games/03_the_game1_file/index.html)  |
+| The Content pipeline    | How to load assets using the MGCB editor and the ContentManager class | [2D games chapter 05](https://docs.monogame.net/articles/tutorials/building_2d_games/05_content_pipeline/index.html?tabs=vscode)  |
+| Working with textures   | We will need to display textures in our game, for UI.                 | [2D games chapter 06](https://docs.monogame.net/articles/tutorials/building_2d_games/06_working_with_textures/index.html)  |
+| Handling input          | They way to use keyboard, mouse and controller in Monogame            | [2D games chapter 10](https://docs.monogame.net/articles/tutorials/building_2d_games/10_handling_input/index.html)  |
+| Input management        | How to actually use the previous lesson in a game                     | [2D games chapter 11](https://docs.monogame.net/articles/tutorials/building_2d_games/11_input_management/index.html)  |
+| Sounds in Monogame      | How to use sound effects and music in your game                       | [2D games chapter 14](https://docs.monogame.net/articles/tutorials/building_2d_games/14_soundeffects_and_music/index.html)  |
+| Working with SpriteFonts| How to use fonts and text                                             | [2D games chapter 16](https://docs.monogame.net/articles/tutorials/building_2d_games/16_working_with_spritefonts/index.html)  |
+| Scene management        | The way to create different game scenes (menu, gameplay...)           | [2D games chapter 17](https://docs.monogame.net/articles/tutorials/building_2d_games/17_scenes/index.html)  |
+| Packaging your Game     | How to create a final executable for your game                        | [2D games chapter 25](https://docs.monogame.net/articles/tutorials/building_2d_games/25_packaging_game/index.html?tabs=windows)  |
 
 By the way, you are supposed to be able to use the C# language, for this is the language Monogame is written with. If it is not the case, I would recommend reading the [Learn C#](https://dotnet.microsoft.com/en-us/learn/csharp) tutorials from Microsoft.
 
@@ -53,9 +59,12 @@ This tutorial is divided in 15 steps, which all will tackle a gameplay feature t
 | Step 10: Particles              | Reuse our Quad class to spawn particules, thanks to a Particle system     | Link to lesson 10    |
 | Step 11: Sounds and music       | Make our game more impactful adding sounds and a background music         | Link to lesson 11    |
 | Step 12: Graphics polishing     | Use further the BasicEffect to make the game feel for reactive            | Link to lesson 12    |
-| Step 13: Conversation and 2D UI | Addi a 2D UI on top of our 3D game in order to enable storytelling        | Link to lesson 13    |
-| Step 14: A moving floor         | Enhance the game's graphics with a moving floor, to give a speed feeling  | Link to lesson 14    |
-| Step 15: Going further          | Plenty of gameplay ideas to extend this game tutorial beyond!             | Link to lesson 15    |
+| Step 13: Moving floor           | Enhance the game's graphics with a moving floor, to give a speed feeling  | Link to lesson 13    |
+| Step 14: Graphics polishing     | Use further the BasicEffect to make the game feel for reactive            | Link to lesson 12    |
+| Step 15: Conversation and 2D UI | Add a 2D UI on top of our 3D game in order to enable storytelling         | Link to lesson 13    |
+| Step 16: Scene refactoring      | Add a scene system to manage title screen and game over                   | Link to lesson 14    |
+| Step 17: Scenes and inputs      | Implement the other scenes and refactor input for better controls         | Link to lesson 15    |
+| Step 18: Going further          | Plenty of gameplay ideas to extend this game tutorial beyond!             | Link to lesson 15    |
 
 In case you need a reference, you can find the complete code for this tutorial om the following git reposotory: https://github.com/Gaetz/monogame-tutorial-3d
 
@@ -64,6 +73,11 @@ The solution is organized with one project by step. In each project, the classes
 ## The game's assets
 
 All assets for the game are provided in a resource zipped folder. Make sure to unzip this folder somewhere on your computer before you start coding the project.
+
+Authoring:
+- Musics are created by [Bertrand Toupet](https://soundcloud.com/merune) 
+- The Beach Ball 3d asset and textures is from [RB Whitaker model library](http://rbwhitaker.wikidot.com/model-library)
+- 3D ships and sound effects are made by myself with Asset Forge and bfxr
 
 # About this documentation
 
