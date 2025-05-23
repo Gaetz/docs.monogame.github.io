@@ -7,7 +7,7 @@ description: Organizing the appearance of enemies with a waves system.
 
 We now want to organize a modest chroregraphy of enemies. We will make them enter at a specific time, shooot us and get out of the screen. We will organize a level as a succession of enemy waves. We will also allow to spawn power-ups in the waves.
 
-In this step, we will use the monogame data system to store the data of the waves. We will create a xml file that will be automatically interpreted as wave data thanks to MGCB.
+In this step, we will use the MonoGame data system to store the data of the waves. We will create a xml file that will be automatically interpreted as wave data thanks to MGCB.
 
 ## Wave data library
 
@@ -83,7 +83,7 @@ Once you have created the class, compile the project by right-clicking on the pr
 
 Now we need to reference the dll file in MGCB. Open it from your main project (do not use the MGCB file from the library project). Click on Content on the top left Project explorer. In the Properties panel, go all the way down and click on Reference. In the Reference explorer, click on Add. Browse to the `bin/Debug` folder of the library project and select the dll file. This will add a reference to the dll file in MGCB.
 
-Note: for Monogame 3.8.2 or below the library project must be compiled with .NET 6.0 and not with .NET 8.0. To ensure that, right click on the data library, select `Properties`, and in the `Application` tab, select `.NET 6.0` in the `Target framework` dropdown. Then recompile the project. You will notice a `net6.0` folder in the `bin/Debug` folder of the library project in addition to the `net8.0` folder. This is the folder that MGCB will use to load the dll file. More information here: https://docs.monogame.net/articles/getting_to_know/howto/content_pipeline/HowTo_Add_XML.html
+Note: for MonoGame 3.8.2 or below the library project must be compiled with .NET 6.0 and not with .NET 8.0. To ensure that, right click on the data library, select `Properties`, and in the `Application` tab, select `.NET 6.0` in the `Target framework` dropdown. Then recompile the project. You will notice a `net6.0` folder in the `bin/Debug` folder of the library project in addition to the `net8.0` folder. This is the folder that MGCB will use to load the dll file. More information here: https://docs.MonoGame.net/articles/getting_to_know/howto/content_pipeline/HowTo_Add_XML.html
 
 ### Reference the data library in the main project
 
@@ -272,7 +272,7 @@ public class Wave
       switch (element.type)
       {
         case "enemy":
-          game.AddEnemy(element.position, element.screenSideEnter, element.screenSideExit, element.mainPhaseDuration, "BeachBall");
+          game.AddEnemy(element.position, element.screenSideEnter, element.screenSideExit, element.mainPhaseDuration, "Saucer");
           break;
         case "powerup":
           game.AddPowerUp(element.position);
@@ -469,6 +469,6 @@ The `UpdateWaves` function will check if the current wave is ready to be launche
 
 In this step, we have created a new project to store the wave data. We have created a new class to load and use the wave data. We have modified the `Enemy` class to allow it to be created from the wave data. We have also modified the `Game1` class to load and use the wave data.
 
-The Monogame content pipeline is a powerful tool that allows us to load and use custom data in our game. We have seen how to use it to load xml files and use them directly in our game. This is actually the simplest way to load data in Monogame. There are two types of classes called `ContentImporter` and `ContentProcessor` that would allow to import more complex data. Nevertheless, this would go too far for this basic 3D tutorial. You can check the Monogame documentation for more information on this.
+The MonoGame content pipeline is a powerful tool that allows us to load and use custom data in our game. We have seen how to use it to load xml files and use them directly in our game. This is actually the simplest way to load data in MonoGame. There are two types of classes called `ContentImporter` and `ContentProcessor` that would allow to import more complex data. Nevertheless, this would go too far for this basic 3D tutorial. You can check the MonoGame documentation for more information on this.
 
 Now that our gameplay is ready, we will dedicate the three next steps to improve the graphics of our game, starting with particles in the next lesson.

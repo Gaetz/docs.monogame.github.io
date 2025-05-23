@@ -174,7 +174,7 @@ private void HandlingInput(double dt)
 
 # Keeping the player inside the screen
 
-Finally, we will restrict the player movement to the screen boundaries. We will use the Monogame's Rectangle class to store the boundaries values.
+Finally, we will restrict the player movement to the screen boundaries. We will use the MonoGame's Rectangle class to store the boundaries values.
 
 When the player hit a boundary, we will set the player position to the boundary and set the speed in that direction to 0.
 

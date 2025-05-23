@@ -13,7 +13,7 @@ Our target will be a 2D image that will be displayed in the 3D world. This image
 
 A quad is a 2D plane that is composed of two triangles. For optimization purposes, we will have only for vertices for the triangles. The indices will tell which vertices to use to create the two different triangles.
 
-Monogame allows us to create a mesh by specifying the vertices and the indices that define the triangles. We will create a quad using this in a Quad.cs file.
+MonoGame allows us to create a mesh by specifying the vertices and the indices that define the triangles. We will create a quad using this in a Quad.cs file.
 
 ### The Quad data
 

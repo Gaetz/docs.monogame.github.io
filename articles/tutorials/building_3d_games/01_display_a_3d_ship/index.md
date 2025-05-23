@@ -7,15 +7,17 @@ description: Load and display the 3D model of a space ship, using the ContentMan
 
 ## Objective
 
-In this first tutorial, we will see how to load and display the space ship that will serve to represent the player in our game. We will position it in the game, setup a camera to watch it and integrate that in the Game1 class. This will allow us to review 3D mathematics concept and their API in Monogame.
+In this first tutorial, we will see how to load and display the space ship that will serve to represent the player in our game. We will position it in the game, setup a camera to watch it and integrate that in the `Game1` class. This will allow us to review 3D mathematics concept and their API in MonoGame.
 
 ## Requierements
 
-You are supposed to have read lessons 1, 2, 3 and 6 of the Monogame's 2D basic tutorial. You should know about the Game1 class, its LoadContent, Update and Draw functions and the use of the GameTime parameter in Update and Draw.
+> [!REQUIEREMENTS]
+>
+> You are supposed to have read lessons 1, 2, 3, 5 and 6 of the MonoGame's 2D basic tutorial. You should know about the `Game1` class, its ``LoadContent``, ``Update`` and ``Draw`` functions, the use of the ``GameTime`` parameter in ``Update`` and ``Draw``, and the way to use the MonoGame Content Builder.
 
 # The Player class
 
-Create a Player class. I'll walk you through the 3D game programming concepts in this Player.cs file, focusing on the mathematical aspects while keeping things approachable for beginners. We will for now create the different member variables of this class, and its Load and Update function.
+Create a ``Player.cs`` class. We will review 3D mathematical concepts while creating our ``Player``. We will for now create the different member variables of this class, and its ``Load`` and ``Update`` function.
 
 Create the class squeletton in such a way:
 
@@ -42,11 +44,17 @@ class Player
 
 ## Loading the Model
 
+The `Model` class can contain a 3D model, also called mesh. A mesh file usually contains geometrical data related to the 3d model, plus additional information for textures placement, animations etc. We will use this class to store our player's model.
+
+[Link to the Model documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Model.html)
+
 ### Add the model in MGCB
 
-Double click on the Content/Content.mgcb file. If monogame is correctly installed, the MGCB window should open. Right click on the Content icon, Add, Existing Item, and select the Ship.fbx file and its ShipTexture.png files from the resource folder you have unzipped. Accept to copy those files in the Content folder.
+Double click on the Content/Content.mgcb file. If MonoGame is correctly installed, the MGCB window should open. Right click on the Content icon, Add, Existing Item, and select the *Ship.fbx*``* file from the resource folder you have unzipped. Accept to copy those files in the ``Content`` folder.
 
 The MGCB should have automatically selected the right Importer and Processor for the files you have chosen. Click on the Build icon, shut down MGCB.
+
+![Build the ship in MGCP](./images/ch1_build-ship.png)
 
 ### Load the model in Player class
 
@@ -67,7 +75,7 @@ We will fill this variable by loading the file fron the content manager:
 
 ## Positionning the player's ship
 
-We will position the player ship thanks to two Vector3, to manage its position and scale (its size), and a Quaternion, to manage rotations. Those three variables will allow us to compute a world transform Matrix, which will hold the final space coordinates of our ship. We will explain them just below.
+We will position the player ship thanks to two `Vector3`, to manage its position, scale (its size), and a Quaternion, to manage rotations. Those three variables will allow us to compute a ``world transform matrix``, which will hold the final space coordinates of our ship. We will explain this just below.
 
 ```csharp
     class Player
@@ -84,14 +92,19 @@ We will position the player ship thanks to two Vector3, to manage its position a
 
 The Vector3 position contains the 3D world position of our ship. Before diving deeper, let's understand how 3D space works in games:
 
-Vector3 contain 3 coordinates, x, y, z, along 3 axis:
+Vector3 contains 3 coordinates, x, y, z, along 3 axis:
 - X-axis: Runs horizontally (left to right)
 - Y-axis: Runs vertically (up and down)
-- Z-axis: Runs depth-wise (forward and backward)
+- Z-axis: Runs depth-wise (forward and backward, z towards us)
+
+![3d cartesian coordinates](./images/ch1_3D-coordinates.png)
 
 We decide a special point is the origin: the point where x, y and z coordinates are zero.
 
-In our game, the initial of our ship will be Vector3(0, 0.0f, -250.0f).
+In our game, the initial of our ship will be Vector3(0f, 0f, -250.0f):
+- 0 in x coordinate
+- 0 in y coordinate
+- -250 in z coordinate (negative, so toward the "inside" of the screen)
 
 ```csharp
     public void Load(ContentManager content)
@@ -102,12 +115,13 @@ In our game, the initial of our ship will be Vector3(0, 0.0f, -250.0f).
 ```
 
 This places the ship:
+- At the center horizontally (x = 0)
+- At the middle vertically (y = 0)
+- 250 units into the screen/away from the camera (z = -250)
 
-At the center horizontally (x = 0)
-At the bottom/middle vertically (y = 0)
-250 units into the screen/away from the camera (z = -250)
+### About Vector3 in MonoGame
 
-### About Vector3 in Monogame
+Here is [MonoGame Vector3 Documetation]()
 
 #### Basic Definition
 
@@ -125,7 +139,7 @@ A direction with magnitude (like velocity or force)
 (x1, y1, z1) + (x2, y2, z2) = (x1+x2, y1+y2, z1+z2)
 ```
 
-In Monogame, Vector3 can be added:
+In MonoGame, Vector3 can be added:
 ```csharp
 var a = new Vector3(0, 1, 2);
 var b = new Vector3(3, 4, 5);
@@ -139,7 +153,7 @@ If you can add them, you can substract them. But there is no equivalent for the 
 |a| = √(x² + y² + z²)
 ```
 
-Monogame provides you with a way to directly magnitude from a vector. You can also get the squared magnitude (magnitude multiplied by itself), that is useful for more optimal computing.
+MonoGame provides you with a way to directly magnitude from a vector. You can also get the squared magnitude (magnitude multiplied by itself), that is useful for more optimal computing.
 
 ```csharp
 Vector3 distanceFromOrigin = position.Length();
@@ -151,7 +165,7 @@ Vector3 distanceFromOriginSquared = position.LengthSquared();
 v̂ = v/|v| = (x/|v|, y/|v|, z/|v|)
 ```
 
-Usually, we want a normalized vector when we want a direction with no length information. Normalizing will set the length of the vector to 1. Monogame provides us with a way to easily do this operation:
+Usually, we want a normalized vector when we want a direction with no length information. Normalizing will set the length of the vector to 1. MonoGame provides us with a way to easily do this operation:
 
 ```csharp
 Vector3 directionFromOrigin = position - Vector3.Zero;
@@ -168,7 +182,7 @@ a·b = ax*bx + ay*by + az*bz
 - If a·b > 0, angles between vectors is less than 90°
 - If a·b < 0, angle is greater than 90°
 
-This operation is super useful in videogames. The Monogame's Vector3 class gives us a way to easily compute dot products:
+This operation is super useful in videogames. The MonoGame's Vector3 class gives us a way to easily compute dot products:
 
 ```csharp
 var a = new Vector3(0, 1, 2);
@@ -185,7 +199,7 @@ Do not forget to normalize a and b!
 a×b = (ay*bz - az*by, az*bx - ax*bz, ax*by - ay*bx)
 ```
 
-The cross product between two vectors give a vector that is perpendicular to the plane defined by the two input vectors. This is super useful to compute normal vectors, which are used in lighting computations. Monogame provides us with a way to easily compute cross products:
+The cross product between two vectors give a vector that is perpendicular to the plane defined by the two input vectors. This is super useful to compute normal vectors, which are used in lighting computations. MonoGame provides us with a way to easily compute cross products:
 
 ```csharp
 var a = new Vector3(0, 1, 0);   // Up
@@ -218,7 +232,7 @@ The identity quaternion is the quaternion that does not rotate the object. It is
 
 Quaternions are a way to represent rotations in 3D space. They are more efficient than matrices for rotations, and they do not suffer from gimbal lock. We will see in further lessons how to use them to rotate our ship.
 
-### Quaternions in Monogame
+### Quaternions in MonoGame
 
 #### Why Not Just Use Angles?
 Before discussing quaternions, it's important to understand why we don't just use Euler angles (pitch, yaw, roll):
@@ -263,7 +277,7 @@ orientation.Normalize();
 q1 * q2 = (w1w2 - x1x2 - y1y2 - z1z2) + (w1x2 + x1w2 + y1z2 - z1y2)i + (w1y2 - x1z2 + y1w2 + z1x2)j + (w1z2 + x1y2 - y1x2 + z1w2)k
 ```
 
-Monogame allows us to multiply quaternions:
+MonoGame allows us to multiply quaternions:
 
 ```csharp
 orientation = orientation * Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.Pi);
@@ -325,7 +339,7 @@ Because position and rotation will constantly change, we need to update the worl
 
 As we have seen, we can create a scale matrix from the scale vector, a rotation matrix from the orientation quaternion, and a translation matrix from a position vector. We can multiply those three matrices to get the final world matrix.
 
-### Matrices in monogame
+### Matrices in MonoGame
 
 A matrix in 3D graphics is typically a 4×4 grid of numbers that can represent a transformation. In the MonoGame framework, Matrix is this structure.
 
@@ -472,13 +486,13 @@ We will now update the player in the Update function. As you may have remarked i
 
 Ok, we have a player in our game, that is updated every frame. We will now see how to draw it.
 
-# Basic 3D drawing with Monogame
+# Basic 3D drawing with MonoGame
 
 ## The view and projection matrices
 
 We have seen that the world matrix is used to transform a vertex from the object space to the world space. But we cannot stop here. First, we need to see the world from the point of view of a camera. Then we need to project the 3D world "filmed" by this camera to your 2D screen. To achieve that, we need two other matrices: the view matrix and the projection matrix.
 
-The view matrix is used to transform a vertex from the world space to the camera space. Monogames provides us with a way to create a view matrix from a position, a target and an up vector. The position is the position of the camera, the target is the point the camera is looking at, and the up vector is the direction that is considered as up.
+The view matrix is used to transform a vertex from the world space to the camera space. MonoGames provides us with a way to create a view matrix from a position, a target and an up vector. The position is the position of the camera, the target is the point the camera is looking at, and the up vector is the direction that is considered as up.
 
 ```csharp
 private Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 100), new Vector3(0, 0, 0), Vector3.UnitY);
@@ -486,11 +500,11 @@ private Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 100), new Vector3(0,
 
 The projection matrix is used to transform a vertex from the camera space to the screen space. There are usually two ways to create a projection matrix: create a pespective projection matrix or an orthographic projection matrix. The perspective projection matrix is used to create a perspective effect, where objects that are far away are smaller than objects that are close. The orthographic projection matrix is used to create an isometric effect, where objects that are far away are the same size as objects that are close.
 
-In our case, we will use a perspective projection matrix. Monogame provides us with a way to create a perspective projection matrix from a field of view, an aspect ratio, a near plane and a far plane. The field of view is the angle of the camera's field of view, the aspect ratio is the ratio of the screen's width to the screen's height, the near plane is the distance from the camera to the near clipping plane, and the far plane is the distance from the camera to the far clipping plane.
+In our case, we will use a perspective projection matrix. MonoGame provides us with a way to create a perspective projection matrix from a field of view, an aspect ratio, a near plane and a far plane. The field of view is the angle of the camera's field of view, the aspect ratio is the ratio of the screen's width to the screen's height, the near plane is the distance from the camera to the near clipping plane, and the far plane is the distance from the camera to the far clipping plane.
 
 The near and far clipping planes are used to clip objects that are too close or too far from the camera. Objects that are too close or too far are not drawn. This is useful to improve performance, because objects that are not drawn are not processed by the GPU. The shape of the clipping volume is known as a frustum, which is a pyramid with the top cut off.
 
-Monogame provides us with a way to create a perspective projection matrix (and also an orthographic projection matrix, but we won't use it in this tutorial):
+MonoGame provides us with a way to create a perspective projection matrix (and also an orthographic projection matrix, but we won't use it in this tutorial):
 
 ```csharp
 private Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 480f, 1f, 10000f);
@@ -516,7 +530,7 @@ We will now draw the player by defining its Draw function. We need to use the wo
 
 The combination of the world, view and projection matrices is called the world-view-projection matrix, or model-view-projection matrix (MVP matrix). In 3D engines and AOIS, this matricx is computed in a program that run on the GPU and is called a shader. More specifically, it is needed to have at least a vertex shader to compute this matrix, and a fragment shader to compute the color of the pixel on the screen once we know the coordinates of each vertex on the screen.
 
-In Monogame, the BasicEffect class can play the role of both the vertex and fragment shader. It is a class that is used to draw 3D models with a basic effect, like a single color or a texture. We will use the BasicEffect class to draw the player's model.
+In MonoGame, the BasicEffect class can play the role of both the vertex and fragment shader. It is a class that is used to draw 3D models with a basic effect, like a single color or a texture. We will use the BasicEffect class to draw the player's model.
 
 Here is the code for the Player's class Draw function:
 

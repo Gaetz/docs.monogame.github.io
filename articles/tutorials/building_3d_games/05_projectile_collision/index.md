@@ -146,7 +146,7 @@ The UpdateProjectiles function will be rewritten later to handle collisions.
 
 The projectile will also need a bounding box.
 
-Because the projectile can have a rotation and our bounding boxes are aligned with axes (AABB), we will need to create a bounding box that is big enough to contain the projectile at any rotation. Monogame provides a function to create a bounding box from a list of points, so that any point inside this list is also inside the bounding box.
+Because the projectile can have a rotation and our bounding boxes are aligned with axes (AABB), we will need to create a bounding box that is big enough to contain the projectile at any rotation. MonoGame provides a function to create a bounding box from a list of points, so that any point inside this list is also inside the bounding box.
 
 ```csharp
 class Projectile : Entity
