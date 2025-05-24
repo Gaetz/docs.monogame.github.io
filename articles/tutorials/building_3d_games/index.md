@@ -88,7 +88,7 @@ The following conventions are used in this documentation
 
 ### Italics
 
-*Italics* are used for emphasis, technical terms, and paths such as file paths including filenames and extensions.
+*Italics* are used for emphasis and technical terms.
 
 ### Highlights
 
