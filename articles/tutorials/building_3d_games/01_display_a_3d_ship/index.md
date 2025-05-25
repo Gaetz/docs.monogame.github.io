@@ -9,9 +9,7 @@ description: Load and display the 3D model of a space ship, using the ContentMan
 
 In this first tutorial, we will see how to load and display the space ship that will serve to represent the player in our game. We will position it in the game, setup a camera to watch it and integrate that in the `Game1` class. This will allow us to review 3D mathematics concept and their API in MonoGame.
 
-## Requierements
-
-> [!NOTE]
+> [!NOTE] Requierements
 >
 > You are supposed to have read lessons 1, 2, 3, 5 and 6 of the MonoGame's 2D basic tutorial. You should know about the `Game1` class, its `LoadContent`, `Update` and `Draw` functions, the use of the `GameTime` parameter in `Update` and `Draw`, and the way to use the MonoGame Content Builder.
 
@@ -453,7 +451,6 @@ In our case, we will make our ship's scale equal to `Vector3(2f, 2f, 2f)`, which
 
 ![Scaling](images/ch1_scale.png)
 
-
 ```csharp
     public void Load(ContentManager content)
     {
@@ -703,7 +700,7 @@ Ok, we have a player in our game, that is updated every frame. We will now see h
 
 We have seen that the world matrix is used to transform a vertex from the object space to the world space. But we cannot stop here. First, we need to see the world from the point of view of a camera. Then we need to project the 3D world "filmed" by this camera to your 2D screen. To achieve that, we need two other matrices: the *view matrix* and the *projection matrix*.
 
-Basically, we are saying that in addition to multiplying the vertex by the world matrix, we will also multiply it by the view matrix and the projection matrix to get the final position of the vertex on the screen. 
+Basically, we are saying that in addition to multiplying the vertex by the world matrix, we will also multiply it by the view matrix and the projection matrix to get the final position of the vertex on the screen.
 
 > [!NOTE]
 >

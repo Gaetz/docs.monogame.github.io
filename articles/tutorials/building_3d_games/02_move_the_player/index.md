@@ -3,7 +3,9 @@ title: "Step 2: Move the player"
 description: Use inputs to move the player in a graceful way
 ---
 
-# Step 2: Move the player - Introduction
+# Step 2: Move the player
+
+## Objective
 
 In this chapter, we will learn how to move the player using inputs.
 
@@ -13,9 +15,18 @@ Rather than just moving the ship around, we will make the movement smooth and gr
 
 We will also restrict the player movement to the screen boundaries, so that the player will not be able to move outside the screen.
 
-# Moving the player
+> [!NOTE] Requirements
+>
+> For this lesson, you are supposed to know how inputs in MonoGame work. You would find a wonderful reference in the Building 2D Games tutorial's chapter 10 and 11:
 
-All input related code will be placed in a HandleInput function. Let's define it and call it from Update.
+|   Sum up                |     Content                                                           |       Link                      |
+| ----------------------- | --------------------------------------------------------------------- | ------------------------------- |
+| Handling input          | They way to use keyboard, mouse and controller in MonoGame            | [2D games chapter 10](https://docs.monogame.net/articles/tutorials/building_2d_games/10_handling_input/index.html)  |
+| Input management        | How to actually use the previous lesson in a game                     | [2D games chapter 11](https://docs.monogame.net/articles/tutorials/building_2d_games/11_input_management/index.html)  |
+
+## Moving the player
+
+All input related code will be placed in a ``HandleInput`` function. Let's define it and call it from Update.
 
 ```csharp
     private void HandlingInput(double dt)
@@ -26,13 +37,15 @@ All input related code will be placed in a HandleInput function. Let's define it
     public void Update(double dt)
     {
         HandlingInput(dt);
-        world = Matrix.CreateScale(scale) * Matrix.CreateFromQuaternion(orientation) * Matrix.CreateTranslation(position);
+        world = Matrix.CreateScale(scale) 
+                * Matrix.CreateFromQuaternion(orientation) 
+                * Matrix.CreateTranslation(position);
     }
 ```
 
-## Speed and position
+### Speed and position
 
-Speed is the variation of position over time. We will use two variables speedX and speedY to store the speed of the player. We will also create a constant for maximum speed.
+Speed is the variation of position over time. We will use two variables ``speedX`` and ``speedY`` to store the speed of the player. We will also create a constant for maximum speed.
 
 At first, we will change the speed of the player for maximum speed when the input is pressed. We will then use the speed to change the position of the player.
 
@@ -76,10 +89,15 @@ class Player
 
 This will move the player in the x and y directions when the keys are pressed. The player will stop when the keys are released.
 
-## Using input for acceleration
+> [!NOTE]
+>
+> As you can see, the speed variation is multiplied by the ``dt`` parameter. This is because the speed is a variation over time, and we want to make sure that the movement frame rate independent.
+>
+> As a general rule, any variation over time should be multiplied by delta time to ensure consistent behavior across different frame rates.
+
+### Using input for acceleration
 
 We will now add acceleration to the movement. Acceleration is the variation of speed over time. We must make the player accelerate when the input is pressed, and decelerate when the input is released. The speed is variating, so we need to apply the deltatime on it.
-
 
 ```csharp
 class Player
@@ -115,7 +133,7 @@ class Player
 }
 ```
 
-## Deceleration
+### Deceleration
 
 We will now add deceleration to the movement. When the input is released, the player will decelerate until it stops. We will use a deceleration rate to slow down the player.
 
@@ -131,7 +149,7 @@ private void HandlingInput(double dt)
 }
 ```
 
-## Limiting speed
+### Limiting speed
 
 We do not want the player to move infinitely fast. We will limit the speed of the player to the maximum speed.
 
@@ -172,7 +190,7 @@ private void HandlingInput(double dt)
 }
 ```
 
-# Keeping the player inside the screen
+## Keeping the player inside the screen
 
 Finally, we will restrict the player movement to the screen boundaries. We will use the MonoGame's Rectangle class to store the boundaries values.
 
