@@ -274,6 +274,7 @@ Vector3 crossProduct = Vector3.Cross(a, b);
 In this case, the cross product will give us the forward vector, which is perpendicular to the up and right vectors. The two vectors we have chosen do not have to be normalized, except if you want the cross product result to be normalized.
 
 Here is a diagram showing the cross product with non-normalized vectors:
+
 ![Cross product with non-normalized vectors](images/ch1_vector-cross-product.png)
 
 In this case, *a*x*b* is perpendicular to the grey plane.
@@ -401,7 +402,9 @@ Quaternion.Identity = Quaternion(0, 0, 0, 1)
 
 $$
 |q| = \sqrt{w² + x² + y² + z²}
-\\
+$$
+
+$$
 \hat{q} = \frac{q}{|q|}
 $$
 
@@ -707,6 +710,7 @@ Basically, we are saying that in addition to multiplying the vertex by the world
 > After all this matrix multiplication party, we actually have coordinates in *normalized screen space* coordinates. That is, a float number between -1 and 1 that corresponds to where the pixel should be displayed *in proportion* of your screen size. We need to convert those coordinates to the screen's real pixel coordinates, which depends the resolution of the screen. The *viewport* will contain the needed information.
 
 ![Applying all transformations](images/ch1_mvp.png)
+
 *Image is curtesy from [learnopengl.com](https://learnopengl.com/Getting-started/Coordinate-Systems)*
 
 #### View matrix
@@ -730,6 +734,7 @@ In our case, we will use a perspective projection matrix. MonoGame provides us w
 The *near and far clipping planes* are used to clip objects that are too close or too far from the camera. Objects that are too close or too far are not drawn. This is useful to improve performance, because objects that are not drawn are not processed by the GPU. The shape of the clipping volume is known as a *frustum*, which is a pyramid with the top cut off.
 
 ![Frustum](images/ch1_frustum.png)
+
 *Image is curtesy from [learnopengl.com](https://learnopengl.com/Getting-started/Coordinate-Systems)*
 
 MonoGame provides us with a way to create a perspective projection matrix (and also an orthographic projection matrix, but we won't use it in this tutorial):
