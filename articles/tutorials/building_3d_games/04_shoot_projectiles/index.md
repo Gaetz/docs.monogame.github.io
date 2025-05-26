@@ -3,17 +3,19 @@ title: "Step 4: Shoot projectiles"
 description: Shoot projectiles from the player's position to the target
 ---
 
-# Step 4: Shoot projectiles - Introduction
+# Step 4: Shoot projectiles
+
+## Objective
 
 We will now allow the player to shoot projectiles. The projectile will be a simple colored cube that will be scaled in the depth direction to look like a bullet.
 
-Because projectiles will use for a part similar member variable as the player, we will create a new mother class for both. This class will be called Entity. We will refactor the Player and the PlayerAim to inherit from this class.
+Because projectiles will partially use similar member variables as the player, we will create a new mother class for both. This class will be called `Entity`. We will refactor the ``Player`` and the ``PlayerAim`` to inherit from this class.
 
 ## The Entity class
 
 ### The entity itself
 
-Create a Entity.cs file. Its code will be globally similar to the player's code, but without the input handling.
+Create a *Entity.cs* file. Its code will be globally similar to the player's code, but without the input handling.
 
 ```csharp
 class Entity
@@ -31,15 +33,15 @@ class Entity
 
   public Entity()
   {
-      position = Vector3.Zero;
-      orientation = Quaternion.Identity;
-      scale = Vector3.One;
-      world = Matrix.Identity;
+    position = Vector3.Zero;
+    orientation = Quaternion.Identity;
+    scale = Vector3.One;
+    world = Matrix.Identity;
   }
 
   public virtual void Load(ContentManager content, string modelName)
   {
-      model = content.Load<Model>(modelName);
+    model = content.Load<Model>(modelName);
   }
 
   public virtual void Update(double dt)
@@ -53,9 +55,9 @@ class Entity
     {
       foreach (BasicEffect effect in mesh.Effects)
       {
-          effect.World = world;
-          effect.View = view;
-          effect.Projection = projection;
+        effect.World = world;
+        effect.View = view;
+        effect.Projection = projection;
       }
 
       mesh.Draw();
@@ -68,7 +70,7 @@ class Entity
 
 Now, we will make the player inherit from the Entity class.
 
-We will now refactor the player's code to use the Entity class. We wil update the Load and the Update functions. The Draw function is no longer needed, as it is already defined in the Entity class.
+We will now refactor the player's code to use the ``Entity`` class. We wil update the ``Load`` and the ``Update`` functions. The ``Draw`` function is no longer needed, as it is already defined in the ``Entity`` class.
 
 ```csharp
 class Player : Entity
@@ -100,7 +102,7 @@ class Player : Entity
 
 ### Refactoring the player aim
 
-We will now make the player aim inherit from the Entity class.
+We will now make the player aim inherit from the ``Entity`` class.
 
 ```csharp
 class PlayerAim : Entity
@@ -140,15 +142,15 @@ class PlayerAim : Entity
 }
 ```
 
-Note that, in this case, we will not need to use the Entity's Load or Draw function.
+Note that, in this case, we do not need to use the ``Entity``'s ``Load`` or ``Draw`` function.
 
 ## The projectile
 
-Our projectile will be a simple cube. Add the Cube.fbx file in MGCB.
+Our projectile will be a simple cube. Add the *Cube.fbx* file in MGCB.
 
 ### The projectile class
 
-Now we will create the Projectile.cs. It will inherit from the Entity class.
+Now we will create the *Projectile.cs* file. ``Projectile`` will inherit from the ``Entity`` class.
 
 The projectile will borrow its direction and its position from its shooter. It will have a constant speed and a bool variable to tell if the projectile is issued from the player or from an enemy.
 
@@ -186,11 +188,13 @@ class Projectile : Entity
 }
 ```
 
+As you can see, in `Update`, we have used ``Vector3.Transform`` to orientate the direction vector with a quaternion. Indeed, `Vector3.Transform` works either with matrices or quaternions.
+
 ### Managing projectils in the Game1 class
 
-The Game1 class will manage the projectiles. We will add a list of projectiles in it. The class will be responsible for updating and drawing the projectiles.
+The ``Game1`` class will manage the projectiles. We will add a list of projectiles in it. The class will be responsible for updating and drawing the projectiles.
 
-We will also add an UpdateProjectiles function and a AddProjectile function, to add a projectile in the managed projectiles list, that will be called from the Player's class when hitting the shooting input.
+We will also add an ``UpdateProjectiles`` function and a ``AddProjectile`` function, to add a projectile in the managed projectiles list, that will be called from the ``Player``'s class when hitting the shooting input.
 
 ```csharp
 public class Game1 : Game
@@ -257,7 +261,7 @@ public class Game1 : Game
 
 Now we can update the player to shoot the projectile when the player presses the left mouse button. We will introduce a cooldown mecanism to avoid the player to shoot too many projectiles at once.
 
-Note that the player will now receive a reference to the Game1 class, so that it can call Game1.AddProjectile.
+Note that the player will now receive a reference to the ``Game1`` class, so that it can call ``Game1.AddProjectile``.
 
 ```csharp
 class Player : Entity
@@ -295,3 +299,9 @@ class Player : Entity
 ```
 
 That's it! You can now shoot projectiles from the player's position to the target. You can now move the player and aim with the mouse, and shoot with the left mouse button.
+
+### Conclusion
+
+In this step, we have created a new `Entity` class to encapsulate common properties and methods for the player, the player's aim and projectiles. We refactored the player and player aim classes to inherit from this new class. We also created a `Projectile` class that can be instantiated and managed by the `Game1` class, allowing the player to shoot projectiles.
+
+In the next step, we will implement collision detection between projectiles and enemies, allowing the player to defeat enemies by shooting them.
