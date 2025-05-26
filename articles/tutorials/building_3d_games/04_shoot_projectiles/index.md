@@ -5,7 +5,7 @@ description: Shoot projectiles from the player's position to the target
 
 # Step 4: Shoot projectiles
 
-## Objective
+## Objectives
 
 We will now allow the player to shoot projectiles. The projectile will be a simple colored cube that will be scaled in the depth direction to look like a bullet.
 
