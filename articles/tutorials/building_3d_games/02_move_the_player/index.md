@@ -17,12 +17,11 @@ We will also restrict the player movement to the screen boundaries, so that the 
 
 > [!NOTE] Requirements
 >
-> For this lesson, you are supposed to know how inputs in MonoGame work. You would find a wonderful reference in the Building 2D Games tutorial's chapter 10 and 11:
+> For this lesson, you are supposed to know how keyboard inputs work in MonoGame. You would find a wonderful reference in the Building 2D Games tutorial's chapter 10:
 
 |   Sum up                |     Content                                                           |       Link                      |
 | ----------------------- | --------------------------------------------------------------------- | ------------------------------- |
 | Handling input          | They way to use keyboard, mouse and controller in MonoGame            | [2D games chapter 10](https://docs.monogame.net/articles/tutorials/building_2d_games/10_handling_input/index.html)  |
-| Input management        | How to actually use the previous lesson in a game                     | [2D games chapter 11](https://docs.monogame.net/articles/tutorials/building_2d_games/11_input_management/index.html)  |
 
 ## Moving the player
 
@@ -89,7 +88,7 @@ class Player
 
 This will move the player in the x and y directions when the keys are pressed. The player will stop when the keys are released.
 
-> [!NOTE]
+> [!TIP]
 >
 > As you can see, the speed variation is multiplied by the ``dt`` parameter. This is because the speed is a variation over time, and we want to make sure that the movement frame rate independent.
 >
@@ -97,7 +96,9 @@ This will move the player in the x and y directions when the keys are pressed. T
 
 ### Using input for acceleration
 
-We will now add acceleration to the movement. Acceleration is the variation of speed over time. We must make the player accelerate when the input is pressed, and decelerate when the input is released. The speed is variating, so we need to apply the deltatime on it.
+We will now add acceleration to the movement, to make the movement smoother.
+
+Acceleration is the variation of speed over time. We must make the player accelerate when the input is pressed, and decelerate when the input is released. The speed is variating, so we need to multipl it with the delta time.
 
 ```csharp
 class Player
@@ -149,11 +150,13 @@ private void HandlingInput(double dt)
 }
 ```
 
+Multuplying the speed by a value less than 1 will make the speed decrease over time, simulating a friction effect. The player will now slow down when the input is released.
+
 ### Limiting speed
 
 We do not want the player to move infinitely fast. We will limit the speed of the player to the maximum speed.
 
-```csharp
+```csharp #5-7
 private void HandlingInput(double dt)
 {
   KeyboardState state = Keyboard.GetState();
