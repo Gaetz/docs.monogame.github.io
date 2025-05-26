@@ -25,7 +25,7 @@ We will also restrict the player movement to the screen boundaries, so that the 
 
 ## Moving the player
 
-All input related code will be placed in a ``HandleInput`` function. Let's define it and call it from Update.
+All input related code will be placed in a `HandleInput` function. Let's define it and call it from Update.
 
 ```csharp
     private void HandlingInput(double dt)
@@ -44,7 +44,7 @@ All input related code will be placed in a ``HandleInput`` function. Let's defin
 
 ### Speed and position
 
-Speed is the variation of position over time. We will use two variables ``speedX`` and ``speedY`` to store the speed of the player. We will also create a constant for maximum speed.
+Speed is the variation of position over time. We will use two variables `speedX` and `speedY` to store the speed of the player. We will also create a constant for maximum speed.
 
 At first, we will change the speed of the player for maximum speed when the input is pressed. We will then use the speed to change the position of the player.
 
@@ -90,7 +90,7 @@ This will move the player in the x and y directions when the keys are pressed. T
 
 > [!TIP]
 >
-> As you can see, the speed variation is multiplied by the ``dt`` parameter. This is because the speed is a variation over time, and we want to make sure that the movement frame rate independent.
+> As you can see, the speed variation is multiplied by the `dt` parameter. This is because the speed is a variation over time, and we want to make sure that the movement frame rate independent.
 >
 > As a general rule, any variation over time should be multiplied by delta time to ensure consistent behavior across different frame rates.
 
@@ -98,7 +98,7 @@ This will move the player in the x and y directions when the keys are pressed. T
 
 We will now add acceleration to the movement, to make the movement smoother.
 
-Acceleration is the variation of speed over time. We must make the player accelerate when the input is pressed, and decelerate when the input is released. The speed is variating, so we need to multipl it with the delta time.
+Acceleration is the variation of speed over time. We must make the player accelerate when the input is pressed, and decelerate when the input is released. The speed is variating, so we need to multiply it with the delta time.
 
 ```csharp
 class Player
@@ -150,7 +150,7 @@ private void HandlingInput(double dt)
 }
 ```
 
-Multuplying the speed by a value less than 1 will make the speed decrease over time, simulating a friction effect. The player will now slow down when the input is released.
+Multiplying the speed by a value less than 1.0f will make the speed decrease over time, simulating a friction effect. The player will now slow down when the input is released.
 
 ### Limiting speed
 
@@ -193,9 +193,13 @@ private void HandlingInput(double dt)
 }
 ```
 
+After each speed change, we check if the absolute value of the speed is greater than the maximum speed. If it is, we set the speed to the maximum speed in the direction of the speed.
+
 ## Keeping the player inside the screen
 
-Finally, we will restrict the player movement to the screen boundaries. We will use the MonoGame's Rectangle class to store the boundaries values.
+Finally, we will restrict the player movement to the screen boundaries. We will use the MonoGame's `Rectangle` class to store the boundaries values.
+
+[Link to MonoGame Rectangle documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Rectangle.html)
 
 When the player hit a boundary, we will set the player position to the boundary and set the speed in that direction to 0.
 
@@ -238,4 +242,12 @@ class Player
 }
 ```
 
-That's it! The player can now move around the screen in a smooth and graceful way. In the next chapter, we will add the ability to orientate the player and display a target in the direction the player is aiming.
+That's it! The player can now move around the screen in a smooth and graceful way !
+
+![Final screenshot](images/ch2_final-screen.png)
+
+## Conclusion
+
+In this chapter, we have learned how to move the player using inputs. Using `Vector3` operations, we have implemented smooth movement with acceleration and deceleration, and we have restricted the player movement to the screen boundaries.
+
+In the next chapter, we will add the ability to orientate the player and display a target in the direction the player is aiming.
