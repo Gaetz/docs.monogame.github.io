@@ -3,17 +3,25 @@ title: "Step 3: Aim and rotate the player"
 description: Use inputs aim toward a displayed target
 ---
 
-# Step 3: Aim and rotate the player - Introduction
+# Step 3: Aim and rotate the player
 
-In this chapter, we will create a target that the player will move with the mouse or the right thumbstick of the gamepad. The player will rotate to aim at the target.
+## Objective
+
+In this chapter, we will create a target that the player will move with the mouse. The player's ship will rotate to aim at the target.
 
 ## Creating the target's quad
 
 Our target will be a 2D image that will be displayed in the 3D world. This image must have a 3D mesh on which the texture will be applied. We will use a simple quad for this purpose.
 
-A quad is a 2D plane that is composed of two triangles. For optimization purposes, we will have only for vertices for the triangles. The indices will tell which vertices to use to create the two different triangles.
+A quad is a 2D plane that is composed of two triangles. For optimization purposes, we will have only four vertices for the triangles. Indices will tell which vertices to use to create the two different triangles.
 
-MonoGame allows us to create a mesh by specifying the vertices and the indices that define the triangles. We will create a quad using this in a Quad.cs file.
+![A quad](images/ch3_quad.png)
+
+> [!IMPORTANT]
+>
+> The order of the indices determines the orientation of the triangles. If the order is not correct, the triangles will be rendered in the wrong direction, and the texture will not be displayed correctly.
+
+MonoGame allows us to create a mesh by specifying the vertices and the indices that define the triangles. We will create a quad using this in a *Quad.cs* file.
 
 ### The Quad data
 
@@ -37,15 +45,23 @@ class Quad
 }
 ```
 
-Our quad's vertices will store the position, normal, and texture coordinates. We will also store the indices that define the triangles.
+We use the ``VertexPositionNormalTexture`` class for our vertices. Our quad's vertices will store the position, normal, and texture coordinates. We will also store the indices that define the triangles in our `Quad` class.
 
-The origin, up, normal, and left vectors will be used to position the quad in the 3D world. The upperLeft, upperRight, lowerLeft, and lowerRight vectors will store the position of the quad's corners.
+[Link to MonoGame VertexPositionNormalTexture documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.VertexPositionNormalTexture.html)
 
-We will use a BasicEffect to render the quad. We will set the effect's texture to the texture we want to apply to the quad.
+The origin, ``up``, ``normal``, and ``left`` vectors will be used to position the quad in the 3D world. The ``upperLeft``, ``upperRight``, ``lowerLeft``, and ``lowerRight`` vectors will store the position of the quad's corners.
+
+> [!NOTE] About texture coordinates
+>
+> Texture coordinates, also called UVs, indicate how to map a texture onto a mesh. They are usually in the range [0, 1], where (0, 0) is the upper left corner of the texture and (1, 1) is the lower right corner.
+>
+> ![Quad's texture coordinates](images/ch3_quad-uv.png)
+
+We will use a `BasicEffect` to render the quad. We will set the effect's texture to the texture we want to apply to the quad.
 
 ### Filling the vertices
 
-Let's fill the vertices with the quad's position, normal, and texture coordinates. We will also set the indices for the triangles. This will happen in a FillVertices function.
+Let's fill the vertices with the quad's position, normal, and texture coordinates. We will also set the indices for the triangles. This will happen in a `FillVertices` function.
 
 ```csharp
 private void FillVertices()
@@ -80,7 +96,7 @@ private void FillVertices()
 
 ### Building the quad
 
-We will create the quad in the constructor of the Quad class. We will set the origin, up, normal, and left vectors. We will also set the position of the quad's corners. Finally, we will call the FillVertices function and store the BasicEffect we will use to draw.
+We will create the quad in the constructor of the ``Quad`` class. We will set the ``origin``, ``up``, ``normal``, and ``left`` vectors. We will also set the position of the quad's corners. Finally, we will call the ``FillVertices`` function and store the ``BasicEffect`` we will use to draw.
 
 ```csharp
 public Quad(Vector3 origin, Vector3 normal, Vector3 up,
@@ -107,7 +123,7 @@ public Quad(Vector3 origin, Vector3 normal, Vector3 up,
 
 ### Drawing the quad
 
-Drawing a mesh set by hand is different from drawing a model. As with the player, we will need a world, view, and projection matrix to draw the quad. The difference is that we  will call the DrawUserIndexedPrimitives function to draw the quad, and trigger the application of the shader pass. In order to do those last two operations, we will need an access to the GraphicsDevice.
+Drawing a mesh set by hand is different from drawing a model. As with the player, we will need a world, view, and projection matrix to draw the quad. The difference is that we  will call the ``GraphicsDevice.DrawUserIndexedPrimitives`` function to draw the quad, and trigger the application of the shader pass. In order to do those last two operations, we will need an access to the ``GraphicsDevice``.
 
 ```csharp
 public void Draw(GraphicsDevice device, Matrix world, Matrix view, Matrix projection)
@@ -117,19 +133,21 @@ public void Draw(GraphicsDevice device, Matrix world, Matrix view, Matrix projec
   effect.Projection = projection;
   foreach (EffectPass pass in effect.CurrentTechnique.Passes)
   {
-      pass.Apply();
-      device.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(
-          PrimitiveType.TriangleList, vertices, 0, 4, indices, 0, 2
-      );
+    pass.Apply();
+    device.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(
+      PrimitiveType.TriangleList, vertices, 0, 4, indices, 0, 2
+    );
   }
 }
 ```
 
+The `GraphicsDevice` contains differents methods related to graphics. Here is a link to the [MonoGame GraphicsDevice documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html).
+
 ## Creating and showing the target
 
-Now the Quad class is ready, we can create a target that we will be able to move, and that will use the quad to display itself. This target will be contained in a PlayerAim.cs file.
+Now the ``Quad`` class is ready, we can create a target that we will be able to move, and that will use the quad to display itself. This target will be contained in a *PlayerAim.cs* file.
 
-In order to draw the player aim's texture, we will need to load it. Add the Crosshair.png file into the MGCB and build it. We will then load the texture in the Load function.
+In order to draw the player aim's texture, we will need to load it. Add the *Crosshair.png* file into the MGCB and build it. We will then load the texture in the ``Load`` function.
 
 ### The PlayerAim class
 
@@ -149,13 +167,13 @@ class PlayerAim
 }
 ```
 
-The PlayerAim class will contain a quad that will be used to display the target. We will also store the position and orientation of the target, and the world matrix and graphics device that will be used to draw the quad.
+The ``PlayerAim`` class will contain a quad that will be used to display the target. We will also store the position and orientation of the target, and the world matrix and graphics device to draw the quad.
 
-We will also create a property to access the position of the target, so that the player will be able to orentate toward it.
+We will also create a property to access the position of the target, so that the player will be able to orientate toward it.
 
 ### Setting up the quad and its basic effect
 
-We will use the load function to set up our member variables. The position of the target will be set to (0, 0, -5000) to place it in front of the camera. We will create a BasicEffect and set its texture to the Crosshair texture. We will then create the quad, orientated towards the player.
+We will use the ``Load`` function to set up our member variables. The position of the target will be set to *(0, 0, -5000)* to place it in front of the camera. We will create a ``BasicEffect`` and set its texture to the *Crosshair* texture. We will then create the quad, orientated towards the player.
 
 ```csharp
   public void Load(ContentManager content, GraphicsDevice device)
@@ -173,7 +191,7 @@ We will use the load function to set up our member variables. The position of th
 
 ### Updating the target
 
-We will update the target in the Update function. We will use the mouse or the right thumbstick of the gamepad to move the target. We will then update the world matrix of the quad.
+We will update the target in the ``Update`` function. We will use the mouse to move the target. We will then update the world matrix of the quad.
 
 ```csharp
   public void Update(double dt)
@@ -186,11 +204,15 @@ We will update the target in the Update function. We will use the mouse or the r
   }
 ```
 
+> [!NOTE] 
+> 
+> The player's aim quad won't rotate, so we don't need to set the orientation. The world matrix is simply a translation matrix.
+
 The multiplication by -10.04f is used make the mouse move more dynamic. The multiplication by -10.04f is used to invert the Y axis.
 
 ### Drawing the target
 
-We can now call the Draw function of the quad in the Draw function of the PlayerAim class.
+We can now call the ``Draw`` function of the quad in the ``Draw`` function of the ``PlayerAim`` class.
 
 ```csharp
   public void Draw(Matrix view, Matrix projection)
@@ -199,11 +221,11 @@ We can now call the Draw function of the quad in the Draw function of the Player
   }
 ```
 
-Now we need to create our PlayerAim objecto from the Game1 class.
+Now we need to create our ``PlayerAim`` object from the ``Game1`` class.
 
 ## Managing the PlayerAim
 
-We will now create a PlayerAim object in the Game1 class. We will load it in the LoadContent function, update it in the Update function, and draw it in the Draw function.
+We will now create a ``PlayerAim`` object in the ``Game1`` class. As usual, we will load it in the ``LoadContent`` function, update it in the ``Update`` function, and draw it in the ``Draw`` function.
 
 ```csharp
 public class Game1 : Game
@@ -250,16 +272,16 @@ public class Game1 : Game
 }
 ```
 
-Note that:
-- The player's constructo now takes a PlayerAim object as a parameter.
-- When drawing the PlayerAim, we set the BlendState to NonPremultiplied to ensure transarency.
+> [!NOTE]
+> 
+> - The player's constructor now takes a PlayerAim object as a parameter.
+> - When drawing the PlayerAim, we set the BlendState to NonPremultiplied to ensure transparency.
 
-We will now update the Player so that it rotates toward its PlayerAim.
+We will now update the ``Player`` so that it rotates toward its ``PlayerAim``.
 
+## Orienting the Player toward the PlayerAim
 
-## Creating and showing the target
-
-First, we need to add a PlayerAim member variable to the Player class. It will be passed to they player in its noew constructor.
+First, we need to add a ``PlayerAim`` member variable to the ``Player`` class. It will be passed to they player in a new constructor.
 
 ```csharp
   private PlayerAim playerAim;
@@ -272,7 +294,7 @@ First, we need to add a PlayerAim member variable to the Player class. It will b
 
 ### The HandleAiming function
 
-In the Player class, we will create an HandleAiming function that will rotate the player toward the target. We will then call this function in the Update function.
+In the Player class, we will create an ``HandleAiming`` function that will rotate the player toward the target. We will then call this function in the ``Update`` function.
 
 ```csharp
   private void HandleAiming()
@@ -285,13 +307,19 @@ In the Player class, we will create an HandleAiming function that will rotate th
     HandlingInput(dt);
     HandleAiming();
 
-    world = Matrix.CreateFromQuaternion(orientation) * Matrix.CreateTranslation(position);
+    world = Matrix.CreateScale(scale) * Matrix.CreateFromQuaternion(orientation) * Matrix.CreateTranslation(position);
   }
 ```
 
 ### Calculating the rotation to follow the aim
 
-The general idea here will be to compute the direction between the player and the aim, then create a rotation matrix from this direction. In order to create this matrix, and if we consider the direction vector as a forward vector, we need to create two other vectors: the right vector (xAxis) and the up vector (yAxis), relative to our forward vector. We will then create a matrix from these three vectors, by setting the matrix's value by hand.
+The general idea here will be to compute the direction between the player and the aim, then create a rotation matrix from this direction.
+
+We can get the direction by subtracking the aim's position from the player's position. We will then normalize this direction vector to get a unit vector.
+
+![Player aiming at the target](images/ch3_aiming.png)
+
+Then, in order to create this rotation matrix, and if we consider the direction vector as a forward vector, we need to create two other vectors: the right vector (xAxis) and the up vector (yAxis), relative to our forward vector. We will then create a matrix from these three vectors, by setting the matrix's value by hand.
 
 When we have the orientation matrix, we create a quaternion from it and set it as the player's orientation.
 
@@ -324,4 +352,12 @@ When we have the orientation matrix, we create a quaternion from it and set it a
   }
 ```
 
-Everything is ready! Run the game and rotate the player toward the target while moving the ship with the keys or left strick.
+Everything is ready! Run the game and rotate the player toward the target while moving the ship with the keys and the mouse.
+
+![Chapter 3 result](images/ch3_final-screen.png)
+
+## Conclusion
+
+In this chapter, we created a target that the player can aim at using the mouse. The player rotates to face the target. We also learned how to create a quad mesh and apply a texture to it.
+
+In the next chapter, we will add a shooting mechanic to the player, allowing it to shoot in the direction of the target. We will also create a projectile class to handle the bullets' behavior and rendering.

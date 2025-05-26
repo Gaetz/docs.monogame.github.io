@@ -156,7 +156,7 @@ Multiplying the speed by a value less than 1.0f will make the speed decrease ove
 
 We do not want the player to move infinitely fast. We will limit the speed of the player to the maximum speed.
 
-```csharp #5-7
+```csharp #12-15,25-28
 private void HandlingInput(double dt)
 {
   KeyboardState state = Keyboard.GetState();
@@ -172,7 +172,6 @@ private void HandlingInput(double dt)
   {
       speedY = MathF.Sign(speedY) * MAX_SPEED;
   }
-
 
   if (state.IsKeyDown(Keys.A))
   {
