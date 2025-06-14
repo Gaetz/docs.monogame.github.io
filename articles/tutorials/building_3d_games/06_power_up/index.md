@@ -57,7 +57,11 @@ class PowerUp : Entity
 }
 ```
 
-We set the sacle to `10f` so that the power-up is easy to catch for the player.
+We set the scale to `10f` so that the power-up is easy to catch for the player.
+
+> [!TIP]
+>
+> When making a game, it is nearly always better to favorise player's comfort than exact numbers.
 
 ## Setting up the player for power-ups
 
@@ -113,7 +117,11 @@ The projectiles will be positionned on a circle in front of the player. In order
 
 ![Projectiles on a circle](images/ch6_projectile-on-circle.png)
 
-Once we have this angle, if we consider a cercle of radius 1, the projectile x coordinate is the cosine of the angle, and the y coordinate is the sine of the angle. Because we want a circle bigger than 1, the circle will be given a `PROJECTILES_RADIUS`, to make the circle bigger. We just have to multiply the projectiles coordinate by this radius.
+Once we have this angle, if we consider a cercle of radius 1, the projectile x coordinate is the cosine of the angle, and the y coordinate is the sine of the angle.
+
+![Coordinates on a circle](images/ch6_circle-coordinates.png)
+
+Because we want a circle bigger than 1, the circle will be given a `PROJECTILES_RADIUS`, to make the circle bigger. We just have to multiply the projectiles coordinate by this radius.
 
 By the way, because the first projectile (when we shoot without any power up) should be issued from the center of this circle, we will manage this situation specifically, and keep our former shooting logic.
 
