@@ -5,6 +5,8 @@ description: During main phase, the enemy will shoot some projectiles with timin
 
 # Step 8: Enemies attack
 
+## Objective
+
 Now that our enemies enter and exit the screen, it's time to make them shoot some projectiles. We will make them shoot during their main phase. We will choose how many projectiles they will shoot and the timing between each shot.
 
 ## Projectile and player update
@@ -12,6 +14,14 @@ Now that our enemies enter and exit the screen, it's time to make them shoot som
 ### Projectile related changes
 
 Because both the player and the enemies will shoot projectiles, we need to move the function that determine the projectile orientation to the `Projectile.cs` class.
+
+To orientate the projectile, we will build with our little hands an orientation matrix. It is not the simplest solution here but it will be useful for you to help understand that a matrix represent a coordinate system relatively to an object.
+
+We will start with the projectile's direction - which will be the subtraction of the target's position and shooter position. We normalize it. We then build a perpendicular vector to this vector, by executing a cross product between our normalized direction vector and the world's up vector. We normalize the result. Finally, we create a last normilized perpendicular vector - this time perpendicalar to both the direction and the second vector. Those three normalized vector create a coordinate system specific to the projectile direction. The following diagram reprensents the coordinate system we just created:
+
+![Orientation matrix](images/ch8_orientation-matrix.png)
+
+We can use the coordinates of those three vectors to create a matrix that represent the transformation leading to this coordinate system. We then create a quaternion from this matrix.
 
 ```csharp
 internal class Projectile : Entity
@@ -64,7 +74,7 @@ internal class Player : Entity
 
 The enemy will shoot at the player, so it has to have an impact on the player when he or she is hit.
 
-We will add a `hp` and `idDead` fields to the `Player.cs` class. This will allow us to make the player lose health when hit by an enemy projectile. This re;oval will be handled by a `RemoveHp` function.
+We will add a `hp` and `idDead` fields to the `Player.cs` class. This will allow us to make the player lose health when hit by an enemy projectile. This removal will be handled by a `RemoveHp` function.
 
 ```csharp
 internal class Player : Entity
@@ -251,7 +261,6 @@ In order to trigger the shooting logic, we need to change the shooting state whe
   }
 ```
 
-
 ### Taking projectiles into account
 
 We will update the `Game1.UpdateProjectiles` function to make the enemy projectiles collide with the player, removing hp.
@@ -303,7 +312,7 @@ In order to distinguish between player and enemy projectiles, we change the `Add
   }
 ```
 
-You will need to import the CubeRed model in the `Content` manager.
+You will need to import the *CubeRed* model in the `Content` manager.
 
 ## Conclusion
 
