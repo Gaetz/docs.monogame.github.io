@@ -5,15 +5,15 @@ description: Organizing the appearance of enemies with a waves system.
 
 # Step 9: Enemy waves
 
-We now want to organize a modest chroregraphy of enemies. We will make them enter at a specific time, shooot us and get out of the screen. We will organize a level as a succession of enemy waves. We will also allow to spawn power-ups in the waves.
+We now want to organize a chroregraphy of enemies. We will make them enter at a specific time, shoot at us then get out of the screen. We will organize a level as a succession of enemy waves. We will also allow to spawn power-ups in the waves.
 
-In this step, we will use the MonoGame data system to store the data of the waves. We will create a xml file that will be automatically interpreted as wave data thanks to MGCB.
+In this step, we will use the MonoGame data system to store the data of the waves. We will create a xml file that will be automatically interpreted as wave data thanks to the *MGCB*.
 
 ## Wave data library
 
 ### Create a library project
 
-In order to store the wave data, we need to create a project that MGCB will reference and use to interpret the xml file. We will create a new project in the solution. Right click on the solution and select `Add > New Project...`. Select `MonoGame Game Library` and name it (in my case I chose `3D-Tutorial-Data`). You can remove the .cs files from the project. This will create a new project in the solution. We will use this project to store the wave data.
+In order to store the wave data, we need to create a project that *MGCB* will reference and use to interpret the xml file. We will create a new project in the solution. Right click on the solution and select `Add > New Project...`. Select `MonoGame Game Library` and name it (in my case I chose `3D-Tutorial-Data`). You can remove the *.cs* files from the project. This will create a new project in the solution. We will use this project to store the wave data.
 
 ### The wave data class
 
@@ -22,52 +22,52 @@ In the library, create a new class called `WaveData.cs`. This class will be used
 ```csharp
 namespace Tutorial_Data
 {
-    public class WaveData
-    {
-        public int id;
-        public float time;
-        public int elementNumber;
+  public class WaveData
+  {
+    public int id;
+    public float time;
+    public int elementNumber;
 
-        public string element0Type;
-        public string element0EnterSide;
-        public string element0ExitSide;
-        public float element0X;
-        public float element0Y;
-        public float element0Z;
-        public float element0Duration;
+    public string element0Type;
+    public string element0EnterSide;
+    public string element0ExitSide;
+    public float element0X;
+    public float element0Y;
+    public float element0Z;
+    public float element0Duration;
 
-        public string element1Type;
-        public string element1EnterSide;
-        public string element1ExitSide;
-        public float element1X;
-        public float element1Y;
-        public float element1Z;
-        public float element1Duration;
+    public string element1Type;
+    public string element1EnterSide;
+    public string element1ExitSide;
+    public float element1X;
+    public float element1Y;
+    public float element1Z;
+    public float element1Duration;
 
-        public string element2Type;
-        public string element2EnterSide;
-        public string element2ExitSide;
-        public float element2X;
-        public float element2Y;
-        public float element2Z;
-        public float element2Duration;
+    public string element2Type;
+    public string element2EnterSide;
+    public string element2ExitSide;
+    public float element2X;
+    public float element2Y;
+    public float element2Z;
+    public float element2Duration;
 
-        public string element3Type;
-        public string element3EnterSide;
-        public string element3ExitSide;
-        public float element3X;
-        public float element3Y;
-        public float element3Z;
-        public float element3Duration;
+    public string element3Type;
+    public string element3EnterSide;
+    public string element3ExitSide;
+    public float element3X;
+    public float element3Y;
+    public float element3Z;
+    public float element3Duration;
 
-        public string element4Type;
-        public string element4EnterSide;
-        public string element4ExitSide;
-        public float element4X;
-        public float element4Y;
-        public float element4Z;
-        public float element4Duration;
-    }
+    public string element4Type;
+    public string element4EnterSide;
+    public string element4ExitSide;
+    public float element4X;
+    public float element4Y;
+    public float element4Z;
+    public float element4Duration;
+  }
 }
 ```
 
@@ -81,9 +81,14 @@ Once you have created the class, compile the project by right-clicking on the pr
 
 ### Reference the dll file in MGCB
 
-Now we need to reference the dll file in MGCB. Open it from your main project (do not use the MGCB file from the library project). Click on Content on the top left Project explorer. In the Properties panel, go all the way down and click on Reference. In the Reference explorer, click on Add. Browse to the `bin/Debug` folder of the library project and select the dll file. This will add a reference to the dll file in MGCB.
+Now we need to reference the dll file in MGCB. Open the MGCB file from your main project - do not use the MGCB file from the library project. Click on `Content` on the top left `Project explorer`. In the `Properties` panel, go all the way down and click on `Reference`. In the `Reference` explorer, click on `Add`. Browse to the `bin/Debug` folder of the library project and select the dll file. This will add a reference to the dll file in MGCB.
 
-Note: for MonoGame 3.8.2 or below the library project must be compiled with .NET 6.0 and not with .NET 8.0. To ensure that, right click on the data library, select `Properties`, and in the `Application` tab, select `.NET 6.0` in the `Target framework` dropdown. Then recompile the project. You will notice a `net6.0` folder in the `bin/Debug` folder of the library project in addition to the `net8.0` folder. This is the folder that MGCB will use to load the dll file. More information here: https://docs.MonoGame.net/articles/getting_to_know/howto/content_pipeline/HowTo_Add_XML.html
+![References](images/ch9_references.png)
+
+> [!NOTE]
+>
+> For MonoGame 3.8.2 or below the library project must be compiled with .NET 6.0 and not with .NET 8.0. To ensure that, right click on the data library, select `Properties`, and in the `Application` tab, select `.NET 6.0` in the `Target framework` dropdown. Then recompile the project. You will notice a `net6.0` folder in the `bin/Debug` folder of the library project in addition to the `net8.0` folder. This is the folder that MGCB will use to load the dll file. 
+> More information here: https://docs.MonoGame.net/articles/getting_to_know/howto/content_pipeline/HowTo_Add_XML.html
 
 ### Reference the data library in the main project
 
@@ -96,153 +101,153 @@ We now need to create and populate the xml file that will be used to store the w
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <XnaContent>
-	<Asset Type="Tutorial_Data.WaveData[]">
-		<Item>
-			<id>0</id>
-			<time>0</time>
-			<elementNumber>3</elementNumber>
+  <Asset Type="Tutorial_Data.WaveData[]">
+    <Item>
+      <id>0</id>
+      <time>0</time>
+      <elementNumber>3</elementNumber>
 
-			<element0Type>enemy</element0Type>
-			<element0EnterSide>Left</element0EnterSide>
-			<element0ExitSide>Right</element0ExitSide>
-			<element0X>-200</element0X>
-			<element0Y>0</element0Y>
-			<element0Z>-750</element0Z>
-			<element0Duration>5.0</element0Duration>
+      <element0Type>enemy</element0Type>
+      <element0EnterSide>Left</element0EnterSide>
+      <element0ExitSide>Right</element0ExitSide>
+      <element0X>-200</element0X>
+      <element0Y>0</element0Y>
+      <element0Z>-750</element0Z>
+      <element0Duration>5.0</element0Duration>
 
-			<element1Type>enemy</element1Type>
-			<element1EnterSide>Left</element1EnterSide>
-			<element1ExitSide>Right</element1ExitSide>
-			<element1X>200</element1X>
-			<element1Y>0</element1Y>
-			<element1Z>-750</element1Z>
-			<element1Duration>5.0</element1Duration>
+      <element1Type>enemy</element1Type>
+      <element1EnterSide>Left</element1EnterSide>
+      <element1ExitSide>Right</element1ExitSide>
+      <element1X>200</element1X>
+      <element1Y>0</element1Y>
+      <element1Z>-750</element1Z>
+      <element1Duration>5.0</element1Duration>
 
-			<element2Type>enemy</element2Type>
-			<element2EnterSide>Left</element2EnterSide>
-			<element2ExitSide>Right</element2ExitSide>
-			<element2X>0</element2X>
-			<element2Y>0</element2Y>
-			<element2Z>-750</element2Z>
-			<element2Duration>5.0</element2Duration>
+      <element2Type>enemy</element2Type>
+      <element2EnterSide>Left</element2EnterSide>
+      <element2ExitSide>Right</element2ExitSide>
+      <element2X>0</element2X>
+      <element2Y>0</element2Y>
+      <element2Z>-750</element2Z>
+      <element2Duration>5.0</element2Duration>
 
-			<element3Type>none</element3Type>
-			<element3EnterSide>Left</element3EnterSide>
-			<element3ExitSide>Right</element3ExitSide>
-			<element3X>0</element3X>
-			<element3Y>0</element3Y>
-			<element3Z>0</element3Z>
-			<element3Duration>5.0</element3Duration>
+      <element3Type>none</element3Type>
+      <element3EnterSide>Left</element3EnterSide>
+      <element3ExitSide>Right</element3ExitSide>
+      <element3X>0</element3X>
+      <element3Y>0</element3Y>
+      <element3Z>0</element3Z>
+      <element3Duration>5.0</element3Duration>
 
-			<element4Type>none</element4Type>
-			<element4EnterSide>Left</element4EnterSide>
-			<element4ExitSide>Right</element4ExitSide>
-			<element4X>0</element4X>
-			<element4Y>0</element4Y>
-			<element4Z>0</element4Z>
-			<element4Duration>5.0</element4Duration>
-		</Item>
+      <element4Type>none</element4Type>
+      <element4EnterSide>Left</element4EnterSide>
+      <element4ExitSide>Right</element4ExitSide>
+      <element4X>0</element4X>
+      <element4Y>0</element4Y>
+      <element4Z>0</element4Z>
+      <element4Duration>5.0</element4Duration>
+    </Item>
 
-		<Item>
-			<id>1</id>
-			<time>12</time>
-			<elementNumber>1</elementNumber>
+    <Item>
+      <id>1</id>
+      <time>12</time>
+      <elementNumber>1</elementNumber>
 
-			<element0Type>powerup</element0Type>
-			<element0EnterSide>Left</element0EnterSide>
-			<element0ExitSide>Right</element0ExitSide>
-			<element0X>0</element0X>
-			<element0Y>0</element0Y>
-			<element0Z>-500</element0Z>
-			<element0Duration>5.0</element0Duration>
+      <element0Type>powerup</element0Type>
+      <element0EnterSide>Left</element0EnterSide>
+      <element0ExitSide>Right</element0ExitSide>
+      <element0X>0</element0X>
+      <element0Y>0</element0Y>
+      <element0Z>-500</element0Z>
+      <element0Duration>5.0</element0Duration>
 
-			<element1Type>none</element1Type>
-			<element1EnterSide>Left</element1EnterSide>
-			<element1ExitSide>Right</element1ExitSide>
-			<element1X>200</element1X>
-			<element1Y>0</element1Y>
-			<element1Z>-750</element1Z>
-			<element1Duration>5.0</element1Duration>
+      <element1Type>none</element1Type>
+      <element1EnterSide>Left</element1EnterSide>
+      <element1ExitSide>Right</element1ExitSide>
+      <element1X>200</element1X>
+      <element1Y>0</element1Y>
+      <element1Z>-750</element1Z>
+      <element1Duration>5.0</element1Duration>
 
-			<element2Type>none</element2Type>
-			<element2EnterSide>Left</element2EnterSide>
-			<element2ExitSide>Right</element2ExitSide>
-			<element2X>0</element2X>
-			<element2Y>0</element2Y>
-			<element2Z>-750</element2Z>
-			<element2Duration>5.0</element2Duration>
+      <element2Type>none</element2Type>
+      <element2EnterSide>Left</element2EnterSide>
+      <element2ExitSide>Right</element2ExitSide>
+      <element2X>0</element2X>
+      <element2Y>0</element2Y>
+      <element2Z>-750</element2Z>
+      <element2Duration>5.0</element2Duration>
 
-			<element3Type>none</element3Type>
-			<element3EnterSide>Left</element3EnterSide>
-			<element3ExitSide>Right</element3ExitSide>
-			<element3X>0</element3X>
-			<element3Y>0</element3Y>
-			<element3Z>0</element3Z>
-			<element3Duration>5.0</element3Duration>
+      <element3Type>none</element3Type>
+      <element3EnterSide>Left</element3EnterSide>
+      <element3ExitSide>Right</element3ExitSide>
+      <element3X>0</element3X>
+      <element3Y>0</element3Y>
+      <element3Z>0</element3Z>
+      <element3Duration>5.0</element3Duration>
 
-			<element4Type>none</element4Type>
-			<element4EnterSide>Left</element4EnterSide>
-			<element4ExitSide>Right</element4ExitSide>
-			<element4X>0</element4X>
-			<element4Y>0</element4Y>
-			<element4Z>0</element4Z>
-			<element4Duration>5.0</element4Duration>
-		</Item>
+      <element4Type>none</element4Type>
+      <element4EnterSide>Left</element4EnterSide>
+      <element4ExitSide>Right</element4ExitSide>
+      <element4X>0</element4X>
+      <element4Y>0</element4Y>
+      <element4Z>0</element4Z>
+      <element4Duration>5.0</element4Duration>
+    </Item>
 
-		<Item>
-			<id>2</id>
-			<time>15</time>
-			<elementNumber>3</elementNumber>
+    <Item>
+      <id>2</id>
+      <time>15</time>
+      <elementNumber>3</elementNumber>
 
-			<element0Type>enemy</element0Type>
-			<element0EnterSide>Bottom</element0EnterSide>
-			<element0ExitSide>Bottom</element0ExitSide>
-			<element0X>-200</element0X>
-			<element0Y>0</element0Y>
-			<element0Z>-750</element0Z>
-			<element0Duration>5.0</element0Duration>
+      <element0Type>enemy</element0Type>
+      <element0EnterSide>Bottom</element0EnterSide>
+      <element0ExitSide>Bottom</element0ExitSide>
+      <element0X>-200</element0X>
+      <element0Y>0</element0Y>
+      <element0Z>-750</element0Z>
+      <element0Duration>5.0</element0Duration>
 
-			<element1Type>enemy</element1Type>
-			<element1EnterSide>Bottom</element1EnterSide>
-			<element1ExitSide>Bottom</element1ExitSide>
-			<element1X>200</element1X>
-			<element1Y>0</element1Y>
-			<element1Z>-750</element1Z>
-			<element1Duration>5.0</element1Duration>
+      <element1Type>enemy</element1Type>
+      <element1EnterSide>Bottom</element1EnterSide>
+      <element1ExitSide>Bottom</element1ExitSide>
+      <element1X>200</element1X>
+      <element1Y>0</element1Y>
+      <element1Z>-750</element1Z>
+      <element1Duration>5.0</element1Duration>
 
-			<element2Type>enemy</element2Type>
-			<element2EnterSide>Bottom</element2EnterSide>
-			<element2ExitSide>Bottom</element2ExitSide>
-			<element2X>0</element2X>
-			<element2Y>0</element2Y>
-			<element2Z>-750</element2Z>
-			<element2Duration>5.0</element2Duration>
+      <element2Type>enemy</element2Type>
+      <element2EnterSide>Bottom</element2EnterSide>
+      <element2ExitSide>Bottom</element2ExitSide>
+      <element2X>0</element2X>
+      <element2Y>0</element2Y>
+      <element2Z>-750</element2Z>
+      <element2Duration>5.0</element2Duration>
 
-			<element3Type>none</element3Type>
-			<element3EnterSide>Bottom</element3EnterSide>
-			<element3ExitSide>Bottom</element3ExitSide>
-			<element3X>0</element3X>
-			<element3Y>0</element3Y>
-			<element3Z>0</element3Z>
-			<element3Duration>5.0</element3Duration>
+      <element3Type>none</element3Type>
+      <element3EnterSide>Bottom</element3EnterSide>
+      <element3ExitSide>Bottom</element3ExitSide>
+      <element3X>0</element3X>
+      <element3Y>0</element3Y>
+      <element3Z>0</element3Z>
+      <element3Duration>5.0</element3Duration>
 
-			<element4Type>none</element4Type>
-			<element4EnterSide>Bottom</element4EnterSide>
-			<element4ExitSide>Bottom</element4ExitSide>
-			<element4X>0</element4X>
-			<element4Y>0</element4Y>
-			<element4Z>0</element4Z>
-			<element4Duration>5.0</element4Duration>
-		</Item>
-	</Asset>
+      <element4Type>none</element4Type>
+      <element4EnterSide>Bottom</element4EnterSide>
+      <element4ExitSide>Bottom</element4ExitSide>
+      <element4X>0</element4X>
+      <element4Y>0</element4Y>
+      <element4Z>0</element4Z>
+      <element4Duration>5.0</element4Duration>
+    </Item>
+  </Asset>
 </XnaContent>
 ```
 
 The `none` type is used to indicate that there is no element at this position. The `enemy` type is used to indicate that the element is an enemy, and the `powerup` type is used to indicate that the element is a power-up.
 
-As you can see, we specify the data class in the `Asset` tag. This is the class that MGCB will use to interpret the xml file. The `Item` tag contains the data of a wave. We can have as many `Item` tags as we want, and MGCB will interpret them as an array of `WaveData` objects. Our test level will countain one first wave with 3 enemies, a second wave with a power-up, and a third wave with 3 enemies coming and exiting from a different direction. First wave will start at second 0, the power up will appear at second 12 and the second enemy wave at time 15.
+As you can see, we specify the data class in the `Asset` tag. This is the class that *MGCB* will use to interpret the xml file. The `Item` tag contains the data of a wave. We can have as many `Item` tags as we want, and MGCB will interpret them as an array of `WaveData` objects. Our test level will countain one first wave with 3 enemies, a second wave with a power-up, and a third wave with 3 enemies coming and exiting from a different direction. First wave will start at second 0, the power up will appear at second 12 and the second enemy wave at time 15.
 
-Now open MGCB, add an existing file and select the xml file we just created. Build the content data and everything should be fine. You can check the output window to see if there are any errors.
+Now open *MGCB*, add an existing file and select the xml file we just created. Build the content data and everything should be fine. You can check the output window to see if there are any errors.
 
 ## Loading and using the wave data
 
