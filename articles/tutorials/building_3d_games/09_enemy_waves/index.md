@@ -87,8 +87,7 @@ Now we need to reference the dll file in MGCB. Open the MGCB file from your main
 
 > [!NOTE]
 >
-> For MonoGame 3.8.2 or below the library project must be compiled with .NET 6.0 and not with .NET 8.0. To ensure that, right click on the data library, select `Properties`, and in the `Application` tab, select `.NET 6.0` in the `Target framework` dropdown. Then recompile the project. You will notice a `net6.0` folder in the `bin/Debug` folder of the library project in addition to the `net8.0` folder. This is the folder that MGCB will use to load the dll file. 
-> More information here: https://docs.MonoGame.net/articles/getting_to_know/howto/content_pipeline/HowTo_Add_XML.html
+> For MonoGame 3.8.2 or below the library project must be compiled with .NET 6.0 and not with .NET 8.0. To ensure that, right click on the data library, select `Properties`, and in the `Application` tab, select `.NET 6.0` in the `Target framework` dropdown. Then recompile the project. You will notice a `net6.0` folder in the `bin/Debug` folder of the library project in addition to the `net8.0` folder. This is the folder that MGCB will use to load the dll file.
 
 ### Reference the data library in the main project
 
@@ -249,6 +248,10 @@ As you can see, we specify the data class in the `Asset` tag. This is the class 
 
 Now open *MGCB*, add an existing file and select the xml file we just created. Build the content data and everything should be fine. You can check the output window to see if there are any errors.
 
+> [!NOTE]
+>
+> If you want more information about custom MonoGame data on xml format, you will find it here: https://docs.MonoGame.net/articles/getting_to_know/howto/content_pipeline/HowTo_Add_XML.html
+
 ## Loading and using the wave data
 
 ### The Wave class
@@ -305,6 +308,10 @@ public class WaveElement
   }
 }
 ```
+
+> [!NOTE]
+>
+> If you want more information about how to load custom xml data, you will find it here: https://docs.monogame.net/articles/getting_to_know/howto/content_pipeline/HowTo_Load_XML.html
 
 ### Updating the enemy class
 
@@ -469,6 +476,8 @@ We will finally modify our `Update` function to call the waves. We will add a ne
 ```
 
 The `UpdateWaves` function will check if the current wave is ready to be launched. If it is, it will call the `Launch` function of the `Wave` class. The `currentWave` variable will be incremented to the next wave. The `waveTimer` variable will be used to know when to launch the next wave.
+
+![Waves!](images/ch09_final-screen.gif)
 
 ## Conclusion
 

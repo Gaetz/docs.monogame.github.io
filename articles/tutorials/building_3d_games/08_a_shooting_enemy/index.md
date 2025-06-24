@@ -316,6 +316,10 @@ You will need to import the *CubeRed* model in the `Content` manager.
 
 ## Conclusion
 
-In this step, we added the ability for the enemies to shoot projectiles at the player. We also added a `hp` field to the player, and a `RemoveHp` function to handle the player's health. The enemy main phase now has a state machine to handle the shooting logic. We also added a `GameOver` function to the `Game1` class, which is called when the player's hp reaches 0.
+In this step, we added the ability for the enemies to shoot projectiles at the player. 
+
+![A shooting enemy](images/ch08_final-screen.png)
+
+We also added a `hp` field to the player, and a `RemoveHp` function to handle the player's health. The enemy main phase now has a state machine to handle the shooting logic. We also added a `GameOver` function to the `Game1` class, which is called when the player's hp reaches 0.
 
 In the next step, we will take profit of our new enemy behaviour to create waves of enemies, and orchestrate their entrance and exit.

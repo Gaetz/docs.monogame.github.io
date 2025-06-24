@@ -204,8 +204,8 @@ We will update the target in the ``Update`` function. We will use the mouse to m
   }
 ```
 
-> [!NOTE] 
-> 
+> [!NOTE]
+>
 > The player's aim quad won't rotate, so we don't need to set the orientation. The world matrix is simply a translation matrix.
 
 The multiplication by -10.04f is used make the mouse move more dynamic. The multiplication by -10.04f is used to invert the Y axis.
@@ -273,7 +273,7 @@ public class Game1 : Game
 ```
 
 > [!NOTE]
-> 
+>
 > - The player's constructor now takes a PlayerAim object as a parameter.
 > - When drawing the PlayerAim, we set the BlendState to NonPremultiplied to ensure transparency.
 
