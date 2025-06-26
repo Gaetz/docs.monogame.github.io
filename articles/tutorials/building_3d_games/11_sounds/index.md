@@ -5,7 +5,18 @@ description: Improve the game feeling with sounds.
 
 # Step 11: Sounds
 
-In this step, we will add some sounds to the game. Sounds are a great way to improve the game feeling. We will add sounds for the player shooting, for the player and enemy getting hit, when the enemy explodes and when the player gets a powerup.
+## Objective
+
+In this step, we will add some sounds to the game. Sounds are a great way to improve the game feeling, for they emphasize player's action and world rections. We will add sounds for the player shooting, for the player and enemy getting hit, when the enemy explodes and when the player gets a powerup.
+
+> [!NOTE] Requierements
+>
+> You are supposed to have read lessons 14 of the MonoGame's 2D basic tutorial. You should know about the `SoundEffect` and `Song` class. You can improve the code we will write in this lesson by reading chapter 15.
+
+|   Sum up                |     Content                                                           |       Link                      |
+| ----------------------- | --------------------------------------------------------------------- | ------------------------------- |
+| SoundEffects and Music  | Learn how to load and play sound effects and background music         | [2D games chapter 14](https://docs.monogame.net/articles/tutorials/building_2d_games/14_soundeffects_and_music/index.html)          |
+| Audio Controller        | A reusable audio controller class to manage sound effects and music   | [2D games chapter 15](https://docs.monogame.net/articles/tutorials/building_2d_games/15_audio_controller/index.html)          |
 
 ## Sound for the player shooting
 
@@ -31,7 +42,9 @@ internal class Player : Entity
 }
 ```
 
-It is important to load the sound in the `Load` method and not just before playing it, because loading a sound takes some time.
+> [!IMPORTANT] Requierements
+>
+> It is important to load the sound in the `Load` method and not just before playing it, because loading a sound takes some time.
 
 We can now play the sound when the player shoots.
 
@@ -105,7 +118,7 @@ public class Game1 : Game
 
 ### Playing powerup's sound
 
-This is very simple, we call the sound when the player picks up a powerup.
+This is very simple, we call the sound's `Play` function when the player picks up a powerup.
 
 ```csharp
   private void UpdatePowerUps(double dt)
@@ -187,4 +200,4 @@ As you have seen, we played the `smallExplosion` sound when the player or enemy 
 
 Nothing to add! In this very short step we added somes sounds in the game and play them. Even if the code is simple, the impact on the game's feeling will be huge. Remember it: sounds are paramount in a game.
 
-In the next step, we will go further in the use of `BasicEffect` to imporve our game's feedbacks.
+In the next step, we will go further in the use of `BasicEffect` to improve our game's feedbacks.
