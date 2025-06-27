@@ -300,6 +300,8 @@ class Player : Entity
 
 That's it! You can now shoot projectiles from the player's position to the target. You can now move the player and aim with the mouse, and shoot with the left mouse button.
 
+![The player shoots](images/ch04_final-screen.gif)
+
 ### Conclusion
 
 In this step, we have created a new `Entity` class to encapsulate common properties and methods for the player, the player's aim and projectiles. We refactored the player and player aim classes to inherit from this new class. We also created a `Projectile` class that can be instantiated and managed by the `Game1` class, allowing the player to shoot projectiles.

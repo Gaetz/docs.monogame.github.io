@@ -235,6 +235,8 @@ Also, we will remove projectiles that are out of bounds.
 
 That's it! You can now shoot at the enemy model and see it move to a different position when hit.
 
+![Shooting at an enemy](images/ch05_final-screen.gif)
+
 ## Conclusion
 
 In this step, we learned how to create bounding boxes for both the projectile and the enemy model, and how to check for collisions between them. This is an important step in our quest for fun interactivity!

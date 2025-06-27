@@ -328,4 +328,6 @@ We will remove the power-up test timer we implemented in the previous chapter. W
 
 We have learned how to implement a simple enemy state machine. We have created an enemy that enters the game, waits for a few seconds, and then exits. When the enemy is hit by a projectile, it will lose 1 hp. When the hp reaches 0, the enemy will be destroyed.
 
+![A moving enemy](images/ch07_final-screen.gif)
+
 In the next step, we will make the enemy shoot at the player during its main phase!

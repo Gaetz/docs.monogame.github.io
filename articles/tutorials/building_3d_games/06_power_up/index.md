@@ -275,6 +275,8 @@ public class Game1 : Game
 
 Now, power-ups appear at a regular rate. You can use them to check that our projectile system is working as expected.
 
+![Effect of a power up](images/ch06_final-screen.gif)
+
 ## Conclusion
 
 In this step, we have added a power-up to the game. When the player collides with the power-up, the player's weapon will shoot more projectiles. This system is quite simple, but could easylly be extended to more complex power-ups, such as a power-up that makes the player invincible for a short period of time, or different kind of projectiles patterns.
