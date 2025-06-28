@@ -5,6 +5,8 @@ description: Improve the game feeling by making player and enemies flash in red 
 
 # Step 12: Entities color flash
 
+## Objective
+
 In this step, we will add a color flash effect to the player and enemies when they are hit. This effect will help the player to understand when they are hit, when an enemy is hit or when they catch a power-up. An effective communication of interaction information is always important to improve the game feeling.
 
 This step will allow us to go further with the use of the `BasicEffect` class. We will see how we can structure our code to allow the use of different effects on entites sharing the same model.
@@ -15,7 +17,17 @@ This step will allow us to go further with the use of the `BasicEffect` class. W
 
 First, we need to manage color modification on our player and enemies. Because this special effect could actually happen for any 3d model in the game, we will setup everything in the `Entity` class.
 
-The general idea for our flash effect is to set the `BasicEffect` diffuse color to a certain value, and then allows it to go back to normal (white) over a certain duration. We will need to store the flash color and the flash duration, as well as the current color and the flash timer. Modify `Entity.cs` as follows:
+The general idea for our flash effect is to set the `BasicEffect` emissive color to a certain value, and then allows it to go back to normal (transparent) over a certain duration. This will automaically add a color to the model then make it progressively disappear. We will need to store the flash color and the flash duration, as well as the current color and the flash timer.
+
+> [!NOTE] What are emissive color and diffuse color?
+>
+> Emissive and diffuse color are color that will automatically modify the model's texture color thanks to the `BasicEffect`.
+>
+> Emissive color is supposed to be a color that is emitted by the 3D object, and as such modify the texture color in an *additive* way. That is to say that the emissive color's components are added to the already existing color of the texture.
+>
+> Diffuse color is supposed to be the color of the object itself. It is usually multiplied with the texture's color in order to mix the texture's and the diffuse's color. It is called *diffuse* because it represents a statistical approximation of a lighting on an homogeneous surface. The light particules are supposed to bounce in a random direction, which diffuses them, and thus gives an uniform color.
+
+It's time to implement our flash. Modify `Entity.cs` as follows:
 
 ```csharp
 internal class Entity
@@ -56,7 +68,7 @@ internal class Entity
 }
 ```
 
-We create an `UpdateFlash` method that will be called in the `Update` method. This method will update the `currentFlashColor` variable based on the proportion between `flashTimer` and flash duration - similarly to what we did in step 10 for particle colors. If the flash timer goes under 0, we set the `currentFlashColor` to white.
+We create an `UpdateFlash` method that will be called in the `Update` method. This method will update the `currentFlashColor` variable based on the proportion between `flashTimer` and flash duration - similarly to what we did in step 10 for particle colors. If the flash timer goes under 0, we set the `currentFlashColor` back to transparent.
 
 The `Flash` public method will be used to set the flash color and duration. It basically resets the flash effect to start it again. This function will be called when the player or an enemy is hit, or when the player catches a power-up.
 
@@ -69,8 +81,8 @@ For the `Player.cs`
 ```csharp
   public void PowerUp()
   {
-      projectileNumber++;
-      Flash(new Color(0, 255, 0), 2.0f);
+    projectileNumber++;
+    Flash(new Color(0, 255, 0), 2.0f);
   }
 ```
 
@@ -130,7 +142,7 @@ And in `Game1.cs`:
 
 Calling Flash this way is not enough. We need to change the `BasicEffect.emissiveColor` value to make it appear.
 
-This modification cannot happen anywhere: for GPU optimization reasons, the `BasicEffect` shader is shared across all the models that will be drawn with it. That's why we must modify this diffuse color just before drawing the entity. If we would modify the diffuse color in the `Update` method, it would be modified for all the models that are using this effect, so for instance all enemies would turn red.
+This modification cannot happen anywhere: for GPU optimization reasons, the `BasicEffect` shader is shared across all the models that will be drawn with it. That's why we must modify this emissive color just before drawing a specific entity. If we would modify the emissive color in the `Update` method, it would be modified for all the models that are using this effect, so for instance all enemies would turn red.
 
 In order to achieve this individual modification, we will override the `Entity.Draw` function in `Player.cs` and `Enemy.cs`:
 
@@ -148,14 +160,26 @@ In order to achieve this individual modification, we will override the `Entity.D
   }
 ```
 
-The code is the same for both classes. The diffuse color is stored as a Vector3, so we convert the `Color` to a `Vector3` using the `ToVector3` method.
+The code is the same for both classes. The diffuse color is stored as a `Vector3`, so we convert the `Color` to a `Vector3` using the `ToVector3` method.
 
 Now, when an enemy is hit, is will turn red for a short period of time.
 
-Note that this change on `emissiveColor` is working well with our `Ship` and `Saucer` models, which have integrated colors. For models with a texture, like our `BeachBall` model, you would rather change the `BasicEffect.diffuseColor`.
+> [!TIPS] Should we use emissive or diffuse color for flash?
+>
+> In this lesson, I decided to use emissive color because of the way my *Ship* and *Saucer* models are textured. For an other models with other texture, like the *BeachBall*, it might be better to use diffuse color.
+>
+> Note that for diffuse color, the neutral color is not `Color.Transparent` (0, 0, 0, 0) as with emissive, but `Color.White` (1, 1, 1, 1). This is because we multiply the texture color components with the diffuse color components value instead of adding them.
+
+## An additional note about shaders
+
+The `BasicEffect` is actually an abstraction the MonoGame team created around an important graphics programming topic called *Shaders*. `BasicEffect` *is* a set of shaders, applied to the drawing of basic 3D elements. The more general `Effect` class allows to create custom effects - that is custom shaders.
+
+I decided that shaders will be outside the scope of this first 3D tutorial, for, usually, starting to think in 3D is already enough for an aspiring game programmer. Nevertheless, if you are interested, you can read [Introduction to this concept in the 2D game tutorial](https://docs.monogame.net/articles/tutorials/building_2d_games/24_shaders/) as well as the [MonoGame's documentation about Custom Effects](https://docs.monogame.net/articles/getting_started/content_pipeline/custom_effects.html).
 
 ## Conclusion
 
-In this step, we added a color flash effect to the player and enemies when they are hit. This effect is achieved by modifying the `BasicEffect` diffuse color in the `Draw` method of the entity. We also added a `Flash` method to manage the flash effect and a `UpdateFlash` method to update the current flash color over time. All this allowed us to learn more about the `BasicEffect` class.
+In this step, we added a color flash effect to the player and enemies when they are hit. This effect is achieved by modifying the `BasicEffect` emissive color in the `Draw` method of the entity. We also added a `Flash` method to manage the flash effect and a `UpdateFlash` method to update the current flash color over time. All this allowed us to learn more about the `BasicEffect` class.
+
+![Flash!](images/ch12_final-screen.gif)
 
 Overall, our game's feedback starts to be really good. We have sounds, particles and colors to communicate the game state to the player. The game is starting to feel like a real game! In the next step we will improve the graphical aspect by using a neat trick to create a dynamic level background.
