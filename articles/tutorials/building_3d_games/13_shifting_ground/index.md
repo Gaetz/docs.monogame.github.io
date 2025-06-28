@@ -5,11 +5,17 @@ description: Improve the game graphics by displaying a shifting texture for grou
 
 # Step 13: Shifting texture for ground and sky
 
-Let's make the game's graphics better. For now our background fills too empty. Let's pretend our game takes place in a virtual numerical environment, like in Tron, and we are supposed to destroy bugs or attackers. We will add a shifting texture for the ground and the sky, and we will also add a fog effect to make the game more immersive.
+## Objective
+
+Let's make the game's graphics better. For now our background fills too empty. Let's pretend our game takes place in a virtual numerical environment, like in Tron, and we are supposed to destroy bugs or attackers. We will add a shifting texture for the ground and the sky that will represent this numerical environment, and we will also add a fog effect to make the game more immersive.
 
 ## Shifting texture for ground and sky
 
 ### Some theory
+
+As stated above, our background will be composed of two textures, placed in the way that one will represent the ground, and the other the sky.
+
+![Ground and sky](images/ch13_ground-and-sky.png)
 
 Textures are 2D images that are mapped onto 3D objects to give them a more realistic appearance. In our case, the texture is mapped on a simple quad. If you check the code we used to setup `Quad.cs`:
 
@@ -46,10 +52,15 @@ Textures are 2D images that are mapped onto 3D objects to give them a more reali
 
 You see that the texture is mapped on the quad using the `TextureCoordinate` property of the vertices. The texture coordinates are in the range [0, 1], where (0, 0) is the upper left corner of the texture and (1, 1) is the lower right corner. In our case, we are saying thaht the upper left corner of the texture is mapped to the upper left corner of the quad, and the lower right corner of the texture is mapped to the lower right corner of the quad. This means that the texture will be stretched to fit the quad.
 
-Now, this actually open a possibility for us: we can modify the texture coordinates of the vertices to make the texture move. Indeed, if we modify the texture coordinates of the vertices, the texture will move on the quad. This is a common technique used in games to create a moving background or a shifting texture effect.
+![Texture coordinates](images/ch13_texture-coordinates.png)
 
-But how to use this effect to figure out the ground and sky? The idea is to use two quads, one for the ground and one for the sky. The ground quad will be mapped with a texture that moves down, and the sky quad will be mapped with a texture that moves up. If we position those quads horizontally below the player (for the ground) and above the player (for the sky), and make their textures shift toward us, we will have the illusion that our ship is rushing through space.
+Now, this actually opens a possibility for us: we can modify the texture coordinates of the vertices to make the texture move. Indeed, if we modify the texture coordinates of the vertices, the texture will move on the quad. This is a common technique used in games to create a moving background or a shifting texture effect.
 
+But how to use this effect to figure out the ground and sky? The idea is the ground quad will be mapped with a texture that moves down, and the sky quad will be mapped with a texture that moves up. If we position those quads horizontally below the player (for the ground) and above the player (for the sky), and make their textures shift toward us, we will have the illusion that our ship is rushing through space.
+
+> [!NOTE] UVs
+>
+> Texture coordinates are often called *UVs*. That's because we often use xyz for 3D position coordinates, so we needed two additional letters for the texture coordinates. We took the closest. Thus U - horizontal texture coordinate - and V - vertical texture coordinate. Some engines or frameworks also use S and T.
 
 ### Updating the quad class
 
@@ -98,6 +109,11 @@ Now we just have to update the `Draw` method of the `Quad` class to use this var
   ...
 ```
 
+We update the texture coordinates with the `textureShiftSpeed`. This will offset the texture each frame.
+
+> [!NOTE] Wrapping texture
+>
+> Because texture are by default setup in `Wrapping` mode, the increase of the texture coordinate will actually make the texture pixels (*texels*) wrap around the 0-1 values. To put it simply, texel at coordinate (1.5, 0.5) will actually represented by texel (0.5, 0.5).
 
 ### The shifting texture entity
 
@@ -147,11 +163,9 @@ internal class ShiftingTexture : Entity
 }
 ```
 
-This class will hold a `Quad` and will be responsible for updating the texture shift speed. The `Load` method will load the texture and set the effect. The `Update` method will update the texture shift speed based on the time elapsed since the last frame.
-The `Draw` method will call the `Draw` method of the `Quad` class.
+This class will hold a `Quad` and will be responsible for updating the texture shift speed. The `Load` method will load the texture and set the effect. The `Update` method will update the texture shift speed based on the time elapsed since the last frame. The `Draw` method will call the `Draw` method of the `Quad` class.
 
 In the `Load` method, we set a new effect: the fog effect. The fog effect is a common technique used in games to create a sense of depth and distance. The `FogStart` and `FogEnd` properties define the distance at which the fog starts and is total, and the `FogColor` property defines the color of the fog.
-
 
 ### Some more Entity properties
 
@@ -189,7 +203,9 @@ First, check you have imported the `Grid` texture the MGCB.
 
 In the `Game1.cs` class, we will create two instances of the `ShiftingTexture` class, one for the ground and one for the sky. We will also set their position, orientation and scale, update them and draw them.
 
-Note that we shall orientate the shifting speed in opposite directions, for the ground and the sky quads will be orientated upside down, along the x-axis. This is because **face culling**: a 3d model is not rendered if it is not facing the camera. This is a performance optimization that is used in most 3D engines.
+> [!NOTE] Face culling
+>
+> We shall orientate the shifting speed in opposite directions, for the ground and the sky quads will be orientated upside down, along the x-axis. This is because *face culling*: a 3d model is not rendered if it is not facing the camera. This is a performance optimization that is used in most 3D engines.
 
 ```csharp
 public class Game1 : Game
@@ -305,10 +321,13 @@ Currently, the fog effect is only applied to the ground and sky quads. We need t
   }
   ...
 ```
+
 We set the fog effect to be enabled, and we set the same values as for the ground and sky quads. This way, the projectiles will be affected by the fog effect.
 
 ## Conclusion
 
 We have added a shifting texture for the ground and sky, and we have applied a fog effect entities. This makes the game look much better and more immersive.
+
+![Shifting background!](images/ch13_final-screen.gif)
 
 Nevertheless, we have created a bug: the player's target aim can no longer be seen behind the sky and ground quads. In the next step we will modify our target system to rather use a kind of laser helper in order to aim.

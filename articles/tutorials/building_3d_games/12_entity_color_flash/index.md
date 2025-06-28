@@ -164,7 +164,7 @@ The code is the same for both classes. The diffuse color is stored as a `Vector3
 
 Now, when an enemy is hit, is will turn red for a short period of time.
 
-> [!TIPS] Should we use emissive or diffuse color for flash?
+> [!TIP] Should we use emissive or diffuse color for flash?
 >
 > In this lesson, I decided to use emissive color because of the way my *Ship* and *Saucer* models are textured. For an other models with other texture, like the *BeachBall*, it might be better to use diffuse color.
 >
