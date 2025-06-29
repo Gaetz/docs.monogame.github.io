@@ -5,9 +5,19 @@ description: Replace the TargetAim by a cube that imitate the laser aim.
 
 # Step 15: Message system
 
+## Objective
+
 Let's add some narration in our game. In a 3D shooter game, we can imagine the pilot of the ship will discuss with other people: it can be teammates, enemies or even the ship's computer. We will use a message system to display those messages, along with a caption of the speaking character face.
 
 Our message system will be, in a way, similar to the wave system we already have. We will create a xml file containning the messages' content and the time they will be displayed. The lesson will start with that.
+
+## Requierements
+
+In this lesson, you are supposed to know how to create a sprite font. If it is not the case, please refer to the following 2D tutorial lesson:  
+
+|   Sum up                |     Content                                                           |       Link                      |
+| ----------------------- | --------------------------------------------------------------------- | ------------------------------- |
+| Working with SpriteFonts| How to use fonts and text                                             | [2D games chapter 16](https://docs.monogame.net/articles/tutorials/building_2d_games/16_working_with_spritefonts/index.html)  |
 
 ## The messages data
 
@@ -36,51 +46,51 @@ Let's now create a file `Level0Messages.xml` in our main's project Content folde
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <XnaContent>
-	<Asset Type="Tutorial_Data.MessageData[]">
-		<Item>
-			<id>0</id>
-			<time>1.0</time>
-			<duration>2.0</duration>
-			<portrait>pilot</portrait>
-			<message>Ok Robot! What do we destroy today?</message>
-		</Item>
-		<Item>
-			<id>0</id>
-			<time>3.0</time>
-			<duration>3.0</duration>
-			<portrait>robot</portrait>
-			<message>The motherboard has been overtaken by agressive malignant programs. Unfortunalely, they threaten both the system's data and our corporeal integrity.</message>
-		</Item>
-		<Item>
-			<id>0</id>
-			<time>6.0</time>
-			<duration>2.5</duration>
-			<portrait>robot</portrait>
-			<message>I recommand a cautious approach so we can keep the ship's repairs to a minimum.</message>
-		</Item>
-		<Item>
-			<id>0</id>
-			<time>8.5</time>
-			<duration>2.0</duration>
-			<portrait>pilot</portrait>
-			<message>What are you useful for if not repairing the ship?</message>
-		</Item>
-		<Item>
-			<id>0</id>
-			<time>10.5</time>
-			<duration>3.0</duration>
-			<portrait>robot</portrait>
-			<message>My language subsystems also fit for philosophical dissertation and metaphysical inquiries.</message>
-		</Item>
-		<Item>
-			<id>0</id>
-			<time>13.5</time>
-			<duration>2.0</duration>
-			<portrait>pilot</portrait>
-			<message>Not interested. Let's rock!</message>
-		</Item>
+  <Asset Type="Tutorial_Data.MessageData[]">
+    <Item>
+      <id>0</id>
+      <time>1.0</time>
+      <duration>2.0</duration>
+      <portrait>pilot</portrait>
+      <message>Ok Robot! What do we destroy today?</message>
+    </Item>
+    <Item>
+      <id>0</id>
+      <time>3.0</time>
+      <duration>3.0</duration>
+      <portrait>robot</portrait>
+      <message>The motherboard has been overtaken by agressive malignant programs. Unfortunalely, they threaten both the system's data and our corporeal integrity.</message>
+    </Item>
+    <Item>
+      <id>0</id>
+      <time>6.0</time>
+      <duration>2.5</duration>
+      <portrait>robot</portrait>
+      <message>I recommand a cautious approach so we can keep the ship's repairs to a minimum.</message>
+    </Item>
+    <Item>
+      <id>0</id>
+      <time>8.5</time>
+      <duration>2.0</duration>
+      <portrait>pilot</portrait>
+      <message>What are you useful for if not repairing the ship?</message>
+    </Item>
+    <Item>
+      <id>0</id>
+      <time>10.5</time>
+      <duration>3.0</duration>
+      <portrait>robot</portrait>
+      <message>My language subsystems also fit for philosophical dissertation and metaphysical inquiries.</message>
+    </Item>
+    <Item>
+      <id>0</id>
+      <time>13.5</time>
+      <duration>2.0</duration>
+      <portrait>pilot</portrait>
+      <message>Not interested. Let's rock!</message>
+    </Item>
 
-	</Asset>
+  </Asset>
 </XnaContent>
 ```
 
@@ -134,6 +144,7 @@ We will tackle the `DisplayedCharacter` enum and the `Game1.DisplayMessage` func
 Once we have the message data, we need a place to display it. We will create a `DialogBox.cs` class that will be used to display the messages and the character's face.
 
 Please be sure you have imported in the MBCB all resources needed for the dialog box:
+
 - The dialog box texture (a simple rectangle): `DialogBox.png`
 - The character's face textures: `pilot.png` and `robot.png`
 
@@ -142,6 +153,7 @@ You also need to create in the MGCB a new `Arial.spritefont` file, so we can use
 ### Dialog box content and loading
 
 Our dialog box will be able to:
+
 - Display a written message with a font
 - Display a character's face
 - Be visible or not
@@ -239,7 +251,9 @@ The `DisplayMessage` function will used by the `Game1` class to setup the `Dialo
 
 ### Drawing the dislog box
 
-Contrary to what we did until now, we will use 2D rendering to draw the dialog box. It will be displayed above our 3D scene - so will be drawn last. With MonoGame, as you already know form the Basic 2D Tutorial, 2D elements are drawn with the `Spritebatch`. That is why the dialog box's `Draw` function and its related functions will use `Spritebatch` as a parameter.
+Contrary to what we did until now, we will use 2D rendering to draw the dialog box. It will be displayed above our 3D scene - so will be drawn last. 
+
+With MonoGame, as you already know form the Basic 2D Tutorial, 2D elements are drawn with the `Spritebatch`. That is why the dialog box's `Draw` function and its related functions will use `Spritebatch` as a parameter.
 
 ```csharp
   ...
@@ -438,7 +452,7 @@ Test the game now. It works... but it seems the rendering is completely broken. 
 
 ### Fixing spritebatch issues
 
-The problem is that we are using the `Spritebatch` to draw the dialog box, it changes some values in the `GraphicsDevice`. More precisely, we are not resetting the `SamplerState` (which manage texture repetition) and `DepthStencilState` (which manage Deapth, so superposition) to their default 3D rendering values. We will fix that by adding two lines of code after the call to the `Spritebatch`.
+The problem is that we are using the `Spritebatch` to draw the dialog box, it silently changes some values in the `GraphicsDevice`. More precisely, we are not resetting the `SamplerState` (which manage texture repetition) and `DepthStencilState` (which manage depth, so superposition) to their default 3D rendering values. We will fix that by adding two lines of code after the call to the `Spritebatch`.
 
 ```csharp
   protected override void Draw(GameTime gameTime)
@@ -459,6 +473,10 @@ That's it! Now the dialog box is displayed correctly and the game is back to nor
 
 ## Conclusion
 
-We have now a message system that can be used to display messages in the game. Even if text is not mandatory in games, narration can add a whole layer of involvement to players that are sensible to it. What is super cool is that the timing of the messages is independant from the timing of the waves. It could allow us to have our characters discuss while the player is fighting.
+We have now a message system that can be used to display messages in the game. 
+
+![Dialog box](images/ch15_final-screen.png)
+
+Even if text is not mandatory in games, narration can add a whole layer of involvement to players that are sensible to it. What is super cool is that the timing of the messages is independant from the timing of the waves. It could allow us to have our characters discuss while the player is fighting.
 
 We are nearing the end of this tutorial. In the next steps, we will add a main menu and a game over screen, which will wrap up our entire game.
