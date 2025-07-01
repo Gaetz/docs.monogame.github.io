@@ -5,6 +5,8 @@ description: Refactor the game class in order to create a scene system.
 
 # Step 16: Scene refactoring
 
+## Objective
+
 We call scene is a specific mode of gameplay in a video game. For example, a game can have a main menu scene (which we will call `SceneMenu`), a game over scene (`SceneGameOver`), and a gameplay scene (`SceneGame`). Each scene can have its own set of rules, graphics, and sounds. The game can switch between these scenes in function of the game situation.
 
 In this step, we will refactor the game class in order to allow our game to have different scenes. This will be a necessary operation to implement the main menu and the game over scenes in the next step.
@@ -42,6 +44,7 @@ The `SceneGame` class will contain all the game logic, that was previously in th
 This will cause some trouble: some functions from other classes reference the `Game1` class in order to call functions managed a level above. For instance, the `Player` calls the `GameOver` function to finish the game. Thus, we will update all the classes that reference the `Game1` class to use the `SceneGame` class instead.
 
 For `Player.cs`:
+
 ```csharp
 internal class Player : Entity
 {
@@ -57,6 +60,7 @@ internal class Player : Entity
 ```
 
 For `Enemy.cs`:
+
 ```csharp
 internal class Enemy : Entity
 {
@@ -77,6 +81,7 @@ internal class Enemy : Entity
 ```
 
 For `Wave.cs`:
+
 ```csharp
     ...
     public void Launch(SceneGame game)
@@ -98,6 +103,7 @@ For `Wave.cs`:
 ```
 
 For `Message.cs`:
+
 ```csharp
     ...
     public void Launch(SceneGame game)
@@ -109,7 +115,7 @@ For `Message.cs`:
 
 ### The SceneGame class
 
-Create the `SceneGame.cs` file. The `SceneGame` class will implement the `Scene` interface and basically contain everything we have coded so far in the `Game1` class. Additionally, it will countain a reference to the `Game1` class in order to call the `GameOver` ) function.
+Create the `SceneGame.cs` file. The `SceneGame` class will implement the `Scene` interface and basically contain everything we have coded so far in the `Game1` class. Additionally, it will countain a reference to the `Game1` class in order to call the `GameOver` function.
 
 The (very long) following code will show the implementation. Use it as a reference if your code do not compiles:
 
@@ -526,11 +532,10 @@ As you can see, we start the game and directly switch to the `SceneGame`. I have
 
 For now, we have commented out the `SceneMenu` and `SceneGameOver` classes. We will implement them in the next step.
 
-Test the game: you should have exactly the same result as before.
+Test the game: you should have exactly the same behaviour as before.
 
 ## Conclusion
 
 In this lesson, we have refactored the game so it can use a scene system. We have created the `Scene` interface and the `SceneGame` class, which contains all the game logic. We have also created a simple scene management system in the `Game1` class.
 
 In the next step, we will implement the main menu and the game over scenes.
-

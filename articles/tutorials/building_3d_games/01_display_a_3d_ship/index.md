@@ -624,7 +624,6 @@ In our code, we compute the world matrix in the `Update` function:
 ```csharp
     private Matrix world;
 
-```csharp
     public void Update(double dt)
     {
         world = Matrix.CreateScale(scale) 
