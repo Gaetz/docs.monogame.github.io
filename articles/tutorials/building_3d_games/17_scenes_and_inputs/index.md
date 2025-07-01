@@ -75,38 +75,39 @@ In order to switch from the menu to the game scene, we need to ba able to detect
 
 ### Managing pressed keys
 
-We can distinguish two ways to press a key: holding it dowm (we will call `IsKeyDown` the function that detect it) and pressing it, which will only detect the first frame when the key is pressed (we will call it `IsKeyPressed`). To make this distinction, we need to keep track of the current key state and the one from the frame before, which will be called `previousState`.
+We can distinguish two ways to press a key: holding it dowm (we will call `IsKeyDown` the function that detect it) and pressing it, which will only detect the first frame when the key is pressed (we will call it `IsKeyPressed`). To make this distinction, we need to keep track of the current key state and the one from the frame before, which will be called `previousKeyboardState`.
 
 Create the `InputManager.cs` file:
 
 ```csharp
 internal class InputManager
 {
-    KeyboardState previousState;
-    KeyboardState currentState;
+    KeyboardState previousKeyboardState;
+    KeyboardState currentKeyboardState;
     bool isPreviousStateNull = true;
 
-    public void Update(KeyboardState state)
+    public void Update()
     {
-        currentState = state;
+        KeyboardState state = Keyboard.GetState();
+        currentKeyboardState = state;
     }
 
     public void EndUpdate()
     {
-        previousState = currentState;
+        previousKeyboardState = currentKeyboardState;
         isPreviousStateNull = false;
     }
 
     public bool IsKeyPressed(Keys key)
     {
-        return currentState.IsKeyDown(key) 
-            && previousState.IsKeyUp(key) 
+        return currentKeyboardState.IsKeyDown(key) 
+            && previousKeyboardState.IsKeyUp(key) 
             && !isPreviousStateNull;
     }
 
     public bool IsKeyDown(Keys key)
     {
-        return currentState.IsKeyDown(key);
+        return currentKeyboardState.IsKeyDown(key);
     }
 }
 ```
@@ -138,12 +139,13 @@ internal class SceneGameOver : Scene
 
     public void Update(double dt, GraphicsDevice graphicsDevice)
     {
-        KeyboardState state = Keyboard.GetState();
-        inputManager.Update(state);
+        inputManager.Update();
+
         if (inputManager.IsKeyPressed(Keys.Enter) || inputManager.IsKeyPressed(Keys.Space))
         {
             game.GoToMenu();
         }
+
         inputManager.EndUpdate();
     }
 
@@ -221,8 +223,7 @@ internal class SceneMenu : Scene
 
     public void Update(double dt, GraphicsDevice graphicsDevice)
     {
-        KeyboardState state = Keyboard.GetState();
-        inputManager.Update(state);
+        inputManager.Update();
 
         ground.Update(dt);
         sky.Update(dt);
@@ -294,15 +295,343 @@ The solution is to separate the game actions from the input itself. In our input
 
 We could implement a very general system to manage any kind of action and input, but you have come this far in the tutorial and you have started to understand I do not like unnecessary abstractions. We will implement what just what we need: getting to know if an action is used, and testing the inputs for this action.
 
-### A more general input manager
+### More inputs
+
+First, we now need to support other imput systems. Here, we will support first player gamepad and mouse. We will handle them the same way we have handled the keyboard.
+
+We also change the input detection functions visibility to `private` and add some for button and mouse handling. Note that we will not manage mouse mouvement.
+
+```csharp
+internal class InputManager
+{
+    KeyboardState previousKeyboardState;
+    KeyboardState currentKeyboardState;
+    GamePadState previousGamePadState;
+    GamePadState currentGamePadState;
+    MouseState previousMouseState;
+    MouseState currentMouseState;
+
+    bool isPreviousStateNull = true;
+    bool isPreviousGamePadStateNull = true;
+    bool isPreviousMouseStateNull = true;
+
+    public void Update()
+    {
+        KeyboardState keyboardState = Keyboard.GetState();
+        GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
+        MouseState mouseState = Mouse.GetState();
+        currentKeyboardState = keyboardState;
+        currentGamePadState = gamePadState;
+        currentMouseState = mouseState;
+    }
+
+    public void EndUpdate()
+    {
+        previousKeyboardState = currentKeyboardState;
+        previousGamePadState = currentGamePadState;
+        previousMouseState = currentMouseState;
+        isPreviousStateNull = false;
+        isPreviousMouseStateNull = false;
+        isPreviousGamePadStateNull = false;
+    }
+
+    private bool IsKeyPressed(Keys key)
+    {
+        return currentKeyboardState.IsKeyDown(key) 
+            && previousKeyboardState.IsKeyUp(key) 
+            && !isPreviousStateNull;
+    }
+
+    private bool IsKeyDown(Keys key)
+    {
+        return currentKeyboardState.IsKeyDown(key);
+    }
+
+    private bool IsButtonPressed(Buttons button)
+    {
+        return currentGamePadState.IsButtonDown(button) 
+            && previousGamePadState.IsButtonUp(button) 
+            && !isPreviousGamePadStateNull;
+    }
+
+    private bool IsButtonDown(Buttons button)
+    {
+        return currentGamePadState.IsButtonDown(button);
+    }
+
+    private bool IsMouseLeftButtonPressed()
+    {
+        return currentMouseState.LeftButton == ButtonState.Pressed 
+        && previousMouseState.LeftButton == ButtonState.Released 
+        && !isPreviousMouseStateNull;
+    }
+
+    private bool IsMouseLeftButtonDown()
+    {
+        return currentMouseState.LeftButton == ButtonState.Pressed;
+    }
+    ...
+}
+```
+
+### Differentiating actions and inputs
+
+We made the input detection functions `private`. The goal is to no longer use them outside our `InputManager` class.
+
+Instead, we will create `public` "action" function that will correspond to the different input we want to be associated with one action. For instance, going up will be associated with holding the W, Z or Up keys, or maintaining the gamepad's left thumb stick, or its up directional pad button.
+
+```csharp
+internal class InputManager
+{
+    ...
+    public bool IsValidationActionPressed()
+    {
+        return IsKeyPressed(Keys.Enter) || IsKeyPressed(Keys.Space) 
+            || IsButtonPressed(Buttons.A) || IsButtonPressed(Buttons.RightShoulder) 
+            || IsButtonPressed(Buttons.RightTrigger);
+    }
+
+    public bool IsShootActionPressed()
+    {
+        return IsMouseLeftButtonPressed() || IsButtonPressed(Buttons.RightTrigger)
+            || IsButtonPressed(Buttons.RightShoulder) || IsButtonPressed(Buttons.A)
+            || IsKeyPressed(Keys.Space) || IsKeyPressed(Keys.Enter);
+    }
+
+    public bool IsUpActionDown() 
+    {
+        return IsKeyDown(Keys.W) || IsKeyDown(Keys.Up) || IsKeyDown(Keys.Z)
+            || IsButtonDown(Buttons.DPadUp) || IsButtonDown(Buttons.LeftThumbstickUp);
+    }
+
+    public bool IsDownActionDown() 
+    {
+        return IsKeyDown(Keys.S) || IsKeyDown(Keys.Down) 
+            || IsButtonDown(Buttons.DPadDown) || IsButtonDown(Buttons.LeftThumbstickDown);
+    }
+
+    public bool IsLeftActionDown() 
+    {
+        return IsKeyDown(Keys.A) || IsKeyDown(Keys.Left) || IsKeyDown(Keys.Q)
+            || IsButtonDown(Buttons.DPadLeft) || IsButtonDown(Buttons.LeftThumbstickLeft);
+    }
+
+    public bool IsRightActionDown() 
+    {
+        return IsKeyDown(Keys.D) || IsKeyDown(Keys.Right) 
+            || IsButtonDown(Buttons.DPadRight) || IsButtonDown(Buttons.LeftThumbstickRight);
+    }
+
+    public bool IsUpActionPressed()
+    {
+        return IsKeyPressed(Keys.W) || IsKeyPressed(Keys.Up) || IsKeyPressed(Keys.Z)
+            || IsButtonPressed(Buttons.DPadUp) || IsButtonPressed(Buttons.LeftThumbstickUp);
+    }
+
+    public bool IsDownActionPressed()
+    {
+        return IsKeyPressed(Keys.S) || IsKeyPressed(Keys.Down)
+            || IsButtonPressed(Buttons.DPadDown) || IsButtonPressed(Buttons.LeftThumbstickDown);
+    }
+
+    public bool IsLeftActionPressed()
+    {
+        return IsKeyPressed(Keys.A) || IsKeyPressed(Keys.Left) || IsKeyPressed(Keys.Q)
+            || IsButtonPressed(Buttons.DPadLeft) || IsButtonPressed(Buttons.LeftThumbstickLeft);
+    }
+
+    public bool IsRightActionPressed()
+    {
+        return IsKeyPressed(Keys.D) || IsKeyPressed(Keys.Right)
+            || IsButtonPressed(Buttons.DPadRight) || IsButtonPressed(Buttons.LeftThumbstickRight);
+    }
+}
+```
+
+We have thus defined actions for:
+
+- Menu validation
+- Shoot action
+- Up, down, left and right directions held down for the ship maneuvers
+- Up and down buttons pressed for menus
+- Left and right buttons pressed are not used but it does not hurt to define them
+
+Each action can be triggered by the keyboard, the mouse or the gamepad.
+
+### Updating menu and game over scenes
+
+Because we changed the input visibility functions, we now have to use our new action functions in the `SceneMenu` and `SceneGameOver`. The changes are easy to understand.
+
+For the `SceneMenu`:
+
+```csharp
+internal class SceneMenu : Scene
+{
+    ...
+    public void Update(double dt, GraphicsDevice graphicsDevice)
+    {
+        inputManager.Update();
+
+        ground.Update(dt);
+        sky.Update(dt);
+
+        timeCounter += dt;
+        float x = (float)Math.Cos(timeCounter);
+        ship.Position = new Vector3(x * 50f, 0, 0);
+        ship.Orientation = Quaternion.CreateFromAxisAngle(Vector3.Forward, x * -0.2f) * SHIP_DEFAULT_ORIENTATION;
+        ship.Update(dt);
+
+        if (inputManager.IsDownActionPressed())
+        { 
+            menuItem = (menuItem + 1) % 2;
+        }
+        if (inputManager.IsUpActionPressed())
+        {
+            menuItem = (menuItem - 1) % 2;
+        }
+        if (inputManager.IsValidationActionPressed())
+        {
+            if (menuItem == 0)
+            {
+                game.Start();
+            }
+            else
+            {
+                game.Exit();
+            }
+        }
+
+        inputManager.EndUpdate();
+    }
+    ...
+}
+```
+
+We just call `InputManager.IsDownActionPressed`, `InputManager.IsUpActionPressed` and `InputManager.IsValidationActionPressed` instead of the previous input functions.
+
+For the `SceneGameOver`:
+
+```csharp
+internal class SceneGameOver : Scene
+{
+    ...
+    public void Update(double dt, GraphicsDevice graphicsDevice)
+    {
+        inputManager.Update();
+
+        if (inputManager.IsValidationActionPressed())
+        {
+            game.GoToMenu();
+        }
+
+        inputManager.EndUpdate();
+    }
+    ...
+}
+```
+
+### Updating the player
+
+Finally, in the `SceneGame`, inputs are managed by the player - if we exemple the `PlayerAim` move that we will not change here. The `Player` class needs to be updated:
+
+```csharp
+internal class Player : Entity
+{
+    ...
+    private void HandlingInput(double dt)
+    {
+        if (inputManager.IsUpActionDown())
+        {
+            speedY += ACCELERATION_RATE * (float)dt;
+        }
+        if (inputManager.IsDownActionDown())
+        {
+            speedY -= ACCELERATION_RATE * (float)dt;
+        }
+        if (MathF.Abs(speedY) > MAX_SPEED)
+        {
+            speedY = MathF.Sign(speedY) * MAX_SPEED;
+        }
 
 
+        if (inputManager.IsLeftActionDown())
+        {
+            speedX -= ACCELERATION_RATE * (float)dt;
+        }
+        if (inputManager.IsRightActionDown())
+        {
+            speedX += ACCELERATION_RATE * (float)dt;
+        }
+        if (MathF.Abs(speedX) > MAX_SPEED)
+        {
+            speedX = MathF.Sign(speedX) * MAX_SPEED;
+        }
 
 
+        position += new Vector3((float)(speedX * dt), (float)(speedY * dt), 0);
+        if (position.X < BOUNDS.Left)
+        {
+            position.X = BOUNDS.Left;
+            speedX = 0;
+        } 
+        else if (position.X > BOUNDS.Right)
+        {
+            position.X = BOUNDS.Right;
+            speedX = 0;
+        }
+        if (position.Y < BOUNDS.Top)
+        {
+            position.Y = BOUNDS.Top;
+            speedY = 0;
+        }
+        else if (position.Y > BOUNDS.Bottom)
+        {
+            position.Y = BOUNDS.Bottom;
+            speedY = 0;
+        }
 
+        speedX *= DECELERATION_RATE;
+        speedY *= DECELERATION_RATE;
+    }
+    ...
+
+    public override void Update(double dt)
+    {
+        inputManager.Update();
+
+        HandlingInput(dt);
+        HandleAiming();
+
+        // Handle shooting
+        if (inputManager.IsShootActionPressed() && cooldownTimer <= 0)
+        {
+            shootSound.Play();
+            if (projectileNumber == 1)
+            {
+                game.AddProjectile(position, orientation, 1000.0f);
+            }
+            else
+            {
+                CreateProjectiles();
+            }
+            cooldownTimer = COOLDOWN;
+        }
+        cooldownTimer -= (float)dt;
+
+        base.Update(dt);
+        boundingBox = CreateBoundingBox();
+        laserAim.Update(dt);
+
+        inputManager.EndUpdate();
+    }
+    ...
+}
+```
+
+That's it! If you test the game... it should not be different. Except this time you can use a gamepad or easily update your input bindings, thanks to the action functions.
 
 ## Conclusion
 
-With the two previous steps, we implemented scene management and our new `SceneMenu` and `SceneGameOver`.
+With the two previous steps, we implemented scene management and our new `SceneMenu` and `SceneGameOver`, and allow the player to control the game with different kinds of input.
 
 In the next and last lesson, we will wrap up everything and add the little small details that will make our demo game shine!
