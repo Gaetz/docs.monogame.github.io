@@ -479,4 +479,14 @@ We have now a message system that can be used to display messages in the game.
 
 Even if text is not mandatory in games, narration can add a whole layer of involvement to players that are sensible to it. What is super cool is that the timing of the messages is independant from the timing of the waves. It could allow us to have our characters discuss while the player is fighting.
 
+Note that this message system implementation is a super simple UI. If you want to go further and implement a full UI with many options regarding the size and resolution of your game, please refer to the following chapters in the basic 2D tutorial:
+
+|   Sum up                     |     Content                                                           |       Link                      |
+| ---------------------------- | --------------------------------------------------------------------- | ------------------------------- |
+| User Interface Fundamentals  | Learn the basics of user interface design in MonoGame                 | [2D games chapter 19](https://docs.monogame.net/articles/tutorials/building_2d_games/19_user_interface_fundamentals/index.html)  |
+| Implementing UI with Gum     | Use Gum, a specialized framework that simplifies many aspects of UI   | [2D games chapter 20](https://docs.monogame.net/articles/tutorials/building_2d_games/20_implementing_ui_with_gum/index.html)  |
+| Customizing Gum UI           | Customize the UI graphics with Gum                                    | [2D games chapter 21](https://docs.monogame.net/articles/tutorials/building_2d_games/21_customizing_gum_ui/index.html)  |
+
+You can easily keep our UI timing system while reimplementing the message system with Gum.
+
 We are nearing the end of this tutorial. In the next steps, we will add a main menu and a game over screen, which will wrap up our entire game.

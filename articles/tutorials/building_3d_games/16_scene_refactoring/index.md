@@ -538,4 +538,11 @@ Test the game: you should have exactly the same behaviour as before.
 
 In this lesson, we have refactored the game so it can use a scene system. We have created the `Scene` interface and the `SceneGame` class, which contains all the game logic. We have also created a simple scene management system in the `Game1` class.
 
-In the next step, we will implement the main menu and the game over scenes.
+If you want to complete our scene interface implementation, which was written in its simplest shape here, you can refer to the basic 2D tutorial:
+
+|   Sum up                |     Content                                                           |       Link                      |
+| ----------------------- | --------------------------------------------------------------------- | ------------------------------- |
+| Scene management        | The way to create different game scenes (menu, gameplay...)           | [2D games chapter 17](https://docs.monogame.net/articles/tutorials/building_2d_games/17_scenes/index.html)  |
+
+
+In the next step, we will implement the main menu and the game over scenes. Additionnaly, we will ensure portability of our game by allowing to use other inputs along with the keyboard.
