@@ -114,3 +114,256 @@ In the box's vertices creation, we have change the *x* value from *64f* to *60f*
 You can work on collisions for all your game objects. Collisions, when done right, will make your game feels more physical, more grounded in reality.
 
 ### Expanding the level
+
+Until now, we have two waves of enemies, separated by a power up. You can create other waves with other enemy patterns, main phase timing. The waves system even allows to have several waves present on screen at the same time, provided you time the wave with close enough timings. You can also add commentaries from the robot or from our dauntless pilot. 
+
+You can also imagine to create other kind of enemies, with different patterns - that is to say, a different internal state machine. A level boss, with infinite (-1) main phase duration, could be such an enemy.
+
+Here are two additional waves in the `Level0.xml` file:
+
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<XnaContent>
+    <Asset Type="Tutorial_Data.WaveData[]">
+        <Item>
+            <id>0</id>
+            <time>12</time>
+            <elementNumber>3</elementNumber>
+
+            <element0Type>enemy</element0Type>
+            <element0EnterSide>Left</element0EnterSide>
+            <element0ExitSide>Right</element0ExitSide>
+            <element0X>-200</element0X>
+            <element0Y>0</element0Y>
+            <element0Z>-750</element0Z>
+            <element0Duration>5.0</element0Duration>
+
+            <element1Type>enemy</element1Type>
+            <element1EnterSide>Left</element1EnterSide>
+            <element1ExitSide>Right</element1ExitSide>
+            <element1X>200</element1X>
+            <element1Y>0</element1Y>
+            <element1Z>-750</element1Z>
+            <element1Duration>5.0</element1Duration>
+
+            <element2Type>enemy</element2Type>
+            <element2EnterSide>Left</element2EnterSide>
+            <element2ExitSide>Right</element2ExitSide>
+            <element2X>0</element2X>
+            <element2Y>0</element2Y>
+            <element2Z>-750</element2Z>
+            <element2Duration>5.0</element2Duration>
+
+            <element3Type>none</element3Type>
+            <element3EnterSide>Left</element3EnterSide>
+            <element3ExitSide>Right</element3ExitSide>
+            <element3X>0</element3X>
+            <element3Y>0</element3Y>
+            <element3Z>0</element3Z>
+            <element3Duration>5.0</element3Duration>
+
+            <element4Type>none</element4Type>
+            <element4EnterSide>Left</element4EnterSide>
+            <element4ExitSide>Right</element4ExitSide>
+            <element4X>0</element4X>
+            <element4Y>0</element4Y>
+            <element4Z>0</element4Z>
+            <element4Duration>5.0</element4Duration>
+        </Item>
+        
+        <Item>
+            <id>1</id>
+            <time>24</time>
+            <elementNumber>1</elementNumber>
+
+            <element0Type>powerup</element0Type>
+            <element0EnterSide>Left</element0EnterSide>
+            <element0ExitSide>Right</element0ExitSide>
+            <element0X>0</element0X>
+            <element0Y>0</element0Y>
+            <element0Z>-500</element0Z>
+            <element0Duration>5.0</element0Duration>
+
+            <element1Type>none</element1Type>
+            <element1EnterSide>Left</element1EnterSide>
+            <element1ExitSide>Right</element1ExitSide>
+            <element1X>200</element1X>
+            <element1Y>0</element1Y>
+            <element1Z>-750</element1Z>
+            <element1Duration>5.0</element1Duration>
+
+            <element2Type>none</element2Type>
+            <element2EnterSide>Left</element2EnterSide>
+            <element2ExitSide>Right</element2ExitSide>
+            <element2X>0</element2X>
+            <element2Y>0</element2Y>
+            <element2Z>-750</element2Z>
+            <element2Duration>5.0</element2Duration>
+
+            <element3Type>none</element3Type>
+            <element3EnterSide>Left</element3EnterSide>
+            <element3ExitSide>Right</element3ExitSide>
+            <element3X>0</element3X>
+            <element3Y>0</element3Y>
+            <element3Z>0</element3Z>
+            <element3Duration>5.0</element3Duration>
+
+            <element4Type>none</element4Type>
+            <element4EnterSide>Left</element4EnterSide>
+            <element4ExitSide>Right</element4ExitSide>
+            <element4X>0</element4X>
+            <element4Y>0</element4Y>
+            <element4Z>0</element4Z>
+            <element4Duration>5.0</element4Duration>
+        </Item>
+        
+        <Item>
+            <id>2</id>
+            <time>27</time>
+            <elementNumber>3</elementNumber>
+
+            <element0Type>enemy</element0Type>
+            <element0EnterSide>Bottom</element0EnterSide>
+            <element0ExitSide>Bottom</element0ExitSide>
+            <element0X>-200</element0X>
+            <element0Y>0</element0Y>
+            <element0Z>-750</element0Z>
+            <element0Duration>5.0</element0Duration>
+
+            <element1Type>enemy</element1Type>
+            <element1EnterSide>Bottom</element1EnterSide>
+            <element1ExitSide>Bottom</element1ExitSide>
+            <element1X>200</element1X>
+            <element1Y>0</element1Y>
+            <element1Z>-750</element1Z>
+            <element1Duration>5.0</element1Duration>
+
+            <element2Type>enemy</element2Type>
+            <element2EnterSide>Bottom</element2EnterSide>
+            <element2ExitSide>Bottom</element2ExitSide>
+            <element2X>0</element2X>
+            <element2Y>0</element2Y>
+            <element2Z>-750</element2Z>
+            <element2Duration>5.0</element2Duration>
+
+            <element3Type>none</element3Type>
+            <element3EnterSide>Bottom</element3EnterSide>
+            <element3ExitSide>Bottom</element3ExitSide>
+            <element3X>0</element3X>
+            <element3Y>0</element3Y>
+            <element3Z>0</element3Z>
+            <element3Duration>5.0</element3Duration>
+
+            <element4Type>none</element4Type>
+            <element4EnterSide>Bottom</element4EnterSide>
+            <element4ExitSide>Bottom</element4ExitSide>
+            <element4X>0</element4X>
+            <element4Y>0</element4Y>
+            <element4Z>0</element4Z>
+            <element4Duration>5.0</element4Duration>
+        </Item>
+
+        <Item>
+            <id>3</id>
+            <time>37</time>
+            <elementNumber>5</elementNumber>
+
+            <element0Type>enemy</element0Type>
+            <element0EnterSide>Top</element0EnterSide>
+            <element0ExitSide>Bottom</element0ExitSide>
+            <element0X>-200</element0X>
+            <element0Y>50</element0Y>
+            <element0Z>-750</element0Z>
+            <element0Duration>5.0</element0Duration>
+
+            <element1Type>enemy</element1Type>
+            <element1EnterSide>Top</element1EnterSide>
+            <element1ExitSide>Bottom</element1ExitSide>
+            <element1X>200</element1X>
+            <element1Y>-50</element1Y>
+            <element1Z>-750</element1Z>
+            <element1Duration>5.0</element1Duration>
+
+            <element2Type>enemy</element2Type>
+            <element2EnterSide>Top</element2EnterSide>
+            <element2ExitSide>Bottom</element2ExitSide>
+            <element2X>0</element2X>
+            <element2Y>0</element2Y>
+            <element2Z>-750</element2Z>
+            <element2Duration>5.0</element2Duration>
+
+            <element3Type>enemy</element3Type>
+            <element3EnterSide>Top</element3EnterSide>
+            <element3ExitSide>Bottom</element3ExitSide>
+            <element3X>-100</element3X>
+            <element3Y>25</element3Y>
+            <element3Z>-750</element3Z>
+            <element3Duration>5.0</element3Duration>
+
+            <element4Type>enemy</element4Type>
+            <element4EnterSide>Top</element4EnterSide>
+            <element4ExitSide>Bottom</element4ExitSide>
+            <element4X>100</element4X>
+            <element4Y>-25</element4Y>
+            <element4Z>-750</element4Z>
+            <element4Duration>5.0</element4Duration>
+        </Item>
+
+        <Item>
+            <id>4</id>
+            <time>47</time>
+            <elementNumber>5</elementNumber>
+
+            <element0Type>enemy</element0Type>
+            <element0EnterSide>Top</element0EnterSide>
+            <element0ExitSide>Bottom</element0ExitSide>
+            <element0X>-200</element0X>
+            <element0Y>-50</element0Y>
+            <element0Z>-750</element0Z>
+            <element0Duration>5.0</element0Duration>
+
+            <element1Type>enemy</element1Type>
+            <element1EnterSide>Top</element1EnterSide>
+            <element1ExitSide>Bottom</element1ExitSide>
+            <element1X>200</element1X>
+            <element1Y>50</element1Y>
+            <element1Z>-750</element1Z>
+            <element1Duration>5.0</element1Duration>
+
+            <element2Type>enemy</element2Type>
+            <element2EnterSide>Top</element2EnterSide>
+            <element2ExitSide>Bottom</element2ExitSide>
+            <element2X>0</element2X>
+            <element2Y>0</element2Y>
+            <element2Z>-750</element2Z>
+            <element2Duration>5.0</element2Duration>
+
+            <element3Type>enemy</element3Type>
+            <element3EnterSide>Top</element3EnterSide>
+            <element3ExitSide>Bottom</element3ExitSide>
+            <element3X>-100</element3X>
+            <element3Y>-25</element3Y>
+            <element3Z>-750</element3Z>
+            <element3Duration>5.0</element3Duration>
+
+            <element4Type>enemy</element4Type>
+            <element4EnterSide>Top</element4EnterSide>
+            <element4ExitSide>Bottom</element4ExitSide>
+            <element4X>100</element4X>
+            <element4Y>25</element4Y>
+            <element4Z>-750</element4Z>
+            <element4Duration>5.0</element4Duration>
+        </Item>
+    </Asset>
+</XnaContent>
+```
+
+### Other ideas
+
+This is just a beginning. In this tutorial, we just set up the main mecanic of our game. It's your turn to think about the variation you want to give to your player, to make sure they have a wonderful experience playing your game. Now you know how to make 3D games: a new dimension of creation literaly just opened up.
+
+## Conclusion and next steps
+
+Congratulations! You have reach the end of the MonoGame's basic 3D tutorial. I hope you learned useful things and realize how a convenient framework monogame is - And I mean it! for I have tested dozens of frameworks and engines. If you have a dream 3D game project, well, go for it. You will learn while making it. If you are not adamant on the kind of game you want to create, I would advise you to create some small and simple gameplay prototypes, so you get use to the 3D thinking. Chances are one of your prototypes will feel funnier than the other to pmake, and you will create a game out of it!
+
+As for myself...
