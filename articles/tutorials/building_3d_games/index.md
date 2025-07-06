@@ -48,24 +48,24 @@ This tutorial is divided in 17 steps plus on conclusion, which all will tackle a
 
 |   Sum up                        |     Content                                                               |       Link           |
 | ------------------------------- | ------------------------------------------------------------------------- | -------------------- |
-| Step 1: Display a 3D ship       | Load and display the 3D model of a space ship, using the ContentManager   | Link to lesson 01    |
-| Step 2: Moving the ship         | Using Vector3 and inputs to move the ship, with 3D velocity               | Link to lesson 02    |
-| Step 3: Aim and rotate          | Display a Quad and use rotations with Matrices and Quaternions            | Link to lesson 03    |
-| Step 4: Shooting projectiles    | Spawn moving projectiles and use Inheritance for the game's entities      | Link to lesson 04    |
-| Step 5: Projectiles' collisions | Handling projectiles collisions on a basic Enemy class                    | Link to lesson 05    |
-| Step 6: A power up              | Colliding the player with a power up will improve it's shooting power     | Link to lesson 06    |
-| Step 7: A moving enemy          | Make the enemy a State Machine to organize its entry and exit             | Link to lesson 07    |
-| Step 8: A shooting enemy        | Extend the enemy's State machine to make it shoot at the player           | Link to lesson 08    |
-| Step 9: Waves of enemy          | Using a data library and XML parsing to setup timed waves of enemies      | Link to lesson 09    |
-| Step 10: Particles              | Reuse our Quad class to spawn particules, thanks to a Particle system     | Link to lesson 10    |
-| Step 11: Sounds and music       | Make our game more impactful adding sounds and a background music         | Link to lesson 11    |
-| Step 12: Graphics polishing     | Use further the BasicEffect to make the game feel for reactive            | Link to lesson 12    |
-| Step 13: Moving floor           | Enhance the game's graphics with a moving floor, to give a speed feeling  | Link to lesson 13    |
-| Step 14: Graphics polishing     | Use further the BasicEffect to make the game feel for reactive            | Link to lesson 14    |
-| Step 15: Conversation and 2D UI | Add a 2D UI on top of our 3D game in order to enable storytelling         | Link to lesson 15    |
-| Step 16: Scene refactoring      | Add a scene system to manage title screen and game over                   | Link to lesson 16    |
-| Step 17: Scenes and inputs      | Implement the other scenes and refactor input for better controls         | Link to lesson 17    |
-| Step 18: Going further          | Plenty of gameplay ideas to extend this game tutorial beyond!             | Link to lesson 18    |
+| Step 1: Display a 3D ship       | Load and display the 3D model of a space ship, using the ContentManager   | [Link to lesson 01](./01_display_a_3d_ship/index.md)    |
+| Step 2: Moving the ship         | Using Vector3 and inputs to move the ship, with 3D velocity               | [Link to lesson 02](./02_move_the_player/index.md)      |
+| Step 3: Aim and rotate          | Display a Quad and use rotations with Matrices and Quaternions            | [Link to lesson 03](./03_aim_and_rotate/index.md)       |
+| Step 4: Shooting projectiles    | Spawn moving projectiles and use Inheritance for the game's entities      | [Link to lesson 04](./04_shoot_projectiles/index.md)    |
+| Step 5: Projectiles' collisions | Handling projectiles collisions on a basic Enemy class                    | [Link to lesson 05](./05_projectile_collision/index.md) |
+| Step 6: A power up              | Colliding the player with a power up will improve it's shooting power     | [Link to lesson 06](./06_power_up/index.md)             |
+| Step 7: A moving enemy          | Make the enemy a State Machine to organize its entry and exit             | [Link to lesson 07](./07_a_moving_enemy/index.md)       |
+| Step 8: A shooting enemy        | Extend the enemy's State machine to make it shoot at the player           | [Link to lesson 08](./08_a_shooting_enemy/index.md)     |
+| Step 9: Waves of enemy          | Using a data library and XML parsing to setup timed waves of enemies      | [Link to lesson 09](./09_enemy_waves/index.md)          |
+| Step 10: Particles              | Reuse our Quad class to spawn particules, thanks to a Particle system     | [Link to lesson 10](./10_particles/index.md)            |
+| Step 11: Sounds and music       | Make our game more impactful adding sounds and a background music         | [Link to lesson 11](./11_sounds/index.md)               |
+| Step 12: Graphics polishing     | Use further the BasicEffect to make the game feel for reactive            | [Link to lesson 12](./12_entity_color_flash/index.md)   |
+| Step 13: Moving floor           | Enhance the game's graphics with a moving floor, to give a speed feeling  | [Link to lesson 13](./13_shifting_ground/index.md)      |
+| Step 14: Graphics polishing     | Use further the BasicEffect to make the game feel for reactive            | [Link to lesson 14](./14_laser_aim/index.md)            |
+| Step 15: Conversation and 2D UI | Add a 2D UI on top of our 3D game in order to enable storytelling         | [Link to lesson 15](./15_message_system/index.md)       |
+| Step 16: Scene refactoring      | Add a scene system to manage title screen and game over                   | [Link to lesson 16](./16_scene_refactoring/index.md)    |
+| Step 17: Scenes and inputs      | Implement the other scenes and refactor input for better controls         | [Link to lesson 17](./17_scenes_and_inputs/index.md)    |
+| Step 18: Finishing touches      | Last modifications and gameplay ideas to extend the game beyond!          | [Link to lesson 18](./18_finishing-touches/index.md)    |
 
 In case you need a reference, you can find the complete code for this tutorial om the following git reposotory: https://github.com/Gaetz/monogame-tutorial-3d
 
@@ -76,29 +76,30 @@ The solution is organized with one project by step. In each project, the classes
 All assets for the game are provided in a resource zipped folder. Make sure to unzip this folder somewhere on your computer before you start coding the project.
 
 Authoring:
+
 - Musics are created by [Bertrand Toupet](https://soundcloud.com/merune) 
 - The Beach Ball 3d asset and textures is from [RB Whitaker model library](http://rbwhitaker.wikidot.com/model-library)
 - 3D ships and sound effects are made by myself with Asset Forge and bfxr
 
-# About this documentation
+## About this documentation
 
-## Conventions Used in This Documentation
+### Conventions Used in This Documentation
 
 The following conventions are used in this documentation
 
-### Italics
+#### Italics
 
 *Italics* are used for emphasis and technical terms.
 
-### Highlights
+#### Highlights
 
 `Highlights` are used for paths such as file paths, including filenames, extensions and other critical information in the application of steps in a tutorial. These are similar to Inline code blocks as they stand out more in Markdown and require emphasis.
 
-### Inline Code Blocks
+#### Inline Code Blocks
 
 `Inline code` blocks are used for methods, functions, and variable names when they are discussed with the body a text paragraph.
 
-### Code Blocks
+#### Code Blocks
 
 ```cs
 // Example Code Block
@@ -107,7 +108,7 @@ public void Foo() { }
 
 Code blocks are used to show code examples with syntax highlighting
 
-## MonoGame
+### MonoGame
 
 If you ever have questions about MonoGame or would like to talk with other developers to share ideas or just hang out with us, you can find us in the various MonoGame communities below
 
@@ -117,7 +118,7 @@ If you ever have questions about MonoGame or would like to talk with other devel
 * [Reddit](https://www.reddit.com/r/monogame/)
 * [Facebook](https://www.facebook.com/monogamecommunity)
 
-# Note From Author
+## Note From Author
 
 > MonoGame (and its predecessor XNA) has been my first game framework, back in 2010 - and if we except the time I was coding in Basic on my high school TI-83 hand calculator. It suddenly opened the possibility to make the exact game I had in mind, instead of using tools that would take the design decisions for me. With MonoGame, I made my first game engine.
 >
@@ -129,10 +130,10 @@ If you ever have questions about MonoGame or would like to talk with other devel
 >
 > \- Gaëtan Blaise-Cazalet (Gaetz) - May 2025
 
-# Acknowledgements
+## Acknowledgements
 
 To the people who made and maintained XNA and MonoGame
 
 To the people that write books, talks, code examples and blog articles, for the knowledge shared
 
-To my friends and lovers, who watched me spending countless hours behind a computer screen, without asking too much questions about my mental sanity
+To my friends and lovers, who watched me spending countless hours behind a computer screen, without asking too much questions about my mental sanity.

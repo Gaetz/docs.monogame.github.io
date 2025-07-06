@@ -362,10 +362,16 @@ Here are two additional waves in the `Level0.xml` file:
 
 This is just a beginning. In this tutorial, we just set up the main mecanic of our game. It's your turn to think about the rules and variations you want to give to your player, to make sure they have a wonderful experience playing your game. Now you know how to make 3D games: a new dimension of creation literaly just opened up.
 
+## Packaging and publishing your game
+
+MonoGame allows you to create a game executable, that you can share with your players or sell on an online store. The details on how to do so were covered in the [Packaging Your Game for Distribution](https://docs.monogame.net/articles/tutorials/building_2d_games/25_packaging_game/index.html) article, so I will forward you to it :)
+
+If you want to share your game with the world, you could publish your game on the [Itch.io](https://itch.io/) platform, which is a great place to share your indie games. The [Publishing your game on Itch.io](https://docs.monogame.net/articles/tutorials/building_2d_games/26_publishing_game/index.html) article will help you to do so.
+
 ## Conclusion and next steps
 
-Congratulations! You have reach the end of the MonoGame's basic 3D tutorial. I hope you learned useful things and realize how a convenient framework MonoGame is - And I mean it, for I have tested dozens of frameworks and engines. If you have a dream 3D game project, well, go for it. You will learn while making it. If you are not adamant on the kind of game you want to create, I would advise you to create some small and simple gameplay prototypes, so you get use to the 3D thinking. Chances are one of your prototypes will feel funnier than the other to pmake, and you will create a game out of it!
+Congratulations! You have reach the end of the MonoGame's basic 3D tutorial. I hope you learned useful things and realize how a convenient framework MonoGame is - And I mean it, for I have tested dozens of frameworks and engines. If you have a dream 3D game project, well, go for it. You will learn while making it. If you are not adamant on the kind of game you want to create, I would advise you to create some small and simple gameplay prototypes, so you get use to the 3D thinking. Chances are one of your prototypes will feel funnier than the other to make, and you will create a game out of it!
 
 As for myself, I am glad to have accompany you until here. I did my best to create a tutorial that would be at the same time lightweight and informative. Of course, it is far from perfect. If you have suggestions about how to improve it, feel free to post an issue on the monogame documentation github.
 
-Farewell, I wish you a pleasant video game creation journez. See you on the way!
+Farewell, I wish you a pleasant video game creation journey. See you on the way!
