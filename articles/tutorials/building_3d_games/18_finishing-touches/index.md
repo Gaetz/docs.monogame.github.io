@@ -343,7 +343,7 @@ Here are two additional waves in the `Level0.xml` file:
             <element3ExitSide>Bottom</element3ExitSide>
             <element3X>-100</element3X>
             <element3Y>-25</element3Y>
-            <element3Z>-750</element3Z>
+            <element3Z>-750</element3 Z>
             <element3Duration>5.0</element3Duration>
 
             <element4Type>enemy</element4Type>
@@ -360,10 +360,12 @@ Here are two additional waves in the `Level0.xml` file:
 
 ### Other ideas
 
-This is just a beginning. In this tutorial, we just set up the main mecanic of our game. It's your turn to think about the variation you want to give to your player, to make sure they have a wonderful experience playing your game. Now you know how to make 3D games: a new dimension of creation literaly just opened up.
+This is just a beginning. In this tutorial, we just set up the main mecanic of our game. It's your turn to think about the rules and variations you want to give to your player, to make sure they have a wonderful experience playing your game. Now you know how to make 3D games: a new dimension of creation literaly just opened up.
 
 ## Conclusion and next steps
 
-Congratulations! You have reach the end of the MonoGame's basic 3D tutorial. I hope you learned useful things and realize how a convenient framework monogame is - And I mean it! for I have tested dozens of frameworks and engines. If you have a dream 3D game project, well, go for it. You will learn while making it. If you are not adamant on the kind of game you want to create, I would advise you to create some small and simple gameplay prototypes, so you get use to the 3D thinking. Chances are one of your prototypes will feel funnier than the other to pmake, and you will create a game out of it!
+Congratulations! You have reach the end of the MonoGame's basic 3D tutorial. I hope you learned useful things and realize how a convenient framework MonoGame is - And I mean it, for I have tested dozens of frameworks and engines. If you have a dream 3D game project, well, go for it. You will learn while making it. If you are not adamant on the kind of game you want to create, I would advise you to create some small and simple gameplay prototypes, so you get use to the 3D thinking. Chances are one of your prototypes will feel funnier than the other to pmake, and you will create a game out of it!
 
-As for myself...
+As for myself, I am glad to have accompany you until here. I did my best to create a tutorial that would be at the same time lightweight and informative. Of course, it is far from perfect. If you have suggestions about how to improve it, feel free to post an issue on the monogame documentation github.
+
+Farewell, I wish you a pleasant video game creation journez. See you on the way!
