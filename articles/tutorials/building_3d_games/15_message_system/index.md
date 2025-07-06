@@ -11,9 +11,9 @@ Let's add some narration in our game. In a 3D shooter game, we can imagine the p
 
 Our message system will be, in a way, similar to the wave system we already have. We will create a xml file containning the messages' content and the time they will be displayed. The lesson will start with that.
 
-## Requierements
-
-In this lesson, you are supposed to know how to create a sprite font. If it is not the case, please refer to the following 2D tutorial lesson:  
+> [!WARNING] Requirements
+>
+> In this lesson, you are supposed to know how to create a sprite font. If it is not the case, please refer to the following 2D tutorial lesson:  
 
 |   Sum up                |     Content                                                           |       Link                      |
 | ----------------------- | --------------------------------------------------------------------- | ------------------------------- |

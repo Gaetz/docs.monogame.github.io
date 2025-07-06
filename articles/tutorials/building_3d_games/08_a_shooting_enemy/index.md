@@ -15,7 +15,7 @@ Now that our enemies enter and exit the screen, it's time to make them shoot som
 
 Because both the player and the enemies will shoot projectiles, we need to move the function that determine the projectile orientation to the `Projectile.cs` class.
 
-To orientate the projectile, we will build with our little hands an orientation matrix. It is not the simplest solution here but it will be useful for you to help understand that a matrix represent a coordinate system relatively to an object.
+To orientate the projectile, we will build an orientation matrix. This is very similar to what we did to orientate the player in the Chapter 3.
 
 We will start with the projectile's direction - which will be the subtraction of the target's position and shooter position. We normalize it. We then build a perpendicular vector to this vector, by executing a cross product between our normalized direction vector and the world's up vector. We normalize the result. Finally, we create a last normilized perpendicular vector - this time perpendicalar to both the direction and the second vector. Those three normalized vector create a coordinate system specific to the projectile direction. The following diagram reprensents the coordinate system we just created:
 

@@ -15,7 +15,7 @@ Rather than just moving the ship around, we will make the movement smooth and gr
 
 We will also restrict the player movement to the screen boundaries, so that the player will not be able to move outside the screen.
 
-> [!NOTE] Requirements
+> [!WARNING] Requirements
 >
 > For this lesson, you are supposed to know how keyboard inputs work in MonoGame. You would find a wonderful reference in the Building 2D Games tutorial's chapter 10:
 

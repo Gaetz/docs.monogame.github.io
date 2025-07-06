@@ -9,7 +9,7 @@ description: Improve the game feeling with sounds.
 
 In this step, we will add some sounds to the game. Sounds are a great way to improve the game feeling, for they emphasize player's action and world rections. We will add sounds for the player shooting, for the player and enemy getting hit, when the enemy explodes and when the player gets a powerup.
 
-> [!NOTE] Requierements
+> [!WARNING] Requierements
 >
 > You are supposed to have read lessons 14 of the MonoGame's 2D basic tutorial. You should know about the `SoundEffect` and `Song` class. You can improve the code we will write in this lesson by reading chapter 15.
 

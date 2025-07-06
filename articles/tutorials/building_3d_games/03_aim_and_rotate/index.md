@@ -9,6 +9,10 @@ description: Use inputs aim toward a displayed target
 
 In this chapter, we will create a target that the player will move with the mouse. The player's ship will rotate to aim at the target.
 
+> [!WARNING] Requirements
+>
+> This chapter is quite mathematical. You need to have understood well [Chapter 1](../01_display_a_3d_ship/index.md) and vector mathematics. You can alse review the explainations about matrices.
+
 ## Creating the target's quad
 
 Our target will be a 2D image that will be displayed in the 3D world. This image must have a 3D mesh on which the texture will be applied. We will use a simple quad for this purpose.
@@ -277,7 +281,161 @@ public class Game1 : Game
 > - The player's constructor now takes a PlayerAim object as a parameter.
 > - When drawing the PlayerAim, we set the BlendState to NonPremultiplied to ensure transparency.
 
-We will now update the ``Player`` so that it rotates toward its ``PlayerAim``.
+We will now update the ``Player`` so that it rotates toward its ``PlayerAim``. But before, we need to explain how rotation works in 3D.
+
+## Understanding 3D Rotation
+
+### How to represent rotations in 3D games?
+
+While in 2D games, we can use just one angle to represent rotations, in 3D games, it is not that simple. While 2D objects were just rotated around a single axis, 3D objects can be rotated around three axes: x, y and z. This means that we need to represent rotations in a more complex way than just using angles.
+
+![2D vs 3D rotations](images/ch1_rotations.png)
+
+After some searches, game programmers of old have come to represent 3D rotations all at once with two main mathematical objects: *rotation matrices* and *quaternions*.
+
+*3D matrices* are a table of 4 by 4 numbers that can contain at the same time translation, rotation and scale information. We have already seen them in the first chapter. If we use them for rotations, they have a marvelous feature: they can be multiplied together to apply several rotations at once. This is a very powerful property, but it has a big drawback: they are quite heavy to compute, and they can suffer from *gimbal lock*. Gimbal lock is a problem that occurs when two of the three axes align, causing a loss of one degree of freedom in rotation. This can lead to unexpected behavior in 3D games.
+
+*Quaternions* is a quite abstract mathematical object which is only represented with 4 numbers, and present the same property of being able to be multiplied together (we say *concatenated*) to apply several rotations at once. Additionally, the do not suffer from gimbal lock, and they are more efficient to compute than matrices. Nevertheless, they can just represent rotations, and not translations or scales like matrices do.
+
+The following consensus was finally found. Because they can represent translations, rotations and scales, matrices would be used to contain the final transformation of a 3D object and sent to the GPU to draw objects. Meanwhile, quaternions being more efficient to rotate the 3d objects around, we would use them to execute any rotation during a frame, and then convert them to matrices to apply the final transformation to the 3D object.
+
+We will implement this consensus in our game. We will use a quaternion to represent the orientation of our ship, rotate it with other quaternions, and we will convert it to a matrix to apply the final transformation to the ship's model.
+
+### About Quaternions
+
+#### Quaternions for our game
+
+The orientation variable will hold the rotation of the ship. As stated before, we will use Quaternions to represent rotations.
+
+```csharp
+  public void Load(ContentManager content)
+  {
+    model = content.Load<Model>("Ship");
+    position = new Vector3(0, 0.0f, -250.0f);
+    orientation = Quaternion.Identity;
+    scale = new Vector3(2f, 2f, 2f);
+  }
+```
+
+The *identity quaternion* is the quaternion that does not rotate the object. It is the equivalent of the zero vector for the `Vector3` class.
+
+#### Quaternions in MonoGame
+
+Usually, in this tutotial's code, in most cases we will create quaternions just before multiplying them to handle rotations.
+
+In this cas we will use the `Quaternion.CreateFromAxisAngle` function. With this function the quaternion will represent a rotation around the axis, by the angle given in radians.
+
+Let's review a case where we create two rotations, one around the x axis and one around the y axis, then multiply (*concatenate*) them together to get a final orientation:
+
+```csharp
+var xRotation = Quaternion.CreateFromAxisAngle(Vector3.Right, -MathF.PI / 2);
+var yRotation = Quaternion.CreateFromAxisAngle(Vector3.Up, MathF.PI / 4);
+orientation = xRotation * yRotation;
+// We could have used: Quaternion.Concatenate(xRotation, yRotation);
+```
+
+![Rotation concatenation](images/ch1_concatenate-rotations.png)
+
+Sometimes, for a specific reason, we will have a matrix containing the rotation that interests us. In this case, we will be able to create a quaternion from a rotation matrix, using the `Quaternion.CreateFromRotationMatrix` function:
+
+```csharp
+return Quaternion.CreateFromRotationMatrix(aim);
+```
+
+As stated in this section's introduction, when we have multiplied quaternions together to get a final orientation, we convert this result back to a rotation matrix using the `Matrix.CreateFromQuaternion` function, so we can apply it to our 3D model.
+
+```csharp
+var rotationMatrix = Matrix.CreateFromQuaternion(orientation);
+```
+
+To learn more about quaternions in MonoGame, here is [MonoGame's Quaternion Documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Quaternion.html).
+
+#### Why Not Just Use Angles?
+
+Before discussing quaternions, it's important to understand why we don't just use Euler angles (pitch, yaw, roll) with rotation matrices. While angles are intuitive, they have significant limitations in 3D graphics:
+
+- Gimbal Lock: When rotations on one axis cause another axis to align, losing a degree of freedom, rotation becomes unpredictable.
+- Interpolation Problems: Smoothly transitioning between rotations is difficult with angles
+- Numerical Stability: Accumulated errors can cause issues over time
+
+#### What is a Quaternion?
+
+Now that we know how to use them, let's understand further what a quaternion is.
+
+Mathematically, a quaternion is a four-dimensional number represented as:
+
+$$
+q = w + xi + yj + zk
+$$
+
+Where:
+
+- *w* is the real component
+- *x*, *y*, *z* are imaginary components
+- *i*, *j*, *k* are special operators with properties like $i² = j² = k² = ijk = -1$
+
+Yes, this last property feels a bit weird. You may have learned that real numbers (numbers from $\mathbb{R}$), when squared, cannot be negative - so their squared values cannot be equal to -1. Actually, there are other sets of numbers than real numbers. You might have heard about complex numbers (in $\mathbb{C}$), which are numbers that can be represented as a + bi, where a and b are real numbers and i is the imaginary unit, with the property that i² = -1. Quaternions are an extension of complex numbers, living in a 4 dimensions space called the Hamiltonian space ($\mathbb{H}$).
+
+In code, a quaternion is stored as a vector with 4 dimensions (x, y, z, w).
+
+> [!NOTE]
+>
+> You cannot represent yourself a number in 4 dimensions? That is normal: it is a quite abstract mathematical object. Actually, you do not need to understand the underlying mathematics to use quaternions. You can consider it as a tool to ease rotation computations.
+
+#### Mathematical properties
+
+**1. Quaternion.Identity:** Represents "no rotation" (like in your code)
+
+```csharp
+Quaternion.Identity = Quaternion(0, 0, 0, 1)
+// Here, w = 1, x = 0, y = 0, z = 0. 
+// w is at the end of the constructor.
+```
+
+**2. Normalization:** Like vectors, quaternions must be normalized for rotation. Using a non-normalized quaternion can cause unexpected rotations.
+
+$$
+|q| = \sqrt{w² + x² + y² + z²}
+$$
+
+$$
+\hat{q} = \frac{q}{|q|}
+$$
+
+```csharp
+orientation.Normalize();
+```
+
+**3. Quaternion Multiplication:** Combines rotations.
+
+This is the key to quaternions' efficiency, because it is way quicker to multiply quaternions than to multiply rotation matrices.
+
+$$
+q_1 * q_2 = (w_1w_2 - x_1x_2 - y_1y_2 - z_1z_2) + (w_1x_2 + x_1w_2 + y_1z_2 - z_1y_2)i + (w_1y_2 - x_1z_2 + y_1w_2 + z_1x_2)j + (w_1z_2 + x_1y_2 - y_1x_2 + z_1w_2)k
+$$
+
+MonoGame allows us to multiply quaternions:
+
+```csharp
+orientation = orientation * Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.Pi);
+```
+
+**4. Converting to a Rotation Matrix:** When we have computed the final orientation of our object with quaternions, we can convert it to a rotation matrix to apply it to our object.
+
+We will discuss matrices just below.
+
+```text
+Matrix rotationMatrix = Matrix.CreateFromQuaternion(orientation);
+```
+
+**Application of Quaternions in Game Development:** Quaternions are used for:
+
+- Representing object orientation (like your ship)
+- Smooth rotation interpolation (SLERP - Spherical Linear Interpolation)
+- Camera control
+- Character animation
+
+Again, this list is far from exhaustive! But for now, that's ok. We can come back to our game and use Quaternions to rotate our player toward the aim target.
 
 ## Orienting the Player toward the PlayerAim
 
@@ -313,11 +471,19 @@ In the Player class, we will create an ``HandleAiming`` function that will rotat
 
 ### Calculating the rotation to follow the aim
 
-The general idea here will be to compute the direction between the player and the aim, then create a rotation matrix from this direction.
+The general idea here will be to compute the direction between the player and the aim, then create a rotation matrix from this direction, then convert this matrix into the quaternion.
 
 We can get the direction by subtracking the aim's position from the player's position. We will then normalize this direction vector to get a unit vector.
 
 ![Player aiming at the target](images/ch3_aiming.png)
+
+To orientate the player, we will build with our little hands an orientation matrix. It is not the simplest solution here but it will be useful for you to help understand that a matrix represent a coordinate system relatively to an object. In the end, we will have a matrix that represents the coordinate system of the player, oriented toward the target.
+
+Now we have a normalized vector toward the target, we build a perpendicular vector to this vector, by executing a cross product between our normalized direction vector and the world's up vector. We normalize the result. Finally, we create a last normalized perpendicular vector - this time perpendicalar to both the direction and the second vector. Those three normalized vector create a coordinate system specific to the player's orientation. The following diagram reprensents the coordinate system we just created:
+
+![Orientation matrix](images/ch3_orientation-matrix.png)
+
+We can use the coordinates of those three vectors to create a matrix that represent the transformation leading to this coordinate system. We then create a quaternion from this matrix.
 
 Then, in order to create this rotation matrix, and if we consider the direction vector as a forward vector, we need to create two other vectors: the right vector (xAxis) and the up vector (yAxis), relative to our forward vector. We will then create a matrix from these three vectors, by setting the matrix's value by hand.
 

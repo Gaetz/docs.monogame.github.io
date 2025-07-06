@@ -5,9 +5,9 @@ description: Some thought before creating our game and know where to find requir
 
 # The 3D game we will create
 
-Hi! Welcome to this MonoGame 3D beginner tutorial. Our goal will be to create a fun and effective game that will present the basics of the MonoGame API for 3D games. In this extent, we will develop the prototype of a Star Fox 64 game.
+Hi! Welcome to this MonoGame 3D beginner tutorial. Our goal will be to create a fun and effective game that will present the basics of the MonoGame API for 3D games. In this extent, we will develop the prototype of a *Star Fox 64* game.
 
-Star fox 64 is a 3D shooter game, born at a time where 3D games were still figuring out their controls and their gameplay shapes. It was reknown for its fun controls, its fast paced rythm and its barrel rolls! It basic gameplay is simple enough to be implemented by a beginner in 3D programming, yet you will be able to polish it a lot if you want to make a complete game out of this tutorial. Though we won't implement the barrel roll feature, we will go through all the mathematical and technical elements you need to bootstrap your 3D gameplays, thanks to the MonoGame API.
+*Star Fox 64* is a 3D shooter game, born at a time where 3D games were still figuring out their controls and their gameplay shapes. It was reknown for its fun controls, its fast paced rythm and its barrel rolls! It basic gameplay is simple enough to be implemented by a beginner in 3D programming, yet you will be able to polish it a lot if you want to make a complete game out of this tutorial. Though we won't implement the barrel roll feature, we will go through all the mathematical and technical elements you need to bootstrap your 3D gameplays, thanks to the MonoGame API.
 
 In order to differ from Star Fox, we will choose to make our game taking place in the internal core of a fantasy computer, where our pilot heroin will rush her miniaturized virtual space ship to shoot and destroy nasty bugs! Our final result will look like this:
 
@@ -18,7 +18,7 @@ Before we start coding, let's review what you need to know.
 ## Knowledge requirements
 
 > [!CAUTION]
-> Before starting this 3D tutorial, you should be able to create a MonoGame 2D game. Thus, I will suppose you have read the wonderful Aristurtle's [Building 2D Games](https://docs.monogame.net/articles/tutorials/building_2d_games/). 
+> Before starting this 3D tutorial, you should be able to create a MonoGame 2D game. Thus, I will suppose you have read the wonderful Aristurtle's [Building 2D Games](https://docs.monogame.net/articles/tutorials/building_2d_games/).
 
 Specifically, some chapters are important to understand before diving in the creation of 3D games with monogame.
 
@@ -35,6 +35,8 @@ Specifically, some chapters are important to understand before diving in the cre
 | Working with SpriteFonts| How to use fonts and text                                             | [2D games chapter 16](https://docs.monogame.net/articles/tutorials/building_2d_games/16_working_with_spritefonts/index.html)  |
 | Scene management        | The way to create different game scenes (menu, gameplay...)           | [2D games chapter 17](https://docs.monogame.net/articles/tutorials/building_2d_games/17_scenes/index.html)  |
 | Packaging your Game     | How to create a final executable for your game                        | [2D games chapter 25](https://docs.monogame.net/articles/tutorials/building_2d_games/25_packaging_game/index.html?tabs=windows)  |
+
+You are not bound to read all these chapters now: in each step of this tutorial, I will remind you the relevant chapters to read before starting the coding.
 
 By the way, you are supposed to be able to use the C# language, for this is the language MonoGame is written with. If it is not the case, I would recommend reading the [Learn C#](https://dotnet.microsoft.com/en-us/learn/csharp) tutorials from Microsoft.
 

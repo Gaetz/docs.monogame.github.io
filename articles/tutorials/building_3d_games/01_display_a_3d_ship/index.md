@@ -9,7 +9,7 @@ description: Load and display the 3D model of a space ship, using the ContentMan
 
 In this first tutorial, we will see how to load and display the space ship that will serve to represent the player in our game. We will position it in the game, setup a camera to watch it and integrate that in the `Game1` class. This will allow us to review 3D mathematics concept and their API in MonoGame.
 
-> [!NOTE] Requierements
+> [!WARNING] Requierements
 >
 > You are supposed to have read lessons 1, 2, 3, 5 and 6 of the MonoGame's 2D basic tutorial. You should know about the `Game1` class, its `LoadContent`, `Update` and `Draw` functions, the use of the `GameTime` parameter in `Update` and `Draw`, and the way to use the MonoGame Content Builder.
 
@@ -23,7 +23,7 @@ In this first tutorial, we will see how to load and display the space ship that 
 
 ## The Player class
 
-Create a `Player.cs` class. We will review 3D mathematical concepts while creating our Player. We will for now create the different member variables of this class, and its `Load` and `Update` function.
+Create a `Player.cs` class. We will review 3D mathematical concepts while creating our `Player`. We will for now create the different member variables of this class, and its `Load` and `Update` function.
 
 Create the class squeletton in such a way:
 
@@ -50,9 +50,7 @@ class Player
 
 ### Loading the Model
 
-The `Model` class can contain a 3D model, also called mesh. A mesh file usually contains geometrical data related to the 3d model, plus additional information for textures placement, animations etc. We will use this class to store our player's model.
-
-[Link to MonoGame's Model documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Model.html)
+The **[Model](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.Model.html)** class can contain a 3D model, composed of one or several **meshes**. A **mesh** file usually contains geometrical data related to the 3d model, plus additional information for textures placement, animations etc. We will use this class to store our player's model.
 
 #### Add the model in MGCB
 
@@ -70,7 +68,7 @@ The model will be stored in the model variable.
     private Model model;
 ```
 
-We will fill this variable by loading the file from the content manager:
+We will fill this variable by loading the file from the content manager. Update the `Load` function of the `Player` class to load the model:
 
 ```csharp
     public void Load(ContentManager content)
@@ -83,6 +81,8 @@ We will fill this variable by loading the file from the content manager:
 
 We will position the player ship thanks to two `Vector3`, to manage its position and scale (its size), and a Quaternion, to manage rotations. Those three variables will allow us to compute a *world transform matrix*, which will hold the final space coordinates of our ship. We will explain this just below.
 
+
+
 ```csharp
     class Player
     {
@@ -93,6 +93,12 @@ We will position the player ship thanks to two `Vector3`, to manage its position
         private Matrix world;
         ...
 ```
+
+> [!NOTE] No rotations yet
+>
+> Rotations in 3D space is a topic by itself. In order to keep this tutorial simple, we will not rotate the ship yet. We will explain and use rotations in Step 3: Aim and rotate.
+>
+> Thus, the rotation Quaternion will be initialized to the identity quaternion, which is the quaternion that does not rotate the object.
 
 #### The position vector
 
@@ -114,6 +120,8 @@ In our game, the initial of our ship will be Vector3(0f, 0f, -250.0f):
 - 0 in y coordinate
 - -250 in z coordinate (negative, so toward the "inside" of the screen)
 
+Add it in the `Load` function of the `Player` class:
+
 ```csharp
     public void Load(ContentManager content)
     {
@@ -130,7 +138,7 @@ This places the ship:
 
 #### About Vector3 in MonoGame
 
-Here is [MonoGame's Vector3 Documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html)
+Here is [MonoGame's Vector3 Documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Vector3.html). Vectors are a fundamental part of 3D mathematics, and MonoGame provides several tools in the `Vector3` class to represent them. Let's explore its features and mathematical properties.
 
 #### Basic Definition
 
@@ -211,7 +219,7 @@ Vector3 directionFromOrigin = position - Vector3.Zero;
 directionFromOrigin.Normalize();
 ```
 
-In this specific case, we do not need to substract the zero vector to our position vector, but it allow me to insist on the fact that a direction between two points in the normalized difference between end point's and starting point's positions ;)
+In this specific case, we do not need to substract the zero vector to our position vector, but it allows me to insist on the fact that a direction between two points in the normalized difference between end point's and starting point's positions ;)
 
 ![Vector normalized](images/ch1_vector-normalize.png)
 
@@ -286,31 +294,9 @@ In this case, *a*x*b* is perpendicular to the grey plane.
 
 This is just a small list of examples, but you will see that vectors are used everywhere in 3D games.
 
-### Orientation with Quaternions
+### Orientation
 
-#### How to represent rotations in 3D games?
-
-While in 2D games, we can use just one angle to represent rotations, in 3D games, it is not that simple. While 2D objects were just rotated around a single axis, 3D objects can be rotated around three axes: x, y and z. This means that we need to represent rotations in a more complex way than just using angles.
-
-![2D vs 3D rotations](images/ch1_rotations.png)
-
-After some searches, game programmers of old have come to represent 3D rotations all at once with two main mathematical objects: *rotation matrices* and *quaternions*.
-
-*3D matrices* are a table of 4 by 4 numbers that can contain at the same time translation, rotation and scale information. If we use them for rotations, they have a marvelous feature: they can be multiplied together to apply several rotations at once. This is a very powerful property, but it has a big drawback: they are quite heavy to compute, and they can suffer from *gimbal lock*. Gimbal lock is a problem that occurs when two of the three axes align, causing a loss of one degree of freedom in rotation. This can lead to unexpected behavior in 3D games.
-
-*Quaternions* is a quite abstract mathematical object which is only represented with 4 numbers, and present the same property of being able to be multiplied together (we say *concatenated*) to apply several rotations at once. Additionally, the do not suffer from gimbal lock, and they are more efficient to compute than matrices. Nevertheless, they can just represent rotations, and not translations or scales like matrices do.
-
-The following consensus was finally found. Because they can represent translations, rotations and scales, matrices would be used to contain the final transformation of a 3D object and sent to the GPU to draw objects. Meanwhile, quaternions being more efficient to rotate the 3d objects around, we would use them to execute any rotation during a frame, and then convert them to matrices to apply the final transformation to the 3D object.
-
-We will implement this consensus in our game. We will use a quaternion to represent the orientation of our ship, rotate it with other quaternions, and we will convert it to a matrix to apply the final transformation to the ship's model.
-
-> [!NOTE]
->
-> Transform matrices will be presented in the next section. For now, let's just focus on quaternions.
-
-#### Quaternions for our game
-
-The orientation variable will hold the rotation of the ship. As stated before, we will use Quaternions to represent rotations.
+As told before, we will not rotate the ship yet, but we will still need to store its orientation. We will use an identity `Quaternion` to represent the neutral orientation of the ship. Add it in the `Player` class' `Load` function:
 
 ```csharp
     public void Load(ContentManager content)
@@ -321,125 +307,7 @@ The orientation variable will hold the rotation of the ship. As stated before, w
     }
 ```
 
-The *identity quaternion* is the quaternion that does not rotate the object. It is the equivalent of the zero vector for the `Vector3` class.
-
-#### Quaternions in MonoGame
-
-Usually, in this tutotial's code, in most cases we will create quaternions just before multiplying them to handle rotations.
-
-In this cas we will use the `Quaternion.CreateFromAxisAngle` function. With this function the quaternion will represent a rotation around the axis, by the angle given in radians.
-
-Let's review a case where we create two rotations, one around the x axis and one around the y axis, then multiply (*concatenate*) them together to get a final orientation:
-
-```csharp
-var xRotation = Quaternion.CreateFromAxisAngle(Vector3.Right, -MathF.PI / 2);
-var yRotation = Quaternion.CreateFromAxisAngle(Vector3.Up, MathF.PI / 4);
-orientation = xRotation * yRotation;
-// We could have used: Quaternion.Concatenate(xRotation, yRotation);
-```
-
-![Rotation concatenation](images/ch1_concatenate-rotations.png)
-
-Sometimes, for a specific reason, we will have a matrix containing the rotation that interests us. In this case, we will be able to create a quaternion from a rotation matrix, using the `Quaternion.CreateFromRotationMatrix` function:
-
-```csharp
-return Quaternion.CreateFromRotationMatrix(aim);
-```
-
-As stated in this section's introduction, when we have multiplied quaternions together to get a final orientation, we convert this result back to a rotation matrix using the `Matrix.CreateFromQuaternion` function, so we can apply it to our 3D model.
-
-```csharp
-var rotationMatrix = Matrix.CreateFromQuaternion(orientation);
-```
-
-To learn more about quaternions in MonoGame, here is [MonoGame's Quaternion Documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Quaternion.html).
-
-#### Why Not Just Use Angles?
-
-Before discussing quaternions, it's important to understand why we don't just use Euler angles (pitch, yaw, roll) with rotation matrices. While angles are intuitive, they have significant limitations in 3D graphics:
-
-- Gimbal Lock: When rotations on one axis cause another axis to align, losing a degree of freedom, rotation becomes unpredictable.
-- Interpolation Problems: Smoothly transitioning between rotations is difficult with angles
-- Numerical Stability: Accumulated errors can cause issues over time
-
-#### What is a Quaternion?
-
-Now that we know how to use them, let's understand further what a quaternion is.
-
-Mathematically, a quaternion is a four-dimensional number represented as:
-
-$$
-q = w + xi + yj + zk
-$$
-
-Where:
-
-- *w* is the real component
-- *x*, *y*, *z* are imaginary components
-- *i*, *j*, *k* are special operators with properties like $i² = j² = k² = ijk = -1$
-
-Yes, this last property feels a bit weird. You may have learned that real numbers (numbers from $\mathbb{R}$), when squared, cannot be negative - so their squared values cannot be equal to -1. Actually, there are other sets of numbers than real numbers. You might have heard about complex numbers (in $\mathbb{C}$), which are numbers that can be represented as a + bi, where a and b are real numbers and i is the imaginary unit, with the property that i² = -1. Quaternions are an extension of complex numbers, living in a 4 dimensions space called the Hamiltonian space ($\mathbb{H}$).
-
-In code, a quaternion is stored as a vector with 4 dimensions (x, y, z, w).
-
-> [!NOTE]
->
-> You cannot represent yourself a number in 4 dimensions? That is normal: it is a quite abstract mathematical object. Actually, you do not need to understand the underlying mathematics to use quaternions. You can consider it as a tool to ease rotation computations.
-
-#### Mathematical properties
-
-**1. Quaternion.Identity:** Represents "no rotation" (like in your code)
-
-```csharp
-Quaternion.Identity = Quaternion(0, 0, 0, 1)
-// Here, w = 1, x = 0, y = 0, z = 0. 
-// w is at the end of the constructor.
-```
-
-**2. Normalization:** Like vectors, quaternions must be normalized for rotation. Using a non-normalized quaternion can cause unexpected rotations.
-
-$$
-|q| = \sqrt{w² + x² + y² + z²}
-$$
-
-$$
-\hat{q} = \frac{q}{|q|}
-$$
-
-```csharp
-orientation.Normalize();
-```
-
-**3. Quaternion Multiplication:** Combines rotations.
-
-This is the key to quaternions' efficiency, because it is way quicker to multiply quaternions than to multiply rotation matrices.
-
-$$
-q_1 * q_2 = (w_1w_2 - x_1x_2 - y_1y_2 - z_1z_2) + (w_1x_2 + x_1w_2 + y_1z_2 - z_1y_2)i + (w_1y_2 - x_1z_2 + y_1w_2 + z_1x_2)j + (w_1z_2 + x_1y_2 - y_1x_2 + z_1w_2)k
-$$
-
-MonoGame allows us to multiply quaternions:
-
-```csharp
-orientation = orientation * Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.Pi);
-```
-
-**4. Converting to a Rotation Matrix:** When we have computed the final orientation of our object with quaternions, we can convert it to a rotation matrix to apply it to our object.
-
-We will discuss matrices just below.
-
-```text
-Matrix rotationMatrix = Matrix.CreateFromQuaternion(orientation);
-```
-
-**Application of Quaternions in Game Development:** Quaternions are used for:
-
-- Representing object orientation (like your ship)
-- Smooth rotation interpolation (SLERP - Spherical Linear Interpolation)
-- Camera control
-- Character animation
-
-Again, this list is far from exhaustive! We will come back to rotations when talking about the transform matrix, but for now, let's change subject and talk about the scale of our ship.
+Rotations will be handled in a latter lesson.
 
 ### Scale with Vector3
 
@@ -475,6 +343,8 @@ A 3D Model is composed multiple vertices - each "point" of the mesh. You have to
 
 ![From object to world space](images/ch1_world-space.png)
 
+What we just wrote is a specific case. A matrix is not limited to convert a vertex from object space to world space. It can actually any vector in a specific coordinate space to another coordinate space.
+
 #### Computing the World Matrix
 
 In our code, our player stores a World matrix:
@@ -490,7 +360,7 @@ In our code, our player stores a World matrix:
         ...
 ```
 
-Because position and rotation will constantly change, we need to update the world matrix every frame. We also have to take into account the effect of the scale. We will compute the world matrix in the `Update` function:
+Because position and rotation will constantly change, we need to update the world matrix every frame. We also have to take into account the effect of the scale. We will compute the world matrix in the `Update` function. Please modify it as follows:
 
 ```csharp
     public void Update(double dt)
@@ -790,7 +660,7 @@ We will make a further use of the `BasicEffect` later in the tutorial. For now, 
 
 ### The GraphicsDevice
 
-In the `Game1` class, you may have remarked the `GraphicsDeviceManager` member variable. The `GraphicsDeviceManager` is used to create the `GraphicsDevice`, which represents the GPU an can draw the game. The `GraphicsDevice` is created when the `Game` class is initialized, and is accessible through the `GraphicsDevice` property of the Game class.
+In the `Game1` class, you may have remarked the `GraphicsDeviceManager` member variable. The `GraphicsDeviceManager` is used to create the **`GraphicsDevice`**, which represents the GPU an can draw the game. The `GraphicsDevice` is created when the `Game` class is initialized, and is accessible through the `GraphicsDevice` property of the Game class.
 
 We create the `GraphicsDeviceManager` in the `Game1` constructor:
 
@@ -838,6 +708,6 @@ If you launch the game, you should see the player's model displayed on the scree
 
 ## Conclusion
 
-In this chapter, we have learned how to create a 3D player in MonoGame. We have seen how to use vectors to represent positions, orientations, and scales, and how to use quaternions to represent rotations. We have also learned how to create a world matrix to transform the player's model from the object space to the world space, and how to use view and projection matrices to draw the player on the screen.
+In this chapter, we have learned how to create a 3D player in MonoGame. We have seen how to use vectors to represent positions and scales. We have also learned how to create a world matrix to transform the player's model from the object space to the world space, and how to use view and projection matrices to draw the player on the screen.
 
 This chapter has been quite mathematical, but no worries: you have learned the most difficult part. In the next chapters, we will rely on the fundations we have laid here to create all the 3D game features. More fun to come!
