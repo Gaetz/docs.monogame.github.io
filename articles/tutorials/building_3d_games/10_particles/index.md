@@ -179,7 +179,7 @@ internal class ParticleSystem
 
 The class handles a list of particles. The constructor populates it and passes all properties to the particles, for a maximum number of `MAX_PARTICLES`.
 
-> [!NOTE] Random velocity to our particles
+> [!NOTE]
 >
 > We have set the velocity of particules to a random value. This implies that the general shape of our particle system will be a sphere, for all particles will go toward all the directions at the same time.
 

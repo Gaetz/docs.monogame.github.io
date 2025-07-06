@@ -9,7 +9,7 @@ description: Use inputs aim toward a displayed target
 
 In this chapter, we will create a target that the player will move with the mouse. The player's ship will rotate to aim at the target.
 
-> [!WARNING] Requirements
+> [!WARNING]
 >
 > This chapter is quite mathematical. You need to have understood well [Chapter 1](../01_display_a_3d_ship/index.md) and vector mathematics. You can alse review the explainations about matrices.
 
@@ -55,7 +55,7 @@ We use the ``VertexPositionNormalTexture`` class for our vertices. Our quad's ve
 
 The origin, ``up``, ``normal``, and ``left`` vectors will be used to position the quad in the 3D world. The ``upperLeft``, ``upperRight``, ``lowerLeft``, and ``lowerRight`` vectors will store the position of the quad's corners.
 
-> [!NOTE] About texture coordinates
+> [!NOTE]
 >
 > Texture coordinates, also called UVs, indicate how to map a texture onto a mesh. They are usually in the range [0, 1], where (0, 0) is the upper left corner of the texture and (1, 1) is the lower right corner.
 >

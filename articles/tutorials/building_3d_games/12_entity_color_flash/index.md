@@ -19,7 +19,7 @@ First, we need to manage color modification on our player and enemies. Because t
 
 The general idea for our flash effect is to set the `BasicEffect` emissive color to a certain value, and then allows it to go back to normal (transparent) over a certain duration. This will automaically add a color to the model then make it progressively disappear. We will need to store the flash color and the flash duration, as well as the current color and the flash timer.
 
-> [!NOTE] What are emissive color and diffuse color?
+> [!NOTE]
 >
 > Emissive and diffuse color are color that will automatically modify the model's texture color thanks to the `BasicEffect`.
 >
@@ -164,7 +164,9 @@ The code is the same for both classes. The diffuse color is stored as a `Vector3
 
 Now, when an enemy is hit, is will turn red for a short period of time.
 
-> [!TIP] Should we use emissive or diffuse color for flash?
+> [!TIP]
+>
+> Should we use emissive or diffuse color for flash?
 >
 > In this lesson, I decided to use emissive color because of the way my *Ship* and *Saucer* models are textured. For an other models with other texture, like the *BeachBall*, it might be better to use diffuse color.
 >

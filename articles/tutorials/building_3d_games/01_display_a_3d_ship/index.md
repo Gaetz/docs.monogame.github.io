@@ -9,7 +9,7 @@ description: Load and display the 3D model of a space ship, using the ContentMan
 
 In this first tutorial, we will see how to load and display the space ship that will serve to represent the player in our game. We will position it in the game, setup a camera to watch it and integrate that in the `Game1` class. This will allow us to review 3D mathematics concept and their API in MonoGame.
 
-> [!WARNING] Requierements
+> [!WARNING]
 >
 > You are supposed to have read lessons 1, 2, 3, 5 and 6 of the MonoGame's 2D basic tutorial. You should know about the `Game1` class, its `LoadContent`, `Update` and `Draw` functions, the use of the `GameTime` parameter in `Update` and `Draw`, and the way to use the MonoGame Content Builder.
 
@@ -92,7 +92,7 @@ We will position the player ship thanks to two `Vector3`, to manage its position
         ...
 ```
 
-> [!NOTE] No rotations yet
+> [!NOTE]
 >
 > Rotations in 3D space is a topic by itself. In order to keep this tutorial simple, we will not rotate the ship yet. We will explain and use rotations in Step 3: Aim and rotate.
 >

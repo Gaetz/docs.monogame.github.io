@@ -58,7 +58,7 @@ Now, this actually opens a possibility for us: we can modify the texture coordin
 
 But how to use this effect to figure out the ground and sky? The idea is the ground quad will be mapped with a texture that moves down, and the sky quad will be mapped with a texture that moves up. If we position those quads horizontally below the player (for the ground) and above the player (for the sky), and make their textures shift toward us, we will have the illusion that our ship is rushing through space.
 
-> [!NOTE] UVs
+> [!NOTE]
 >
 > Texture coordinates are often called *UVs*. That's because we often use xyz for 3D position coordinates, so we needed two additional letters for the texture coordinates. We took the closest. Thus U - horizontal texture coordinate - and V - vertical texture coordinate. Some engines or frameworks also use S and T.
 
@@ -111,7 +111,7 @@ Now we just have to update the `Draw` method of the `Quad` class to use this var
 
 We update the texture coordinates with the `textureShiftSpeed`. This will offset the texture each frame.
 
-> [!NOTE] Wrapping texture
+> [!NOTE]
 >
 > Because texture are by default setup in `Wrapping` mode, the increase of the texture coordinate will actually make the texture pixels (*texels*) wrap around the 0-1 values. To put it simply, texel at coordinate (1.5, 0.5) will actually represented by texel (0.5, 0.5).
 
@@ -203,7 +203,7 @@ First, check you have imported the `Grid` texture the MGCB.
 
 In the `Game1.cs` class, we will create two instances of the `ShiftingTexture` class, one for the ground and one for the sky. We will also set their position, orientation and scale, update them and draw them.
 
-> [!NOTE] Face culling
+> [!NOTE]
 >
 > We shall orientate the shifting speed in opposite directions, for the ground and the sky quads will be orientated upside down, along the x-axis. This is because *face culling*: a 3d model is not rendered if it is not facing the camera. This is a performance optimization that is used in most 3D engines.
 

@@ -11,7 +11,7 @@ In this lesson, we will implement the `SceneMenu.cs` and `SceneGameOver.cs` clas
 
 We will then use this input manager to allow our game to be ported to other platform. MomoGame will handle the heavy lifting, but we will still need to indicate which inputs we want to use on each of those platforms.
 
-> [!WARNING] Requirements
+> [!WARNING]
 >
 > Input management has already be explained in the basic 2D tutorial. You can refer to it if you want additional information.
 
