@@ -316,7 +316,7 @@ You will need to import the *CubeRed* model in the `Content` manager.
 
 ## Conclusion
 
-In this step, we added the ability for the enemies to shoot projectiles at the player. 
+In this step, we added the ability for the enemies to shoot projectiles at the player.
 
 ![A shooting enemy](images/ch08_final-screen.png)
 

@@ -81,8 +81,6 @@ We will fill this variable by loading the file from the content manager. Update 
 
 We will position the player ship thanks to two `Vector3`, to manage its position and scale (its size), and a Quaternion, to manage rotations. Those three variables will allow us to compute a *world transform matrix*, which will hold the final space coordinates of our ship. We will explain this just below.
 
-
-
 ```csharp
     class Player
     {

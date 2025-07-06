@@ -251,7 +251,7 @@ The `DisplayMessage` function will used by the `Game1` class to setup the `Dialo
 
 ### Drawing the dislog box
 
-Contrary to what we did until now, we will use 2D rendering to draw the dialog box. It will be displayed above our 3D scene - so will be drawn last. 
+Contrary to what we did until now, we will use 2D rendering to draw the dialog box. It will be displayed above our 3D scene - so will be drawn last.
 
 With MonoGame, as you already know form the Basic 2D Tutorial, 2D elements are drawn with the `Spritebatch`. That is why the dialog box's `Draw` function and its related functions will use `Spritebatch` as a parameter.
 
@@ -473,7 +473,7 @@ That's it! Now the dialog box is displayed correctly and the game is back to nor
 
 ## Conclusion
 
-We have now a message system that can be used to display messages in the game. 
+We have now a message system that can be used to display messages in the game.
 
 ![Dialog box](images/ch15_final-screen.png)
 

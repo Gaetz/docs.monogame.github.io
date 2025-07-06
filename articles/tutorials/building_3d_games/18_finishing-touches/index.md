@@ -115,7 +115,7 @@ You can work on collisions for all your game objects. Collisions, when done righ
 
 ### Expanding the level
 
-Until now, we have two waves of enemies, separated by a power up. You can create other waves with other enemy patterns, main phase timing. The waves system even allows to have several waves present on screen at the same time, provided you time the wave with close enough timings. You can also add commentaries from the robot or from our dauntless pilot. 
+Until now, we have two waves of enemies, separated by a power up. You can create other waves with other enemy patterns, main phase timing. The waves system even allows to have several waves present on screen at the same time, provided you time the wave with close enough timings. You can also add commentaries from the robot or from our dauntless pilot.
 
 You can also imagine to create other kind of enemies, with different patterns - that is to say, a different internal state machine. A level boss, with infinite (-1) main phase duration, could be such an enemy.
 
