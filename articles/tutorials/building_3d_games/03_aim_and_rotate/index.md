@@ -289,7 +289,7 @@ We will now update the ``Player`` so that it rotates toward its ``PlayerAim``. B
 
 While in 2D games, we can use just one angle to represent rotations, in 3D games, it is not that simple. While 2D objects were just rotated around a single axis, 3D objects can be rotated around three axes: x, y and z. This means that we need to represent rotations in a more complex way than just using angles.
 
-![2D vs 3D rotations](images/ch1_rotations.png)
+![2D vs 3D rotations](../01_display_a_3d_ship/images/ch1_rotations.png)
 
 After some searches, game programmers of old have come to represent 3D rotations all at once with two main mathematical objects: *rotation matrices* and *quaternions*.
 
