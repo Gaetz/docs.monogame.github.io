@@ -334,7 +334,7 @@ orientation = xRotation * yRotation;
 // We could have used: Quaternion.Concatenate(xRotation, yRotation);
 ```
 
-![Rotation concatenation](images/ch1_concatenate-rotations.png)
+![Rotation concatenation](../01_display_a_3d_ship/images/ch1_concatenate-rotations.png)
 
 Sometimes, for a specific reason, we will have a matrix containing the rotation that interests us. In this case, we will be able to create a quaternion from a rotation matrix, using the `Quaternion.CreateFromRotationMatrix` function:
 
