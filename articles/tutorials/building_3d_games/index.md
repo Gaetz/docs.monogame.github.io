@@ -75,7 +75,7 @@ The solution is organized with one project by step. In each project, the classes
 
 ## The game's assets
 
-All assets for the game are provided in a resource zipped folder. Make sure to unzip this folder somewhere on your computer before you start coding the project.
+All assets for the game are provided in this [Resources](./Resources.zip) zipped folder. Make sure to unzip this folder somewhere on your computer before you start coding the project.
 
 Authoring:
 
