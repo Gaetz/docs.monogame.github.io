@@ -11,7 +11,7 @@ In this chapter, we will learn how to move the player using inputs.
 
 The player will be able to move in left/right and up/down directions, along a plane that will be set up at 250 units from the camera. Such move will allow the player to position itself to shoot and to avoid incoming bullets.
 
-Rather than just moving the ship around, we will make the movement smooth and graceful. We will also add a bit of inertia to the movement, so that the player will not stop immediately when the input is released. This will be accomplished by creating a concept of velocity and acceleration.
+Rather than just moving the ship around, we will make the movement smooth and graceful. We will also add a bit of inertia to the movement, so that the player will not stop immediately when the input is released. This will be accomplished by creating a concept of **velocity** and **acceleration**.
 
 We will also restrict the player movement to the screen boundaries, so that the player will not be able to move outside the screen.
 
@@ -46,7 +46,7 @@ All input related code will be placed in a `HandleInput` function. Let's define 
 
 Speed is the variation of position over time. We will use two variables `speedX` and `speedY` to store the speed of the player. We will also create a constant for maximum speed.
 
-At first, we will change the speed of the player for maximum speed when the input is pressed. We will then use the speed to change the position of the player.
+At first, we will change the speed of the player for maximum speed when the input is pressed. We will then use the speed to change the position of the player, taking into account the delta-time `dt`.
 
 ```csharp
 class Player
@@ -196,7 +196,7 @@ After each speed change, we check if the absolute value of the speed is greater 
 
 ## Keeping the player inside the screen
 
-Finally, we will restrict the player movement to the screen boundaries. We will use the MonoGame's `Rectangle` class to store the boundaries values.
+Finally, we will restrict the player movement to the screen boundaries. We will use the MonoGame's **[Rectangle](xref:Microsoft.Xna.Framework.Rectangle)** class to store the boundaries values.
 
 [Link to MonoGame Rectangle documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Rectangle.html)
 
@@ -243,7 +243,9 @@ class Player
 
 That's it! The player can now move around the screen in a smooth and graceful way !
 
-![Final screenshot](images/ch2_final-screen.png)
+| ![Final screenshot](images/ch2_final-screen.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 2-1: Final screenshot** |
 
 ## Conclusion
 

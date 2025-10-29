@@ -11,21 +11,23 @@ In this chapter, we will create a target that the player will move with the mous
 
 > [!WARNING]
 >
-> This chapter is quite mathematical. You need to have understood well [Chapter 1](../01_display_a_3d_ship/index.md) and vector mathematics. You can alse review the explainations about matrices.
+> This chapter is quite mathematical. You need to have understood well [Chapter 1](../01_display_a_3d_ship/index.md) and vector mathematics. You can also review the explainations about matrices.
 
 ## Creating the target's quad
 
-Our target will be a 2D image that will be displayed in the 3D world. This image must have a 3D mesh on which the texture will be applied. We will use a simple quad for this purpose.
+Our target will be a 2D image that will be displayed in the 3D world. This image must have a 3D mesh on which the texture will be applied. We will use a simple **quad** for this purpose.
 
-A quad is a 2D plane that is composed of two triangles. For optimization purposes, we will have only four vertices for the triangles. Indices will tell which vertices to use to create the two different triangles.
+A quad is a 2D plane that is composed of two triangles. For optimization purposes, we will have only four vertices for the triangles, and tell the GPU to use 3 vertices for one triangle, and three others for the second triangle - using the same vertices for the diagonal, so the two triangles will share one edge. **Indices** will tell which vertices to use to create the two different triangles.
 
-![A quad](images/ch3_quad.png)
+| ![A quad](images/ch3_quad.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 3-1: A quad** |
 
 > [!IMPORTANT]
 >
 > The order of the indices determines the orientation of the triangles. If the order is not correct, the triangles will be rendered in the wrong direction, and the texture will not be displayed correctly.
 
-MonoGame allows us to create a mesh by specifying the vertices and the indices that define the triangles. We will create a quad using this in a *Quad.cs* file.
+MonoGame allows us to create a mesh by specifying the vertices and the indices that define the triangles. We will create a quad using this in a *Quad.cs* file. Create this new file for the `Quad` class.
 
 ### The Quad data
 
@@ -49,7 +51,7 @@ class Quad
 }
 ```
 
-We use the ``VertexPositionNormalTexture`` class for our vertices. Our quad's vertices will store the position, normal, and texture coordinates. We will also store the indices that define the triangles in our `Quad` class.
+We use MonoGame's [**VertexPositionNormalTexture**](xref:Microsoft.Xna.Framework.Graphics.VertexPositionNormalTexture) class for our vertices. This class represents a vertex with a position, **normal**, and **texture coordinate** (see below). You already know the position of a vertex. We will also store the indices that define the triangles in our `Quad` class.
 
 [Link to MonoGame VertexPositionNormalTexture documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.VertexPositionNormalTexture.html)
 
@@ -57,15 +59,21 @@ The origin, ``up``, ``normal``, and ``left`` vectors will be used to position th
 
 > [!NOTE]
 >
-> Texture coordinates, also called UVs, indicate how to map a texture onto a mesh. They are usually in the range [0, 1], where (0, 0) is the upper left corner of the texture and (1, 1) is the lower right corner.
+> **Texture coordinates**, also called UVs, indicate how to map a texture onto a mesh. They are usually in the range [0, 1], where (0, 0) is the upper left corner of the texture and (1, 1) is the lower right corner.
 >
-> ![Quad's texture coordinates](images/ch3_quad-uv.png)
+> | ![Quad's texture coordinates](images/ch3_quad-uv.png) |
+> | :-----------------------------------------------------------------------------------------------: |
+> | **Figure 3-2: Quad's texture coordinates** |
+
+> [!NOTE]
+>
+> The **normal vector** is a vector that is perpendicular to the surface of the quad at the vertex position. It is used in various geometrical operations, particularly in lighting calculations to determine how light interacts with the surface.
 
 We will use a `BasicEffect` to render the quad. We will set the effect's texture to the texture we want to apply to the quad.
 
 ### Filling the vertices
 
-Let's fill the vertices with the quad's position, normal, and texture coordinates. We will also set the indices for the triangles. This will happen in a `FillVertices` function.
+Let's fill the vertices with the quad's position, normal, and texture coordinates. We will also set the indices for the triangles. This will happen in a `FillVertices` function you have to create.
 
 ```csharp
 private void FillVertices()
@@ -100,7 +108,9 @@ private void FillVertices()
 
 ### Building the quad
 
-We will create the quad in the constructor of the ``Quad`` class. We will set the ``origin``, ``up``, ``normal``, and ``left`` vectors. We will also set the position of the quad's corners. Finally, we will call the ``FillVertices`` function and store the ``BasicEffect`` we will use to draw.
+We will create the quad in the constructor of the ``Quad`` class. We will set the ``origin``, ``up``, ``normal``, and ``left`` vectors. We will also set the position of the quad's corners: because we consider the general position of the quad in the 3D space should be centered on its middle, the corners will be calculated by going half the width and height in each direction from the center. Finally, we will call the ``FillVertices`` function and store the ``BasicEffect`` we will use to draw. 
+
+Create this constructor:
 
 ```csharp
 public Quad(Vector3 origin, Vector3 normal, Vector3 up,
@@ -111,9 +121,9 @@ public Quad(Vector3 origin, Vector3 normal, Vector3 up,
   this.origin = origin;
   this.normal = normal;
   this.up = up;
+  left = Vector3.Cross(normal, this.up);
 
   // Calculate the quad corners
-  left = Vector3.Cross(normal, this.up);
   Vector3 uppercenter = (this.up * height / 2) + origin;
   upperLeft = uppercenter + (this.left * width / 2);
   upperRight = uppercenter - (this.left * width / 2);
@@ -127,7 +137,7 @@ public Quad(Vector3 origin, Vector3 normal, Vector3 up,
 
 ### Drawing the quad
 
-Drawing a mesh set by hand is different from drawing a model. As with the player, we will need a world, view, and projection matrix to draw the quad. The difference is that we  will call the ``GraphicsDevice.DrawUserIndexedPrimitives`` function to draw the quad, and trigger the application of the shader pass. In order to do those last two operations, we will need an access to the ``GraphicsDevice``.
+Drawing a mesh set by hand is different from drawing a model. As with the player, we will need a world, view, and projection matrix to draw the quad. The difference is that we  will call the ``GraphicsDevice.DrawUserIndexedPrimitives`` function to draw the quad, and trigger the application of the shader (this is called a **shader pass**). In order to do those last two operations, we will need an access to the ``GraphicsDevice`` in the quad's `Draw` function. Create this function:
 
 ```csharp
 public void Draw(GraphicsDevice device, Matrix world, Matrix view, Matrix projection)
@@ -145,13 +155,20 @@ public void Draw(GraphicsDevice device, Matrix world, Matrix view, Matrix projec
 }
 ```
 
-The `GraphicsDevice` contains differents methods related to graphics. Here is a link to the [MonoGame GraphicsDevice documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html).
+We use the `PrimitiveType.TriangleList` to indicate that we want to draw triangles. The `DrawUserIndexedPrimitives` function takes the vertices and indices we created to draw the quad. The first `0` indicate we have no offset, that is we want to draw from the first vertex. The `4` indicates the number of vertices we have. The second `0` indicates we have no offset in the indices, and the `2` indicates the number of **primitives** (here triangles) to draw.
+
+> [!NOTE]
+>
+> A primitive is a basic shape that can be drawn, in our case a triangle. Other primitive types exist, like lines or points.
+
+
+The **[GraphicsDevice](xref:Microsoft.Xna.Framework.Graphics.GraphicsDevice)** contains differents methods related to graphics. Here is a link to the [MonoGame GraphicsDevice documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Graphics.GraphicsDevice.html).
 
 ## Creating and showing the target
 
-Now the ``Quad`` class is ready, we can create a target that we will be able to move, and that will use the quad to display itself. This target will be contained in a *PlayerAim.cs* file.
+Now the ``Quad`` class is ready, we can create a target that we will be able to move, and that will use the quad to display itself. This target will be contained in a *PlayerAim.cs* file you need to create.
 
-In order to draw the player aim's texture, we will need to load it. Add the *Crosshair.png* file into the MGCB and build it. We will then load the texture in the ``Load`` function.
+In order to draw the player aim's texture, we will need to load it. Add the *Crosshair.png* file into the MGCB and build it. We will then load the texture in the ``Load`` function, in the next paragraph.
 
 ### The PlayerAim class
 
@@ -173,11 +190,11 @@ class PlayerAim
 
 The ``PlayerAim`` class will contain a quad that will be used to display the target. We will also store the position and orientation of the target, and the world matrix and graphics device to draw the quad.
 
-We will also create a property to access the position of the target, so that the player will be able to orientate toward it.
+We also need to create a property to access the position of the target, so that the player will be able to orientate toward it.
 
 ### Setting up the quad and its basic effect
 
-We will use the ``Load`` function to set up our member variables. The position of the target will be set to *(0, 0, -5000)* to place it in front of the camera. We will create a ``BasicEffect`` and set its texture to the *Crosshair* texture. We will then create the quad, orientated towards the player.
+We will use the ``Load`` function to set up our member variables. The position of the target will be set to *(0, 0, -5000)* to place it in front of the camera. We will create a ``BasicEffect`` and set its texture to the *Crosshair* texture. We will then create the quad, orientated towards the player. Implement the ``Load`` function like this:
 
 ```csharp
   public void Load(ContentManager content, GraphicsDevice device)
@@ -193,9 +210,11 @@ We will use the ``Load`` function to set up our member variables. The position o
   }
 ```
 
+Note that we need to enable textures on the `BasicEffect` by setting the `TextureEnabled` property to true. 
+
 ### Updating the target
 
-We will update the target in the ``Update`` function. We will use the mouse to move the target. We will then update the world matrix of the quad.
+We will update the target in the ``Update`` function. We will use the mouse to move the target. We will then update the world matrix of the quad. Implement the ``Update`` function:
 
 ```csharp
   public void Update(double dt)
@@ -229,7 +248,7 @@ Now we need to create our ``PlayerAim`` object from the ``Game1`` class.
 
 ## Managing the PlayerAim
 
-We will now create a ``PlayerAim`` object in the ``Game1`` class. As usual, we will load it in the ``LoadContent`` function, update it in the ``Update`` function, and draw it in the ``Draw`` function.
+We will now create a ``PlayerAim`` object in the ``Game1`` class. As usual, we will load it in the ``LoadContent`` function, update it in the ``Update`` function, and draw it in the ``Draw`` function. Let's review the changes to make in those three functions:
 
 ```csharp
 public class Game1 : Game
@@ -289,13 +308,15 @@ We will now update the ``Player`` so that it rotates toward its ``PlayerAim``. B
 
 While in 2D games, we can use just one angle to represent rotations, in 3D games, it is not that simple. While 2D objects were just rotated around a single axis, 3D objects can be rotated around three axes: x, y and z. This means that we need to represent rotations in a more complex way than just using angles.
 
-![2D vs 3D rotations](../01_display_a_3d_ship/images/ch1_rotations.png)
+| ![2D vs 3D rotations](../01_display_a_3d_ship/images/ch1_rotations.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 3-3: 2D vs 3D rotations** |
 
-After some searches, game programmers of old have come to represent 3D rotations all at once with two main mathematical objects: *rotation matrices* and *quaternions*.
+After some searches, game programmers of old have come to represent 3D rotations all at once with two main mathematical objects: **rotation matrices** and **quaternions**.
 
-*3D matrices* are a table of 4 by 4 numbers that can contain at the same time translation, rotation and scale information. We have already seen them in the first chapter. If we use them for rotations, they have a marvelous feature: they can be multiplied together to apply several rotations at once. This is a very powerful property, but it has a big drawback: they are quite heavy to compute, and they can suffer from *gimbal lock*. Gimbal lock is a problem that occurs when two of the three axes align, causing a loss of one degree of freedom in rotation. This can lead to unexpected behavior in 3D games.
+As we have already stated in the first chapter, *3D matrices* or *transforms* are a table of 4 by 4 numbers that can contain at the same time translation, rotation and scale information. If we use them for rotations, they have a marvelous feature: they can be multiplied together to apply several rotations at once. This is a very powerful property, but it has a big drawback: they are quite heavy to compute, and they can suffer from **gimbal lock**. Gimbal lock is a problem that occurs when two of the three axes align, causing a loss of one degree of freedom in rotation. This can lead to unexpected behavior in 3D games.
 
-*Quaternions* is a quite abstract mathematical object which is only represented with 4 numbers, and present the same property of being able to be multiplied together (we say *concatenated*) to apply several rotations at once. Additionally, the do not suffer from gimbal lock, and they are more efficient to compute than matrices. Nevertheless, they can just represent rotations, and not translations or scales like matrices do.
+A **[Quaternion](xref:Microsoft.Xna.Framework.Quaternion)** is a quite abstract mathematical object which is only represented with 4 numbers, and present the same property of being able to be multiplied together (we say *concatenated*) to apply several rotations at once. Additionally, the do not suffer from gimbal lock, and they are more efficient to compute than matrices. Nevertheless, they can just represent rotations, and not translations nor scales like matrices do.
 
 The following consensus was finally found. Because they can represent translations, rotations and scales, matrices would be used to contain the final transformation of a 3D object and sent to the GPU to draw objects. Meanwhile, quaternions being more efficient to rotate the 3d objects around, we would use them to execute any rotation during a frame, and then convert them to matrices to apply the final transformation to the 3D object.
 
@@ -323,7 +344,7 @@ The *identity quaternion* is the quaternion that does not rotate the object. It 
 
 Usually, in this tutotial's code, in most cases we will create quaternions just before multiplying them to handle rotations.
 
-In this cas we will use the `Quaternion.CreateFromAxisAngle` function. With this function the quaternion will represent a rotation around the axis, by the angle given in radians.
+In this cas we will use the `Quaternion.CreateFromAxisAngle` function. With this function the quaternion will represent a rotation around a certain axis, by the angle given in radians.
 
 Let's review a case where we create two rotations, one around the x axis and one around the y axis, then multiply (*concatenate*) them together to get a final orientation:
 
@@ -334,15 +355,19 @@ orientation = xRotation * yRotation;
 // We could have used: Quaternion.Concatenate(xRotation, yRotation);
 ```
 
-![Rotation concatenation](../01_display_a_3d_ship/images/ch1_concatenate-rotations.png)
+| ![Rotation concatenation](../01_display_a_3d_ship/images/ch1_concatenate-rotations.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 3-4: Rotation concatenation** |
 
-Sometimes, for a specific reason, we will have a matrix containing the rotation that interests us. In this case, we will be able to create a quaternion from a rotation matrix, using the `Quaternion.CreateFromRotationMatrix` function:
+> [!NOTE]
+>
+> Sometimes, for a specific reason, we will have a matrix containing the rotation that interests us. In this case, we will be able to create a quaternion from a rotation matrix, using the `Quaternion.CreateFromRotationMatrix` function:
+> 
+> ```csharp
+> return Quaternion.CreateFromRotationMatrix(aim);
+> ```
 
-```csharp
-return Quaternion.CreateFromRotationMatrix(aim);
-```
-
-As stated in this section's introduction, when we have multiplied quaternions together to get a final orientation, we convert this result back to a rotation matrix using the `Matrix.CreateFromQuaternion` function, so we can apply it to our 3D model.
+As stated in this paragraph's introduction, when we have multiplied quaternions together to get a final orientation, we convert this result back to a rotation matrix using the `Matrix.CreateFromQuaternion` function, so we can apply it to our 3D model.
 
 ```csharp
 var rotationMatrix = Matrix.CreateFromQuaternion(orientation);
@@ -374,7 +399,7 @@ Where:
 - *x*, *y*, *z* are imaginary components
 - *i*, *j*, *k* are special operators with properties like $i² = j² = k² = ijk = -1$
 
-Yes, this last property feels a bit weird. You may have learned that real numbers (numbers from $\mathbb{R}$), when squared, cannot be negative - so their squared values cannot be equal to -1. Actually, there are other sets of numbers than real numbers. You might have heard about complex numbers (in $\mathbb{C}$), which are numbers that can be represented as a + bi, where a and b are real numbers and i is the imaginary unit, with the property that i² = -1. Quaternions are an extension of complex numbers, living in a 4 dimensions space called the Hamiltonian space ($\mathbb{H}$).
+Yes, this last property feels a bit weird. You may have learned that real numbers (numbers from $\mathbb{R}$), when squared, cannot be negative - so their squared values cannot be equal to -1. Actually, there are other sets of numbers than real numbers. You might have heard about complex numbers (in $\mathbb{C}$), which are numbers that can be represented as $a + bi$, where $a$ and $b$ are real numbers and $i$ is the imaginary unit, with the property that $i² = -1$. Quaternions are an extension of complex numbers, living in a 4 dimensions space called the Hamiltonian space ($\mathbb{H}$).
 
 In code, a quaternion is stored as a vector with 4 dimensions (x, y, z, w).
 
@@ -422,8 +447,6 @@ orientation = orientation * Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelpe
 
 **4. Converting to a Rotation Matrix:** When we have computed the final orientation of our object with quaternions, we can convert it to a rotation matrix to apply it to our object.
 
-We will discuss matrices just below.
-
 ```text
 Matrix rotationMatrix = Matrix.CreateFromQuaternion(orientation);
 ```
@@ -435,11 +458,13 @@ Matrix rotationMatrix = Matrix.CreateFromQuaternion(orientation);
 - Camera control
 - Character animation
 
-Again, this list is far from exhaustive! But for now, that's ok. We can come back to our game and use Quaternions to rotate our player toward the aim target.
+Again, this list is far from exhaustive! But for now, that's ok. If you want more information about vectors, matrices and quaternions, you can read [this article](https://docs.monogame.net/articles/getting_to_know/whatis/vector_matrix_quat/index.html) which will help you understand these concepts better.
+
+We can come back to our game and use Quaternions to rotate our player toward the aim target.
 
 ## Orienting the Player toward the PlayerAim
 
-First, we need to add a ``PlayerAim`` member variable to the ``Player`` class. It will be passed to they player in a new constructor.
+First, we need to add a ``PlayerAim`` member variable to the ``Player`` class. It will be passed to they player in a new constructor we have evoked sooner. Create this new constructor:
 
 ```csharp
   private PlayerAim playerAim;
@@ -452,7 +477,7 @@ First, we need to add a ``PlayerAim`` member variable to the ``Player`` class. I
 
 ### The HandleAiming function
 
-In the Player class, we will create an ``HandleAiming`` function that will rotate the player toward the target. We will then call this function in the ``Update`` function.
+In the Player class, we will create an ``HandleAiming`` function that will rotate the player toward the target. We will then call this function in the ``Update`` function. Implement this:
 
 ```csharp
   private void HandleAiming()
@@ -475,19 +500,19 @@ The general idea here will be to compute the direction between the player and th
 
 We can get the direction by subtracking the aim's position from the player's position. We will then normalize this direction vector to get a unit vector.
 
-![Player aiming at the target](images/ch3_aiming.png)
+| ![Player aiming at the target](images/ch3_aiming.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 3-5: Player aiming at the target** |
 
 To orientate the player, we will build with our little hands an orientation matrix. It is not the simplest solution here but it will be useful for you to help understand that a matrix represent a coordinate system relatively to an object. In the end, we will have a matrix that represents the coordinate system of the player, oriented toward the target.
 
-Now we have a normalized vector toward the target, we build a perpendicular vector to this vector, by executing a cross product between our normalized direction vector and the world's up vector. We normalize the result. Finally, we create a last normalized perpendicular vector - this time perpendicalar to both the direction and the second vector. Those three normalized vector create a coordinate system specific to the player's orientation. The following diagram reprensents the coordinate system we just created:
+We already have a normalized vector toward the target. We build a perpendicular vector to this vector, by executing a cross product between our normalized direction vector and the world's up vector. We normalize the result. Finally, we create a last normalized perpendicular vector - this time perpendicalar to both the direction and the second vector. Those three normalized vector create a coordinate system specific to the player's orientation. The following diagram represents the coordinate system we just created:
 
-![Orientation matrix](images/ch3_orientation-matrix.png)
+| ![Orientation matrix](images/ch3_orientation-matrix.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 3-6: How to build an orientation matrix?** |
 
-We can use the coordinates of those three vectors to create a matrix that represent the transformation leading to this coordinate system. We then create a quaternion from this matrix.
-
-Then, in order to create this rotation matrix, and if we consider the direction vector as a forward vector, we need to create two other vectors: the right vector (xAxis) and the up vector (yAxis), relative to our forward vector. We will then create a matrix from these three vectors, by setting the matrix's value by hand.
-
-When we have the orientation matrix, we create a quaternion from it and set it as the player's orientation.
+When we have the orientation matrix, we create a quaternion from it and set it as the player's orientation. You will implement all this in the ``HandleAiming`` function:
 
 ```csharp
   private void HandleAiming()
@@ -518,12 +543,15 @@ When we have the orientation matrix, we create a quaternion from it and set it a
   }
 ```
 
-Everything is ready! Run the game and rotate the player toward the target while moving the ship with the keys and the mouse.
+Everything is ready! Run the game and rotate the player toward the target with the mouse while moving the ship with the keys.
 
-![Chapter 3 result](images/ch3_final-screen.png)
+| ![Chapter 3 final result](images/ch3_final-screen.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 3-7: Chapter 3 final result** |
 
 ## Conclusion
 
 In this chapter, we created a target that the player can aim at using the mouse. The player rotates to face the target. We also learned how to create a quad mesh and apply a texture to it.
 
 In the next chapter, we will add a shooting mechanic to the player, allowing it to shoot in the direction of the target. We will also create a projectile class to handle the bullets' behavior and rendering.
+    
