@@ -7,23 +7,23 @@ description: During main phase, the enemy will shoot some projectiles with timin
 
 ## Objective
 
-Now that our enemies enter and exit the screen, it's time to make them shoot some projectiles. We will make them shoot during their main phase. We will choose how many projectiles they will shoot and the timing between each shot.
+Now that our enemies enter and exit the screen, it's time to make them shoot projectiles. We will make them shoot during their main phase. We will choose how many projectiles they will fire and the timing between each shot.
 
 ## Projectile and player update
 
 ### Projectile related changes
 
-Because both the player and the enemies will shoot projectiles, we need to move the function that determine the projectile orientation to the `Projectile.cs` class.
+Because both the player and the enemies will shoot projectiles, we need to move the function that determines the projectile orientation into `Projectile.cs`.
 
-To orientate the projectile, we will build an orientation matrix. This is very similar to what we did to orientate the player in the Chapter 3.
+To orient the projectile, we will build an orientation matrix. This is very similar to what we did to orient the player in Chapter 3.
 
-We will start with the projectile's direction - which will be the subtraction of the target's position and shooter position. We normalize it. We then build a perpendicular vector to this vector, by executing a cross product between our normalized direction vector and the world's up vector. We normalize the result. Finally, we create a last normalized perpendicular vector - this time perpendicular to both the direction and the second vector. Those three normalized vector create a coordinate system specific to the projectile direction. The following diagram reprensents the coordinate system we just created:
+We start with the projectile's direction — which will be the target's position minus the shooter's position. We normalize that vector. We then build a perpendicular vector to this vector by executing a cross product between the normalized direction vector and the world's up vector, and normalize the result. Finally, we create a third normalized perpendicular vector, perpendicular to both the direction and the second vector. Those three normalized vectors define a coordinate system specific to the projectile's direction. The following diagram represents the coordinate system we created:
 
 | ![Orientation matrix](images/ch8_orientation-matrix.png) |
 | :-----------------------------------------------------------------------------------------------: |
 | **Figure 8-1: Orientation matrix** |
 
-We can use the coordinates of those three vectors to create a matrix that represent the transformation leading to this coordinate system. We then create a quaternion from this matrix, since our rotations are stored as quaternions.
+We can use the coordinates of those three vectors to create a matrix representing the transformation to this coordinate system. Then we create a quaternion from that matrix, since rotations are stored as quaternions.
 
 ```csharp
 internal class Projectile : Entity
@@ -57,7 +57,7 @@ internal class Projectile : Entity
 }
 ```
 
-This will make us update the `Player.cs` class. The `HandleAiming` function will now looks like:
+This will change the `Player.cs` class. The `HandleAiming` function will now look like:
 
 ```csharp
 internal class Player : Entity
@@ -72,11 +72,11 @@ internal class Player : Entity
 }
 ```
 
-### Player's hp
+### Player's HP
 
-The enemy will shoot at the player, so it has to have an impact on the player when he or she is hit.
+Enemies will shoot at the player, so the player must be affected when hit.
 
-We will add a `hp` and `idDead` fields to the `Player.cs` class. This will allow us to make the player lose health when hit by an enemy projectile. This removal will be handled by a `RemoveHp` function.
+We will add `hp` and `isDead` fields to the `Player.cs` class. This allows the player to lose health when hit by an enemy projectile. The decrease is handled by a `RemoveHp` function.
 
 ```csharp
 internal class Player : Entity
@@ -97,7 +97,7 @@ internal class Player : Entity
 }
 ```
 
-This will make us add a `GameOver` function to the `Game1.cs` class. This function will be called when the player's hp reaches 0.
+This requires adding a `GameOver` function to `Game1.cs`, which is called when the player's HP reaches 0.
 
 ```csharp
   public void GameOver()
@@ -106,13 +106,13 @@ This will make us add a `GameOver` function to the `Game1.cs` class. This functi
   }
 ```
 
-For now, when the game is over, the game just shuts down. We will add a game over screen at the very end of this tutorial.
+For now, the game simply exits when over. We'll add a game-over screen near the end of the tutorial.
 
 ## An enemy shooting projectiles
 
 ### A state machine inside a state machine
 
-For now, our `Enemy` has three phases: `Enter`, `Main` and `Exit`. During the `Main` phase, we create an other state machine to handle the shooting of projectiles. The states will be the following:
+For now, our `Enemy` has three phases: `Enter`, `Main` and `Exit`. During the `Main` phase, we create another state machine to handle shooting. The states are:
 
 ```csharp
   enum ShootState
@@ -124,7 +124,7 @@ For now, our `Enemy` has three phases: `Enter`, `Main` and `Exit`. During the `M
   }
 ```
 
-When the enemy enters the main phase, it is first `Waiting` for the first shot, during the duration of a `SHOOTING_TIME` constant. Then it starts `Shooting` a projectile. There will be one or multiple projectiles shot. If more than one, between each projectile the enemy will wait for a constant `SHOOTING_INTERVAL` time. When all projectiles are shot, the enemy goes on `Cooldown`, for a `SHOOTING_COOLDOWN` time. If the main phase lasts more than this time, the enemy goes back to `Shooting` state. The `OutsideMainPhase` state is triggered by the enemy phase system. It is used during the exit phase.
+When the enemy enters the main phase, it is first `Waiting` for the first shot during `SHOOTING_TIME`. Then it starts `Shooting` projectiles. There may be multiple projectiles. If more than one, between each projectile the enemy waits `SHOOTING_INTERVAL`. When all projectiles are shot, the enemy enters `Cooldown` for `SHOOTING_COOLDOWN`. If the main phase lasts beyond this time, the enemy returns to `Shooting`. `OutsideMainPhase` is used when the enemy is not in the main phase.
 
 In order to handle this state machine, we need to add the following fields to the `Enemy.cs` class:
 
@@ -144,7 +144,7 @@ internal class Enemy : Entity
 }
 ```
 
-Note that we add a `Game1` field to the `Enemy` class. This will allow us to create projectiles from the enemy and get the player's position. We need to add a `Game1` parameter to the `Enemy` constructor.
+Note the `Game1` field so the enemy can create projectiles and access the player's position. Add a `Game1` parameter to the `Enemy` constructor.
 
 ```csharp
 ...
@@ -159,7 +159,7 @@ Note that we add a `Game1` field to the `Enemy` class. This will allow us to cre
 ...
 ```
 
-We also change the creation of the test enemy in the `Game1.cs` class, and add a property to get the player:
+Also change the test enemy creation in `Game1.cs` and add a Player property:
 
 ```csharp
   ...
@@ -179,7 +179,7 @@ We also change the creation of the test enemy in the `Game1.cs` class, and add a
 
 ### The shooting logic
 
-We can now modify the `UpdateMainPhase` function to handle the shooting logic.
+Modify `UpdateMainPhase` to implement shooting logic:
 
 ```csharp
   private void UpdateMainPhase(double dt)
@@ -234,7 +234,7 @@ We can now modify the `UpdateMainPhase` function to handle the shooting logic.
   }
 ```
 
-In order to trigger the shooting logic, we need to change the shooting state when the enemy enters and exits the main phase.
+Trigger the shooting state when entering and exiting the main phase:
 
 ```csharp
   private void ChangePhase(Phase newPhase)
@@ -265,7 +265,7 @@ In order to trigger the shooting logic, we need to change the shooting state whe
 
 ### Taking projectiles into account
 
-We will update the `Game1.UpdateProjectiles` function to make the enemy projectiles collide with the player, removing hp.
+Update `Game1.UpdateProjectiles` to allow enemy projectiles to hit the player and remove HP:
 
 ```csharp
   private void UpdateProjectiles(double dt)
@@ -302,7 +302,7 @@ We will update the `Game1.UpdateProjectiles` function to make the enemy projecti
   }
 ```
 
-In order to distinguish between player and enemy projectiles, we change the `AddProjectile` function in the `Game1.cs` class.
+Distinguish projectile models by origin in `AddProjectile`:
 
 ```csharp
   public void AddProjectile(Vector3 position, Quaternion orientation, float speed, bool fromPlayer = true)
@@ -314,16 +314,16 @@ In order to distinguish between player and enemy projectiles, we change the `Add
   }
 ```
 
-You will need to import the *CubeRed* model in the `Content` manager.
+You will need to import the *CubeRed* model into the Content manager.
 
 ## Conclusion
 
-In this step, we added the ability for the enemies to shoot projectiles at the player.
+In this step, enemies can shoot at the player during their main phase.
 
 | ![A shooting enemy](images/ch08_final-screen.png) |
 | :-----------------------------------------------------------------------------------------------: |
 | **Figure 8-2: Final screenshot, a shooting enemy** |
 
-We also added a `hp` field to the player, and a `RemoveHp` function to handle the player's health. The enemy main phase now has a state machine to handle the shooting logic. We also added a `GameOver` function to the `Game1` class, which is called when the player's hp reaches 0.
+We also added HP to the player, a `RemoveHp` function, and a `GameOver` call when HP reaches 0. The enemy main phase now includes a small state machine for shooting logic.
 
 In the next step, we will take profit of our new enemy behaviour to create waves of enemies, and orchestrate their entrance and exit.

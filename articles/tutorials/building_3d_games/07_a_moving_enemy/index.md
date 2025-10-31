@@ -7,19 +7,19 @@ description: Make the enemy enter the game, wait and exit.
 
 ## Objectives
 
-We will now start to code one of the pleasure of shooters: the enemy choregraphy. In this chapter, we will focus on one enemy: it will enter the game, wait for a few seconds, and then exit. We will be able to choose which "side" of the screen the enemy will enter or exit by : left side, right side, bottom side, top side, player's back, horizon. This will be the first step to create a more complex system: waves of enemies coming and going.
+We will now start to code one of the pleasures of shooters: the enemy choreography. In this chapter, we will focus on one enemy: it will enter the game, wait for a few seconds, and then exit. We will be able to choose which "side" of the screen the enemy will enter or exit from: left side, right side, bottom side, top side, player's back, horizon. This will be the first step to create a more complex system: waves of enemies coming and going.
 
-By the way, we will implement a simple hp management system for the enemies. When the enemy is hit by a projectile, it will lose 1 hp. When the hp reaches 0, the enemy will be destroyed.
+By the way, we will implement a simple HP management system for the enemies. When the enemy is hit by a projectile, it will lose 1 HP. When the HP reaches 0, the enemy will be destroyed.
 
 ## The enemy state machine
 
 The enemy will have different states, that we will call `Phase`:
 
-- **Enter**: the enemy is entering the game. It is spawned outside player's vision and will move from outside the screen to its target position.
-- **Main Phase**: the enemy is waiting. It will stay at its position for specified time. Later in this tutorial, we will make the enemy shoot at the player during this phase.
-- **Exit**: the enemy is exiting the game. It will move from its position to outside the screen. One outside the screen, the enemy will be destroyed.
+- **Enter**: the enemy is entering the game. It is spawned outside the player's view and will move from outside the screen to its target position.
+- **Main Phase**: the enemy is waiting. It will stay at its position for a specified time. Later in this tutorial, we will make the enemy shoot at the player during this phase.
+- **Exit**: the enemy is exiting the game. It will move from its position to outside the screen. Once outside the screen, the enemy will be destroyed.
 
-Note we will give the possibility for an enemy to stay in the Main Phase for an infinite amount of time. In this case the main phase duration will be set to -1. This will be useful for enemies we want the player to destroy in a mandatory way, like bosses.
+Note: we will give the possibility for an enemy to stay in the Main Phase for an infinite amount of time. In this case the main phase duration will be set to -1. This will be useful for enemies we want the player to destroy in a mandatory way, like bosses.
 
 ### Enums and variables
 
@@ -64,13 +64,13 @@ internal class Enemy : Entity
   ...
 ```
 
-The `targetPosition` will be the position the enemy will move to during the `Enter` and `Exit` phases. The `velocity` will be the 3D speed at which the enemy will move, and the `speed` variable is the actual rate of this movement. The `phase` will be the current phase of the enemy. The `screenSideEnter` and `screenSideExit` will be the side of the screen the enemy will enter and exit from. The `mainPhaseDuration` will be the duration of the `Main` phase. The `mainPhaseCounter` will be a counter that will be used to know when the Main Phase is over.
+The `targetPosition` will be the position the enemy will move to during the `Enter` and `Exit` phases. The `velocity` will be the 3D speed at which the enemy will move, and the `speed` variable is the rate of that movement. The `phase` will be the current phase of the enemy. The `screenSideEnter` and `screenSideExit` specify where the enemy enters and exits. The `mainPhaseDuration` is the duration of the `Main` phase. The `mainPhaseCounter` is a counter used to determine when the Main Phase is over.
 
-The `hp` will be the enemy's hit points. The `isDead` variable will be used to know if the enemy is dead. This last variable will be also useful when the enemy will go out of the screen during the `Exit` phase. When the enemy is out of the screen, it will be set to dead so it can be destroyed.
+The `hp` will be the enemy's hit points. The `isDead` variable will be used to mark the enemy as dead. This variable will also be useful when the enemy goes out of the screen during the `Exit` phase: when the enemy is out of the screen, it will be destroyed.
 
 ### Using the enemy state machine
 
-We will refactor the `Update` function to implement different behaviour in function of the enemy's phase.
+We will refactor the `Update` function to implement different behaviour depending on the enemy's phase.
 
 ```csharp
 public override void Update(double dt)
@@ -101,11 +101,11 @@ public override void Update(double dt)
 
 We will create the `UpdateEnterPhase`, `UpdateMainPhase` and `UpdateExitPhase` functions to implement the behaviour of the enemy in each phase.
 
-Durring the `Enter` phase, the enemy will move to its target position. When the enemy is close enough to its target position, it will change its phase to `Main`.
+During the `Enter` phase, the enemy will move to its target position. When the enemy is close enough to its target position, it will change its phase to `Main`.
 
-During the `Main` phase, the enemy will wait for the specified duration. When the duration is over, the enemy will change its phase to `Exit`. If the `mainPhaseDuration` is set to -1, the enemy will stay in the `Main` phase forever - or until the player destroys it.
+During the `Main` phase, the enemy will wait for the specified duration. When the duration is over, the enemy will change its phase to `Exit`. If the `mainPhaseDuration` is set to -1, the enemy will stay in the `Main` phase indefinitely — or until the player destroys it.
 
-During the `Exit` phase, the enemy will move to its target position. When the enemy is close enough to its target position, it will set itself to dead.
+During the `Exit` phase, the enemy will move to its target position. When the enemy is close enough to its target position, it will be marked dead.
 
 ```csharp
 private void UpdateEnterPhase(double dt)
@@ -150,11 +150,11 @@ We also need to create the `MoveToTargetPosition` function that will move the en
 
 ### Change the enemy's phase
 
-Each phase transition will need a specific behaviour:
+Each phase transition needs specific behaviour:
 
-- When the enemy enters the game, it will be set at a position outside the screen and should move to its target position.
-- When the enemy is in the `Main` phase, it should stop and will wait for a specified duration.
-- When the enemy exits the game, it should move to a target position outside the screen where it will be destroyed.
+- When the enemy enters the game, it will be placed outside the screen and will move to its target position.
+- When the enemy is in the `Main` phase, it should stop and wait for the specified duration.
+- When the enemy exits the game, it should move to a target position outside the screen and be destroyed once out of view.
 
 We will create the `ChangePhase` function to handle those behaviours:
 
@@ -183,7 +183,7 @@ private void ChangePhase(Phase newPhase)
 }
 ```
 
-The `GetPositionFromScreenSide` function will return a position outside the screen depending on the screen side we want the enemy to enter or exit from.
+The `GetPositionFromScreenSide` function will return a position outside the screen depending on the chosen side.
 
 ```csharp
 private Vector3 GetPositionFromScreenSide(ScreenSide side)
@@ -219,11 +219,11 @@ private Vector3 GetPositionFromScreenSide(ScreenSide side)
 
 > [!NOTE]
 >
-> The target position depends on the enemy's z coordinate. This way, the enemy will always move outside the screen, no matter where it is in the game world.
+> The target position depends on the enemy's Z coordinate. This way, the enemy will always move outside the screen, no matter where it is in the game world.
 
 ### Enemy's constructor
 
-We finally need to modify the `Enemy` constructor to set the target position to the enemy's initial position. The enemy will start in the `Enter` phase.
+Modify the `Enemy` constructor to set the target position to the enemy's initial position. The enemy will start in the `Enter` phase.
 
 ```csharp
 public Enemy(Vector3 position) : base()
@@ -235,11 +235,11 @@ public Enemy(Vector3 position) : base()
 }
 ```
 
-Because the enemy's `Update` function is already called in the `Game` class, we don't need to modify the `Game` class to make the enemy enter the game. We will though add a way to deplete enemy's hp when it is hit by a projectile.
+Because the enemy's `Update` function is already called in the `Game` class, we don't need to change the `Game` class to make the enemy enter the game. We will, however, add a way to reduce enemy HP when hit by a projectile.
 
 ## Destroy enemies by shooting them
 
-### Deplete enemy's hp
+### Deplete enemy HP
 
 Just add a public function to the `Enemy` class that will decrement the enemy's hp. We will call it when it is hit by a projectile.
 
@@ -250,9 +250,9 @@ Just add a public function to the `Enemy` class that will decrement the enemy's 
   }
 ```
 
-### Make enemies dead
+### Make enemies die
 
-We just need to update the `UpdateProjectiles` function in the `Game` class to decrement the enemy's hp when it is hit.
+Update the `UpdateProjectiles` function in the `Game` class to decrement an enemy's HP when hit:
 
 ```csharp
   private void UpdateProjectiles(double dt)
@@ -281,7 +281,7 @@ We just need to update the `UpdateProjectiles` function in the `Game` class to d
   }
 ```
 
-We also change the `UpdateEnemies` function to remove the enemy when it is dead.
+Also change `UpdateEnemies` to remove enemies that are dead:
 
 ```csharp
   private void UpdateEnemies(double dt)
@@ -298,11 +298,11 @@ We also change the `UpdateEnemies` function to remove the enemy when it is dead.
   }
 ```
 
-Remark we start the loop from the end of the list to avoid problems when removing elements, as with projectiles.
+Note: the loop runs backwards to safely remove elements while iterating.
 
 ## Removing test power-ups
 
-We will remove the power-up test timer we implemented in the previous chapter. We will not need it anymore. The `Game1`'s `Update` function will be simplified:
+We will remove the test power-up timer from the previous chapter. The `Game1.Update` function will be simplified:
 
 ```csharp
   protected override void Update(GameTime gameTime)
@@ -326,7 +326,7 @@ We will remove the power-up test timer we implemented in the previous chapter. W
 
 ## Conclusion
 
-We have learned how to implement a simple enemy state machine. We have created an enemy that enters the game, waits for a few seconds, and then exits. When the enemy is hit by a projectile, it will lose 1 hp. When the hp reaches 0, the enemy will be destroyed.
+We implemented a simple enemy state machine. The enemy enters the game, waits for a few seconds, and then exits. When the enemy is hit by a projectile, it loses HP; when HP reaches zero, the enemy is destroyed.
 
 | ![A moving enemy](images/ch07_final-screen.gif) |
 | :-----------------------------------------------------------------------------------------------: |

@@ -9,7 +9,7 @@ description: Shoot projectiles from the player's position to the target
 
 We will now allow the player to shoot projectiles. The projectile will be a simple colored cube that will be scaled in the depth direction to look like a bullet.
 
-Because projectiles will partially use similar member variables as the player, we will create a new mother class for both. This class will be called `Entity`. We will refactor the ``Player`` and the ``PlayerAim`` to inherit from this class.
+Because projectiles will partially reuse member variables similar to the player, we will create a new base class for both. This class will be called `Entity`. We will refactor the `Player` and the `PlayerAim` to inherit from this class.
 
 ## The Entity class
 
@@ -70,7 +70,7 @@ class Entity
 
 Now, we will make the player inherit from the Entity class.
 
-We will now refactor the player's code to use the ``Entity`` class. We wil update the ``Load`` and the ``Update`` functions. The ``Draw`` function is no longer needed, as it is already defined in the ``Entity`` class.
+We will refactor the player's code to use the `Entity` class. We will update the `Load` and the `Update` functions. The `Draw` function is no longer needed, as it is already defined in the `Entity` class.
 
 ```csharp
 class Player : Entity
@@ -102,7 +102,7 @@ class Player : Entity
 
 ### Refactoring the player aim
 
-We will now make the player aim inherit from the ``Entity`` class.
+We will now make the player aim inherit from the `Entity` class.
 
 ```csharp
 class PlayerAim : Entity
@@ -142,17 +142,17 @@ class PlayerAim : Entity
 }
 ```
 
-Same as before, we do not need to use the ``Entity``'s ``Load`` or ``Draw`` function.
+Same as before, we do not need to use the `Entity`'s `Load` or `Draw` function.
 
 ## The projectile
 
-Our projectile will be a simple cube. Add the *Cube.fbx* file in MGCB.
+Our projectile will be a simple cube. Add the *Cube.fbx* file to the MGCB.
 
 ### The projectile class
 
-Now you will create the *Projectile.cs* file. ``Projectile`` will inherit from the ``Entity`` class.
+Now create the *Projectile.cs* file. `Projectile` will inherit from the `Entity` class.
 
-The projectile will borrow its direction and its position from its shooter. It will have a constant speed and a bool variable to tell if the projectile is issued from the player or from an enemy.
+The projectile will borrow its direction and its position from its shooter. It will have a constant speed and a bool variable to indicate whether the projectile was fired by the player or by an enemy.
 
 ```csharp
 class Projectile : Entity
@@ -188,13 +188,13 @@ class Projectile : Entity
 }
 ```
 
-As you can see, in `Update`, we have used ``Vector3.Transform`` to orientate the direction vector with a quaternion. Indeed, `Vector3.Transform` works either with matrices or quaternions.
+As you can see, in `Update` we use `Vector3.Transform` to orient the direction vector with a quaternion. `Vector3.Transform` works with both matrices and quaternions.
 
-### Managing projectils in the Game1 class
+### Managing projectiles in the Game1 class
 
-The ``Game1`` class will manage the projectiles. We will add a list of projectiles in it. The class will be responsible for updating and drawing the projectiles.
+The `Game1` class will manage the projectiles. We will add a list of projectiles in it. The class will be responsible for updating and drawing the projectiles.
 
-We will also add an ``UpdateProjectiles`` function and a ``AddProjectile`` function, to add a projectile in the managed projectiles list, that will be called from the ``Player``'s class when hitting the shooting input.
+We will also add an `UpdateProjectiles` function and an `AddProjectile` function to add a projectile to the managed projectiles list; `AddProjectile` will be called from the `Player` class when the shooting input is detected.
 
 ```csharp
 public class Game1 : Game
@@ -259,9 +259,9 @@ public class Game1 : Game
 
 ### Shooting the projectile
 
-Now we can update the player to shoot the projectile when the player presses the left mouse button. We will introduce a cooldown mecanism to avoid the player to shoot too many projectiles at once.
+Now we can update the player to shoot the projectile when the player presses the left mouse button. We will introduce a cooldown mechanism to prevent the player from firing too many projectiles at once.
 
-Note that the player will now receive a reference to the ``Game1`` class, so that it can call ``Game1.AddProjectile``.
+Note that the player will now receive a reference to the `Game1` class so that it can call `Game1.AddProjectile`.
 
 ```csharp
 class Player : Entity
@@ -298,8 +298,7 @@ class Player : Entity
 }
 ```
 
-That's it! You can now shoot projectiles from the player's position to the target. You can now move the player and aim with the mouse, and shoot with the left mouse button.
-
+That's it! You can now shoot projectiles from the player's position toward the target. Move the player and aim with the mouse, and shoot with the left mouse button.
 
 | ![The player shoots](images/ch04_final-screen.gif) |
 | :-----------------------------------------------------------------------------------------------: |
@@ -307,6 +306,6 @@ That's it! You can now shoot projectiles from the player's position to the targe
 
 ### Conclusion
 
-In this step, we have created a new `Entity` class to encapsulate common properties and methods for the player, the player's aim and projectiles. We refactored the player and player aim classes to inherit from this new class. We also created a `Projectile` class that can be instantiated and managed by the `Game1` class, allowing the player to shoot projectiles.
+In this step, we created a new `Entity` class to encapsulate common properties and methods for the player, the player's aim and projectiles. We refactored the player and player aim classes to inherit from this new class. We also created a `Projectile` class that can be instantiated and managed by the `Game1` class, allowing the player to shoot projectiles.
 
 In the next step, we will implement collision detection between projectiles and enemies, allowing the player to defeat enemies by shooting them.

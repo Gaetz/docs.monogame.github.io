@@ -9,9 +9,9 @@ description: Make the projectiles collide with a target, which will be a bluepri
 
 We will now make the projectiles collide with a target. The target will be our enemy model.
 
-However, we will not directly use our models to detect collisions. We will create bounding box (an invisible mathematical cube) around both the projectile and the target, and check if those bounding boxes are colliding. Testing for collisions with bounding boxes is much faster than testing for collisions with models, and it is also more forgiving, as the bounding boxes can be larger than the actual models.
+However, we will not directly use our models to detect collisions. We will create bounding boxes (an invisible mathematical cube) around both the projectile and the target, and check if those bounding boxes are colliding. Testing for collisions with bounding boxes is much faster than testing for collisions with models, and it is also more forgiving, as the bounding boxes can be larger than the actual models.
 
-Bounding boxes come in two flavours. The first one is called **Axis-Aligned Bounding Box** (AABB). It is a box that is always aligned with the world axes (X, Y, Z). The second one is called **Oriented Bounding Box** (OBB). It is a box that can be rotated in any direction. Compoting collisions with OBBs is more costly than with AABBs ans requires more complex math, so we will use AABBs for this tutorial.
+Bounding boxes come in two flavors. The first one is called an **Axis-Aligned Bounding Box** (AABB). It is a box that is always aligned with the world axes (X, Y, Z). The second one is called an **Oriented Bounding Box** (OBB). It is a box that can be rotated in any direction. Computing collisions with OBBs is more costly than with AABBs and requires more complex math, so we will use AABBs for this tutorial.
 
 | ![Axis-Aligned Bounding Box](images/ch5_bounding-box.png) |
 | :-----------------------------------------------------------------------------------------------: |
@@ -25,9 +25,9 @@ Add the `Saucer.fbx` model to MGCB.
 
 ### An Enemy class blueprint
 
-Create an *Enemy.cs* file. The ``Enemy`` will inherit from ``Entity``.
+Create an *Enemy.cs* file. The `Enemy` will inherit from `Entity`.
 
-We will use the [**BoundingBox**](Microsoft.Xna.Framework.BoundingBox) structure provided by MonoGame to create our bounding box. It countains useful properties and functions we will make a good use of.
+We will use the [**BoundingBox**](Microsoft.Xna.Framework.BoundingBox) structure provided by MonoGame to create our bounding box. It contains useful properties and functions we will make good use of.
 
 ```csharp
 class Enemy : Entity
@@ -69,17 +69,17 @@ class Enemy : Entity
 }
 ```
 
-A bounding box is most of the time created from a minimum and a maximum point. If you imagine a cube, you can think the minimum point as the bottom-left-front corner and the maximum point as the top-right-back corner. In our case, we create a bounding box that is centered on the enemy model, with a size of 30 units in each direction (X, Y, Z).
+A bounding box is usually created from a minimum and a maximum point. If you imagine a cube, you can think of the minimum point as the bottom-left-front corner and the maximum point as the top-right-back corner. In our case, we create a bounding box that is centered on the enemy model, with a size of 30 units in each direction (X, Y, Z).
 
 > [!TIP]
 >
-> The bounding box is created with a size superior to the actual enemy model. This is to make the collision detection more forgiving. It is recreated at each frame, taking into account the enemy's world matrix, so that it follows the model's position.
+> The bounding box is created larger than the actual enemy model. This makes the collision detection more forgiving. It is recreated each frame, taking into account the enemy's world matrix so that it follows the model's position.
 
-We will also add a ``SetRandomPosition`` function to place the enemy at a random position after it has been hit. This will allow us to test our shooting system in a more dynamic way.
+We will also add a `SetRandomPosition` function to place the enemy at a random position after it has been hit. This will allow us to test our shooting system in a more dynamic way.
 
 ### Managing enemies in the Game1 class
 
-We will now add a list of enemies in the ``Game1`` class. The class will be responsible for updating and drawing the enemies. For now, we'll start with a single enemy.
+We will now add a list of enemies in the `Game1` class. The class will be responsible for updating and drawing the enemies. For now, we'll start with a single enemy.
 
 ```csharp
 public class Game1 : Game
@@ -149,11 +149,11 @@ public class Game1 : Game
 }
 ```
 
-The ``UpdateProjectiles`` function will be written later to handle collisions.
+The `UpdateProjectiles` function will be written later to handle collisions.
 
 > [!TIP]
 >
-> We have added `if (dt > 0.1) dt = 0.1;` just after computing the delta time. This is to prevent the game elements from too large movements if the delta time is too high, when, for instance, you use breakpoints to debug your code.
+> We have added `if (dt > 0.1) dt = 0.1;` just after computing the delta time. This prevents game elements from moving too far if the delta time is too large, for example when using breakpoints during debugging.
 
 ## Projectile collisions
 
@@ -161,7 +161,7 @@ The ``UpdateProjectiles`` function will be written later to handle collisions.
 
 The projectile will also need a bounding box.
 
-Because the projectile can have a rotation and our bounding boxes are aligned with axes (*AABB*), we will need to create a bounding box that is big enough to contain the projectile at any rotation. The idea will be to transform each corner of the projectile's bounding box by the projectile's world matrix - which contains the rotation - and then create a new bounding box from these transformed points.
+Because the projectile can have a rotation and our bounding boxes are aligned with the axes (AABB), we will need to create a bounding box that is big enough to contain the projectile at any rotation. The idea is to transform each corner of the projectile's bounding box by the projectile's world matrix — which contains the rotation — and then create a new bounding box from these transformed points.
 
 | ![Rotated bounding box](images/ch5_rotated-bounding-box.png) |
 | :-----------------------------------------------------------------------------------------------: |
@@ -210,7 +210,7 @@ class Projectile : Entity
 
 ### Checking for collisions in the Game1 class
 
-Now we will update the ``UpdateProjectiles`` function to check for collisions. If a collision is detected, we will remove the projectile and set the enemy to a different random position.
+Now we will update the `UpdateProjectiles` function to check for collisions. If a collision is detected, we will remove the projectile and set the enemy to a different random position.
 
 Also, we will remove projectiles that are out of bounds.
 

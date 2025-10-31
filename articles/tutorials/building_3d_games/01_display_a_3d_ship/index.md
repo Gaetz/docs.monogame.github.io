@@ -7,15 +7,15 @@ description: Load and display the 3D model of a space ship, using the ContentMan
 
 ## Objective
 
-In this first tutorial, we will see how to load and display the space ship that will serve to represent the player in our game. We will position it in the game, setup a camera to watch it and integrate that in the `Game1` class. This will allow us to review 3D mathematics concept and their API in MonoGame.
+In this first tutorial, we will see how to load and display the space ship that will serve to represent the player in our game. We will position it in the game, set up a camera to watch it and integrate that in the `Game1` class. This will allow us to review 3D mathematics concepts and the MonoGame API.
 
 > [!WARNING]
 >
-> You are supposed to have read lessons 1, 2, 3, 5 and 6 of the MonoGame's 2D basic tutorial. You should know about the `Game1` class, its `LoadContent`, `Update` and `Draw` functions, the use of the `GameTime` parameter in `Update` and `Draw`, and the way to use the MonoGame Content Builder.
+> You are supposed to have read lessons 1, 2, 3, 5 and 6 of the MonoGame 2D tutorial. You should know about the `Game1` class, its `LoadContent`, `Update` and `Draw` functions, the use of the `GameTime` parameter in `Update` and `Draw`, and the way to use the MonoGame Content Builder.
 
-|   Sum up                |     Content                                                           |       Link                      |
+|   Summary                |     Content                                                           |       Link                      |
 | ----------------------- | --------------------------------------------------------------------- | ------------------------------- |
-| What is MonoGame?       | An high level view and a summary of MonoGame's history and features   | [2D games chapter 01](https://docs.monogame.net/articles/tutorials/building_2d_games/01_what_is_monogame/index.html)          |
+| What is MonoGame?       | A high level view and a summary of MonoGame's history and features   | [2D games chapter 01](https://docs.monogame.net/articles/tutorials/building_2d_games/01_what_is_monogame/index.html)          |
 | How to install MonoGame | Setting up and getting started with MonoGame, whichever your platform | [2D games chapter 02](https://docs.monogame.net/articles/tutorials/building_2d_games/02_getting_started/index.html?tabs=windows)  |
 | The Game1 file         | Understanding the game loop in the Game1 class                         | [2D games chapter 03](https://docs.monogame.net/articles/tutorials/building_2d_games/03_the_game1_file/index.html)  |
 | The Content pipeline    | How to load assets using the MGCB editor and the ContentManager class | [2D games chapter 05](https://docs.monogame.net/articles/tutorials/building_2d_games/05_content_pipeline/index.html?tabs=vscode)  |
@@ -23,9 +23,9 @@ In this first tutorial, we will see how to load and display the space ship that 
 
 ## The Player class
 
-Create a `Player.cs` class. We will review 3D mathematical concepts while creating our `Player`. We will for now create the different member variables of this class, and its `Load` and `Update` function.
+Create a `Player.cs` class. We will review 3D mathematical concepts while creating our `Player`. For now we will create the different member variables of this class, and its `Load` and `Update` functions.
 
-Create the class squeletton in such a way:
+Create the class skeleton as follows:
 
 ```csharp
 class Player
@@ -54,13 +54,13 @@ The **[Model](xref:Microsoft.Xna.Framework.Graphics.Model)** class can contain a
 
 #### Add the model in MGCB
 
-Double click on the `Content/Content.mgcb` file. If MonoGame is correctly installed, the MGCB window should open. Right click on the Content icon, Add, Existing Item, and select the `Ship.fbx` file from the resource folder you have unzipped. Accept to copy those files in the Content folder.
+Double click on the `Content/Content.mgcb` file. If MonoGame is correctly installed, the MGCB window should open. Right click on the Content icon, Add → Existing Item, and select the `Ship.fbx` file from the resource folder you have unzipped. Accept to copy those files in the Content folder.
 
 The MGCB should have automatically selected the right Importer and Processor for the files you have chosen. Click on the Build icon, shut down MGCB.
 
 | ![Figure 1-1: Build the ship in MGCP](./images/ch1_build-ship.png)  |
 | :-----------------------------------------------------------------------------------------------: |
-| **Figure 1-1: Build the ship in MGCP** |
+| **Figure 1-1: Build the ship in MGCB** |
 
 #### Load the model in Player class
 
@@ -79,9 +79,9 @@ We will fill this variable by loading the file from the content manager. Update 
     }
 ```
 
-### Positionning the player's ship
+### Positioning the player's ship
 
-We will position the player ship thanks to two `Vector3`, to manage its position and scale (its size), and a Quaternion, to manage rotations. Those three variables will allow us to compute a **world transform matrix**, which will hold the final space coordinates of our ship. We will explain this just below.
+We will position the player ship using two `Vector3` variables (position and scale) and a Quaternion to manage rotation. Those three variables will allow us to compute a **world transform matrix**, which will hold the final space coordinates of our ship. We will explain this just below.
 
 ```csharp
     class Player
@@ -96,7 +96,7 @@ We will position the player ship thanks to two `Vector3`, to manage its position
 
 > [!NOTE]
 >
-> Rotations in 3D space is a topic by itself, which imply the use of *Quaternions*. In order to keep this tutorial simple, we will not rotate the ship yet. We will explain and use rotations in Step 3: Aim and rotate.
+> Rotations in 3D space are a topic by themselves, which imply the use of *quaternions*. To keep this tutorial simple, we will not rotate the ship yet. We will explain and use rotations in Step 3: Aim and rotate.
 >
 > Thus, the rotation Quaternion will be initialized to the identity quaternion, which is the quaternion that does not rotate the object.
 
@@ -104,7 +104,7 @@ We will position the player ship thanks to two `Vector3`, to manage its position
 
 The Vector3 position contains the 3D world position of our ship. Before diving deeper, let's understand how 3D space works in games:
 
-Vector3 contains 3 coordinates, x, y, z, along 3 axis:
+A Vector3 contains three coordinates: x, y and z, along three axes:
 
 - X-axis: Runs horizontally (left to right)
 - Y-axis: Runs vertically (up and down)
@@ -114,15 +114,15 @@ Vector3 contains 3 coordinates, x, y, z, along 3 axis:
 | :-----------------------------------------------------------------------------------------------: |
 | **Figure 1-2: 3D cartesian coordinates** |
 
-We decide a special point is the origin: the point where x, y and z coordinates are zero. So, when we position a vector to certain coordinates, we are positioning it relatively to this origin point.
+We choose a special point as the origin: the point where x, y and z coordinates are zero. So, when we position a vector to certain coordinates, we are positioning it relative to this origin point.
 
-In our game, the initial of our ship will be Vector3(0f, 0f, -250.0f):
+In our game, the initial position of our ship will be Vector3(0f, 0f, -250.0f):
 
 - 0 in x coordinate
 - 0 in y coordinate
 - -250 in z coordinate (negative, so toward the "inside" of the screen)
 
-Add this position vector it in the `Load` function of the `Player` class:
+Add this position vector in the `Load` function of the `Player` class:
 
 ```csharp
     public void Load(ContentManager content)
@@ -165,7 +165,7 @@ var b = new Vector3(3, 4, 5);
 Vector3 result = a + b;
 ```
 
-If you can add them, you can substract them.
+If you can add them, you can subtract them.
 
 ```csharp
 var a = new Vector3(0, 1, 2);
@@ -173,48 +173,48 @@ var b = new Vector3(3, 4, 5);
 Vector3 result = b - a;
 ```
 
-Vector substraction is very interesting for two reasons :
+Vector subtraction is very interesting for two reasons:
 
-- First, because you can take the opposite of a vector to go in the same orientation but in inverse direction:
+- First, because you can take the opposite of a vector to go in the same orientation but in the inverse direction:
 
 | ![Figure 1-4: Opposed vectors](./images/ch1_vector-opposite.png)  |
 | :-----------------------------------------------------------------------------------------------: |
 | **Figure 1-4: Opposed vectors** |
 
-- Second, because you can use it with points. If you substract two *B* and *A* points' coordinates, you obtain the vector going from the second point to the first:
+- Second, because you can use it with points. If you subtract two points' coordinates B and A, you obtain the vector going from the first point to the second:
 
 | ![Vectors subtractions](images/ch1_vector-subtract.png)  |
 | :-----------------------------------------------------------------------------------------------: |
 | **Figure 1-5: Vectors subtractions, B - A** |
 
-This operation is ultra useful. We will use it a lot in this tutorial.
+This operation is extremely useful. We will use it a lot in this tutorial.
 
-There is no equivalent for the usual multiplication between two Vector3. Instead, there is the **Dot product** and the **Cross product**, as we will see below.
+There is no direct equivalent of the usual multiplication between two Vector3 instances. Instead, there is the **Dot product** and the **Cross product**, as we will see below.
 
 **2. Magnitude (Length):** The "length" of a vector
 
-It can also be tought as the distance from origin to the point that has the vector's coordinates.
+It can also be thought of as the distance from origin to the point that has the vector's coordinates.
 
 $$
-|a| = \sqrt(x² + y² + z²)
+|a| = \sqrt(x^2 + y^2 + z^2)
 $$
 
-MonoGame provides you with a way to directly get the magnitude from a vector. Because square root is a complex numerical operation, you might also want the **squared magnitude** (magnitude multiplied by itself).
+MonoGame provides you with a way to directly get the magnitude from a vector. Because square root is a more expensive numerical operation, you might also want the **squared magnitude** (magnitude multiplied by itself).
 
 ```csharp
-Vector3 distanceFromOrigin = position.Length();
-Vector3 distanceFromOriginSquared = position.LengthSquared();
+float distanceFromOrigin = position.Length();
+float distanceFromOriginSquared = position.LengthSquared();
 ```
 
-For instance, when you want to compare two lengths between two set of 2 points, you would get the vectors between each point of the set by subtracting them, then compare the squared magnitude of the vectors. In term of computing, this is more optimal than comparing the magnitudes themselves, because you do not have to compute the square root, which approximation is an expensive operation.
+For instance, when you want to compare two lengths between two sets of two points, you would get the vectors between each pair of points by subtracting them, then compare the squared magnitudes of the vectors. In terms of computation, this is more optimal than comparing the magnitudes themselves, because you do not have to compute the square root.
 
 **3. Normalization:** Creating a unit vector (length of 1) in the same direction.
 
 $$
-v̂ = v/|v| = (x/|v|, y/|v|, z/|v|)
+\hat{v} = v/|v| = (x/|v|, y/|v|, z/|v|)
 $$
 
-Usually, we want a normalized vector when we want a direction with no length information. Normalizing will set the length of the vector to 1. MonoGame provides us with a way to easily do this operation:
+Usually, we want a normalized vector when we need a direction with no length information. Normalizing will set the length of the vector to 1. MonoGame provides us with a way to easily do this operation:
 
 ```csharp
 Vector3 directionFromOrigin = position - Vector3.Zero;
@@ -230,13 +230,13 @@ In this specific case, we do not need to substract the zero vector to our positi
 **4. Dot Product:** Measures how much parallel (we say *colinear*) two normalized vectors are.
 
 $$
-a·b = x_a*x_b + y_a*y_b + z_a*z_b
+a \cdot b = x_a*x_b + y_a*y_b + z_a*z_b
 $$
 
 If vectors are normalized, the result of the dot product will be a number between -1 and 1, and gives us:
 
 - If *a·b* = 0, vectors are perpendicular
-- If *a·b* > 0, angles between vectors is less than 90°
+- If *a·b* > 0, angle between vectors is less than 90°
 - If *a·b* < 0, angle is greater than 90°
 - If *a·b* = 1, vectors are parallel and in the same direction
 - If *a·b* = -1, vectors are parallel but in opposite directions
@@ -245,7 +245,7 @@ If vectors are normalized, the result of the dot product will be a number betwee
 | :-----------------------------------------------------------------------------------------------: |
 | **Figure 1-7: Dot products with normalized vectors** |
 
-This operation is super useful in videogames. The MonoGame's [Vector3](xref:Microsoft.Xna.Framework.Vector3) class gives us a way to easily compute dot products:
+This operation is very useful in videogames. The MonoGame's [Vector3](xref:Microsoft.Xna.Framework.Vector3) class gives us a way to easily compute dot products:
 
 ```csharp
 var a = new Vector3(0, 1, 2);
@@ -260,7 +260,7 @@ When you want to measure colinearity (again: if vectors are "more or less" paral
 When vectors are NOT normalized, an other dot product definition gives us the projection of the second vector on the first. Example: given $\theta$ the angle between vectors *a* and *b*, the dot product is:
 
 $$
-a·b = cos(\theta) * |a| * |b|
+a \cdot b = \cos(\theta) * |a| * |b|
 $$
 
 That is to say that we can know "how much" the second vector **projects** onto the first vector.
@@ -274,10 +274,10 @@ It is still a useful operation, but it is used in more complex contexts than wha
 **5. Cross Product:** Creates a new vector perpendicular to both inputs.
 
 $$
-a×b = (y_a*z_b - z_a*y_b, z_a*x_b - x_a*z_b, x_a*y_b - y_a*x_b)
+a \times b = (y_a*z_b - z_a*y_b, z_a*x_b - x_a*z_b, x_a*y_b - y_a*x_b)
 $$
 
-The cross product between two vectors give a vector that is *perpendicular to the plane* defined by the two input vectors. This is super useful to compute normal vectors, which are used in lighting computations. MonoGame provides us with a way to easily compute cross products:
+The cross product between two vectors gives a vector that is *perpendicular to the plane* defined by the two input vectors. This is super useful to compute normal vectors, which are used in lighting computations. MonoGame provides us with a way to easily compute cross products:
 
 ```csharp
 var a = new Vector3(0, 1, 0);   // Up
@@ -293,9 +293,9 @@ Here is a diagram showing the cross product with non-normalized vectors:
 | :-----------------------------------------------------------------------------------------------: |
 | **Figure 1-9: Cross product with non-normalized vectors** |
 
-In this case, $a×b$ is perpendicular to the grey plane.
+In this case, $a \times b$ is perpendicular to the grey plane.
 
-**Application of Vector3 in Game Development:** Vectors are used for a lot of 3D calculations in games:
+**Application of Vector3 in Game Development:** Vectors are used for many 3D calculations in games:
 
 - Object positions (like the ship's position in the code)
 - Movement directions and velocity
@@ -306,7 +306,7 @@ This is just a small list of examples, but you will see that vectors are used ev
 
 ### Orientation
 
-As told before, we will not rotate the ship yet, but we will still need to store its orientation. We will use an **Identity Quaternion** to represent the neutral orientation of the ship. Add it in the `Player` class' `Load` function:
+As mentioned before, we will not rotate the ship yet, but we will still need to store its orientation. We will use an **Identity Quaternion** to represent the neutral orientation of the ship. Add it in the `Player` class' `Load` function:
 
 ```csharp
     public void Load(ContentManager content)
@@ -317,13 +317,13 @@ As told before, we will not rotate the ship yet, but we will still need to store
     }
 ```
 
-Rotations will be handled in a latter lesson.
+Rotations will be handled in a later lesson.
 
 ### Scale with Vector3
 
-Lastly, the scale is extension of a 3D element in the three x, y, and z directions. With the scale, you can expand or shrink a 3D element in those directiions.
+Lastly, the scale is an extension of a 3D element in the three x, y, and z directions. With the scale, you can expand or shrink a 3D element in those directions.
 
-By defaut, the scale is `Vector3(1f, 1f, 1f)`, which mean 1 for x, y and z scales. If, for instance, you change the y scale to make it equal to 2 (`Vector3(1f, 2f, 1f)`), your 3D element will be stretched in the vertical direction, doubling its vertical size, while the other sizes will remain the same.
+By default, the scale is `Vector3(1f, 1f, 1f)`, which means 1 for x, y and z scales. If, for instance, you change the y scale to make it equal to 2 (`Vector3(1f, 2f, 1f)`), your 3D element will be stretched in the vertical direction, doubling its vertical size, while the other sizes will remain the same.
 
 In our case, we will make our ship's scale equal to `Vector3(2f, 2f, 2f)`, which will double its size, while conserving the proportions.
 
@@ -347,17 +347,17 @@ That's it for scale. Now let's combine position, orientation and scale to create
 
 #### What is the World Matrix?
 
-A [**Matrix**](xref:Microsoft.Xna.Framework.Matrix) in an algebraic structure (a mathematical tool) that is used to represent linear applications, that is to say, the transformation of a vector in an other vector. In 3D graphics, matrices are used to represent specific applications, named **transformations**, which combine rotations, scalings, and translations.
+A [**Matrix**](xref:Microsoft.Xna.Framework.Matrix) is an algebraic structure (a mathematical tool) that is used to represent linear applications, that is to say, the transformation of a vector into another vector. In 3D graphics, matrices are used to represent specific applications, named **transformations**, which combine rotations, scalings, and translations.
 
-Why do we want to transform a vector in an other vector?
+Why do we want to transform a vector into another vector?
 
-A 3D Model is composed multiple vertices - each "point" of the mesh. You have to understand that each vertex of a 3D object is represented by a `Vector3`, with coordinates set from its origin (the point (0, 0, 0) in blender for instance). To insert this 3D object in the game world, where the object is probably set at a specific position, rotation and scale, we need to convert each vertex coordinate from the **object space** to the **world space**. To achieve that, we multiply each vertex by a matrix, called the **world matrix** or **model matrix**, that combine translation, rotation and scale operations. The result is a new `Vector3`, which is the transformed vertex, with its coordinates expressed relatively to the world origin.
+A 3D Model is composed of multiple vertices — each "point" of the mesh. Each vertex of a 3D object is represented by a `Vector3`, with coordinates set from its origin (the point (0, 0, 0) in Blender for instance). To insert this 3D object in the game world, where the object is set at a specific position, rotation and scale, we need to convert each vertex coordinate from the **object space** to the **world space**. To achieve that, we multiply each vertex by a matrix, called the **world matrix** or **model matrix**, that combines translation, rotation and scale operations. The result is a new `Vector3`, which is the transformed vertex, with its coordinates expressed relative to the world origin.
 
 | ![From object to world space](images/ch1_world-space.png) |
 | :-----------------------------------------------------------------------------------------------: |
 | **Figure 1-11: From object to world space** |
 
-What we just wrote is a specific case. A matrix is not limited to convert a vertex from object space to world space. It can actually any vector in a specific coordinate space to another coordinate space.
+What we just wrote is but a specific case. A matrix is not limited to converting a vertex from object space to world space. It can actually transform any vector from any coordinate space to another coordinate space.
 
 #### Computing the World Matrix
 
@@ -495,7 +495,7 @@ You can perform the same operation with rotation and scale matrices.
 
 Multiplying two matrices is a way to combine their transformations. The result is a new matrix that applies both transformations at the same time.
 
-There is a mathematical rules that are important to know: order is important!
+There is a mathematical rule that is important to know: order is important!
 
 ```text
 A * B != B * A
@@ -505,7 +505,7 @@ The standard order is: Scale → Rotate → Translate. Not respecting this order
 
 In the case of the world matrix, we combine the translation, rotation, and scale matrices to transform a vertex from object space to world space.
 
-Again, the world matrix is the matrix that combines translation, rotation and scale matrices to transform a vertex from the object space to the world space. It can be seen as the matrix that is used to insert the object in the game world.
+Again, the world matrix is the matrix that combines translation, rotation and scale matrices to transform a vertex from object space to world space. It can be seen as the matrix that is used to insert the object in the game world.
 
 In our code, we compute the world matrix in the `Update` function:
 
@@ -560,11 +560,11 @@ Now we can create the player in the `LoadContent` function:
     }
 ```
 
-Note that we pass the `ContentManager` (the `Content` variable) to the `Load` function of the player. This is because the player needs to load the model from the content manager. The `Content` variable comes from the `Game` class, from which `Game1` inherit, and is automatically initialized by the `Game` class.
+Note that we pass the `ContentManager` (the `Content` variable) to the `Load` function of the player. This is because the player needs to load the model from the content manager. The `Content` variable comes from the `Game` class, from which `Game1` inherits, and is automatically initialized by the `Game` class.
 
 ### Update the player
 
-We will now update the player in the `Update` function. As you may have remarked in the `Player` class, the `Update` function takes a double parameter, `dt`, which is the time elapsed since the last frame. We need to create this parameter in the `Update` function of the `Game1` class, and pass it to the `Update` function of the `Player`.
+We will now update the player in the `Update` function. As you may have noticed in the `Player` class, the `Update` function takes a double parameter, `dt`, which is the time elapsed since the last frame. We need to create this parameter in the `Update` function of the `Game1` class, and pass it to the `Update` function of the `Player`.
 
 ```csharp
     protected override void Update(GameTime gameTime)
@@ -593,7 +593,7 @@ Basically, we are saying that in addition to multiplying the vertex by the world
 
 > [!NOTE]
 >
-> In reality, after all this matrix multiplication party, we actually have coordinates in *normalized screen space* coordinates, also called **clip space**. That is, a float number between -1 and 1 that corresponds to where the pixel should be displayed *in proportion* of your screen size. We need to convert those coordinates to the screen's real pixel coordinates, which depends the resolution of the screen. The **viewport** will contain the needed information.
+> In reality, after all this matrix multiplication party, we actually have coordinates in *normalized screen space* coordinates, also called **clip space**. That is, a float number between -1 and 1 that corresponds to where the pixel should be displayed *in proportion* of your screen size. We need to convert those coordinates to the screen's real pixel coordinates, which depends on the resolution of the screen. The **viewport** will contain the needed information.
 
 Here is a figure that summarizes the different transformations:
 
@@ -601,7 +601,7 @@ Here is a figure that summarizes the different transformations:
 | :-----------------------------------------------------------------------------------------------: |
 | **Figure 1-13: Applying all transformations** |
 
-*Image is curtesy from [learnopengl.com](https://learnopengl.com/Getting-started/Coordinate-Systems)*
+*Image is courtesy of [learnopengl.com](https://learnopengl.com/Getting-started/Coordinate-Systems)*
 
 #### View matrix
 
@@ -631,7 +631,7 @@ The *near and far clipping planes* are used to clip objects that are too close o
 | :-----------------------------------------------------------------------------------------------: |
 | **Figure 1-15: Clipping frustum** |
 
-*Image is curtesy from [learnopengl.com](https://learnopengl.com/Getting-started/Coordinate-Systems)*
+*Image is courtesy of [learnopengl.com](https://learnopengl.com/Getting-started/Coordinate-Systems)*
 
 MonoGame provides us with a way to create a perspective projection matrix (and also an orthographic projection matrix, but we won't use it in this tutorial):
 
@@ -661,7 +661,7 @@ For now, the camera won't move, so we can create those matrices once and for all
 
 We will now draw the player by defining its `Draw` function. We need to use the world, view, and projection matrices to transform the player's model from the object space to the screen space.
 
-The combination of the world, view and projection matrices is called the *world-view-projection matrix*, or **model-view-projection matrix** (*MVP matrix*). In 3D engines, this matrix is computed in a program that run on the GPU and is called a shader. More specifically, we traditionnally use at least two shaders: a **vertex shader** and a **fragment shader** (also called pixel shader). The vertex shader is used to execute vertex operations, while the fragment shader is used to compute the color of each pixel on the screen.
+The combination of the world, view and projection matrices is called the *world-view-projection matrix*, or **model-view-projection matrix** (*MVP matrix*). In 3D engines, this matrix is computed in a program that runs on the GPU and is called a shader. More specifically, we traditionally use at least two shaders: a **vertex shader** and a **fragment shader** (also called pixel shader). The vertex shader is used to execute vertex operations, while the fragment shader is used to compute the color of each pixel on the screen.
 
 In MonoGame, the [**BasicEffect**](xref:Microsoft.Xna.Framework.Graphics.BasicEffect) class can play the role of both the vertex and fragment shader. It is a class that is used to draw 3D models in a quick and effective way, without messing with complex graphics programming. We will use the `BasicEffect` class to draw the player's model.
 
@@ -684,13 +684,13 @@ Here is the code for the `Player`'s class `Draw` function:
     }
 ```
 
-As you can see, we loop through the model's meshes, and for each mesh, we loop through the basic effects. We actually have only one of both. We set the world, view, and projection matrices of the effect to the world, view, and projection matrices of the player. We then draw the mesh.
+As you can see, we loop through the model's meshes, and for each mesh, we loop through the basic effects. We actually have only one of each. We set the world, view, and projection matrices of the effect to the world, view, and projection matrices of the player. We then draw the mesh.
 
-We will make a further use of the `BasicEffect` later in the tutorial. For now, let's integrate the player's `Draw` function in the `Game1` class.
+We will make further use of the `BasicEffect` later in the tutorial. For now, let's integrate the player's `Draw` function in the `Game1` class.
 
 ### The GraphicsDevice
 
-In the `Game1` class, you may have remarked the `GraphicsDeviceManager` member variable. The `GraphicsDeviceManager` is used to create the [**GraphicsDevice**](xref:Microsoft.Xna.Framework.Graphics.GraphicsDevice.html), which represents the GPU and can draw the game. The `GraphicsDevice` is created when the `Game` class is initialized, and is accessible through the `GraphicsDevice` property of the Game class.
+In the `Game1` class, you may have noticed the `GraphicsDeviceManager` member variable. The `GraphicsDeviceManager` is used to create the [**GraphicsDevice**](xref:Microsoft.Xna.Framework.Graphics.GraphicsDevice.html), which represents the GPU and can draw the game. The `GraphicsDevice` is created when the `Game` class is initialized, and is accessible through the `GraphicsDevice` property of the Game class.
 
 We create the `GraphicsDeviceManager` in the `Game1` constructor:
 
@@ -703,7 +703,7 @@ We create the `GraphicsDeviceManager` in the `Game1` constructor:
     }
 ```
 
-You have noticed the `GraphicsDevice` is also used to initialize the `SpriteBatch` in the `LoadContent` function:
+You may have noticed the `GraphicsDevice` is also used to initialize the `SpriteBatch` in the `LoadContent` function:
 
 ```csharp
     protected override void LoadContent()
@@ -715,11 +715,11 @@ You have noticed the `GraphicsDevice` is also used to initialize the `SpriteBatc
     }
 ```
 
-You already know the `SpriteBatch` from the 2D tutorial. We won't use it to draw until the UI part of the tutorial, but it worth mentioning.
+You already know the `SpriteBatch` from the 2D tutorial. We won't use it to draw until the UI part of the tutorial, but it's worth mentioning.
 
 ### Drawing the player and using the GraphicsDevice
 
-Now we have everything ready, we will now integrate the player's `Draw` function in the `Game1` class. We will also use the GraphicsDevice to clear the screen and draw the player.
+Now we have everything ready, we will integrate the player's `Draw` function in the `Game1` class. We will also use the GraphicsDevice to clear the screen and draw the player.
 
 ```csharp
     protected override void Draw(GameTime gameTime)
@@ -732,7 +732,7 @@ Now we have everything ready, we will now integrate the player's `Draw` function
     }
 ```
 
-If you launch the game, you should see the player's model displayed on the screen. The player's model should be at the center of the screen, and should be facing the camera. We will orientate it to the far plane of the camera and make it move in the next lesson!
+If you launch the game, you should see the player's model displayed on the screen. The player's model should be at the center of the screen, and should be facing the camera. We will orient it away from the camera and make it move in the next lesson!
 
 | ![Final chapter 1 screenshot](images/ch1_final-screen.png) |
 | :-----------------------------------------------------------------------------------------------: |
@@ -742,4 +742,4 @@ If you launch the game, you should see the player's model displayed on the scree
 
 In this chapter, we have learned how to create a 3D player in MonoGame. We have seen how to use vectors to represent positions and scales. We have also learned how to create a world matrix to transform the player's model from the object space to the world space, and how to use view and projection matrices to draw the player on the screen.
 
-This chapter has been quite mathematical, but no worries: you have learned the most difficult part. In the next chapters, we will rely on the fundations we have laid here to create all the 3D game features. More fun to come!
+This chapter has been quite mathematical, but no worries: you have learned the most difficult parts. In the next chapters, we will rely on the foundations we have laid here to create all the 3D game features. More fun to come!

@@ -50,26 +50,26 @@ internal class Player : Entity
 
 ### Updating and repositioning the laser aim
 
-We could have thought that the laser aim's cube just needed to be scaled once and oriented in the aiming direction, as the player's ship. Actually, if we do that, we will encounter some problems:
+One might think that the laser aim's cube only needs to be scaled once and oriented in the aiming direction, like the player's ship. However, doing so causes some problems:
 
 - The laser will not be positioned correctly when we orient the ship toward the sides of the screen.
 - The laser will not be long enough in those cases.
 
 In order to solve those problems, we need to update the laser position and scale each frame.
 
-The laserAim position should be set to the middle of the distance between the player and the aim: the default position of a cube is at its center, so this is the simplest way to position it.
+The laserAim's position should be set to the middle of the distance between the player and the aim: the default position of a cube is at its center, so this is the simplest way to position it.
 
 | ![Laser position](images/ch14_laser-position.png)  |
 | :-----------------------------------------------------------------------------------------------: |
-|                  **Figure 14-2: Laser position, between the player and the aim**                  |
+|                  **Figure 14-1: Laser position, between the player and the aim**                  |
 
-We orient the laser aim with the same quaternion as the player.
+We orient the laser aim using the same quaternion as the player.
 
 The laser aim should be scaled in the Z direction. Its default length is set to 2400f, but we need to multiply it by the ratio between the current direction length and the default distance, when the player is centered and neutrally oriented. This way, the laser aim will always appear to be the same length, no matter how the player is oriented.
 
 | ![Laser scale](images/ch14_laser-scale.png)  |
 | :-----------------------------------------------------------------------------------------------: |
-|                  **Figure 14-3: Laser scale, adjusted for player orientation**                  |
+|                  **Figure 14-2: Laser scale, adjusted for player orientation**                  |
 
 Now implement that in the player's `HandleAiming` function:
 

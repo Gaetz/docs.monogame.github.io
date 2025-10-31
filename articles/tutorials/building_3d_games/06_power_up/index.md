@@ -9,7 +9,7 @@ description: When a player collides with a power-up, the player's weapon will sh
 
 A shooter game would not be a shooter game if we could not improve our weapons! In this step, we will make the player's weapon more powerful when the player collides with a power-up. The power-up will be a simple sphere, and the player will shoot more projectiles when colliding with it.
 
-In order to achieve this, we will need to create a new class for the power-up, and modify the player's shooting mechanism to take into account the power-up. The `Game1` class will manage the collisions. Each time the player collides with the power-up, the player will shoot one more projectile.
+In order to achieve this, we will need to create a new class for the power-up, and modify the player's shooting mechanism to take the power-up into account. The `Game1` class will manage the collisions. Each time the player collides with the power-up, the player will shoot one more projectile.
 
 ## The Power Up
 
@@ -61,11 +61,11 @@ We set the scale to `10f` so that the power-up is easy to catch for the player.
 
 > [!TIP]
 >
-> When making a game, it is nearly always better to favorise player's comfort than exact numbers.
+> When making a game, it is nearly always better to favor the player's comfort over strict precision.
 
 ## Setting up the player for power-ups
 
-### Allow the player to collide power-ups
+### Allow the player to collide with power-ups
 
 First we need the player to be able to collide with the power-up.
 
@@ -107,27 +107,27 @@ class Player : Entity
   }
 ```
 
-This bounding box is specifically set for our player model. It is bigger than the model so there is no annoying collision detail to take into account when playing. If you want to change the player model, you will need to change the vertices of the bounding box accordingly.
+This bounding box is specifically set for our player model. It is slightly larger than the model so collisions feel fair while playing. If you change the player model, you will need to adjust these vertices accordingly.
 
 ## Make the player shoot more projectiles
 
-Now that we have a `PowerUp` class, we need to modify the player's shooting mechanism to take into account the power-up. We will add a `projectileNumber` variable to the `Player` class, which will be the number of projectiles the player will shoot. Also, we will need a public `PowerUp` method to increase the `projectileNumber` when the player collides with the power-up.
+Now that we have a `PowerUp` class, we need to modify the player's shooting mechanism to take the power-up into account. We will add a `projectileNumber` variable to the `Player` class, which will be the number of projectiles the player will shoot. Also, we will need a public `PowerUp` method to increase the `projectileNumber` when the player collides with the power-up.
 
-The projectiles will be positionned on a circle in front of the player. In order to achieve that, we will use basic trigonometry: the player will shoot `projectileNumber` projectiles, each one at an angle of `2 * PI / projectileNumber` from the previous one. For instance, if we have 5 projectiles, the third projectile will be positionned at the angle `2 * 2 * PI / 5`:
+The projectiles will be positioned on a circle in front of the player. To achieve this, we will use basic trigonometry: the player will shoot `projectileNumber` projectiles, each one at an angle of `2 * PI / projectileNumber` from the previous one. For instance, if we have 5 projectiles, the third projectile will be positioned at the angle `2 * 2 * PI / 5`:
 
 | ![Projectiles on a circle](images/ch6_projectile-on-circle.png) |
 | :-----------------------------------------------------------------------------------------------: |
 | **Figure 6-1: How we will compute projectile positions on a circle** |
 
-Once we have this angle, if we consider a cercle of radius 1, the projectile x coordinate is the cosine of the angle, and the y coordinate is the sine of the angle.
+If we consider a circle of radius 1, the projectile x coordinate is the cosine of the angle, and the y coordinate is the sine of the angle.
 
 | ![Coordinates on a circle](images/ch6_circle-coordinates.png) |
 | :-----------------------------------------------------------------------------------------------: |
 | **Figure 6-2: Usage of cosine and sine to compute projectile positions** |
 
-Because we want a circle bigger than 1, the circle will be given a `PROJECTILES_RADIUS`, to make the circle bigger. We just have to multiply the projectiles coordinate by this radius.
+Because we want a circle larger than 1, the circle will be given a `PROJECTILES_RADIUS`, to scale it. We just have to multiply the projectiles coordinate by this radius.
 
-By the way, because the first projectile (when we shoot without any power up) should be issued from the center of this circle, we will manage this situation specifically, and keep our former shooting logic.
+By the way, because the first projectile (when we shoot without any power up) should be issued from the center of this circle, we will manage this case specifically, and keep our previous shooting logic.
 
 ```csharp
 class Player : Entity
@@ -185,9 +185,9 @@ class Player : Entity
 
 ## Managing power-ups in the Game1 class
 
-Now that we have a `PowerUp` class and the player can collide with it, we need to manage the power-ups in the `Game1` class. We will add a `powerUps` list to the `Game1` class, and we will create the `UpdatePowerUps` method to manage the power-up collisions and player's projectiles number increase.
+Now that we have a `PowerUp` class and the player can collide with it, we need to manage the power-ups in the `Game1` class. Add a `powerUps` list and create the `UpdatePowerUps` method to manage collisions and to increase the player's projectile count.
 
-In this current step, in order to test the power-up, we will make the power-up appear every 5 seconds, and manage this time with a `powerUpTimer` variable.
+For testing, we spawn a power-up every 5 seconds using a `powerUpTimer`.
 
 ```csharp
 public class Game1 : Game
@@ -277,7 +277,7 @@ public class Game1 : Game
 }
 ```
 
-Now, power-ups appear at a regular rate. You can use them to check that our projectile system is working as expected.
+Now power-ups appear at a regular rate. Use them to check that the projectile system behaves as expected.
 
 | ![Effect of a power up](images/ch06_final-screen.gif) |
 | :-----------------------------------------------------------------------------------------------: |
@@ -285,6 +285,6 @@ Now, power-ups appear at a regular rate. You can use them to check that our proj
 
 ## Conclusion
 
-In this step, we have added a power-up to the game. When the player collides with the power-up, the player's weapon will shoot more projectiles. This system is quite simple, but could easily be extended to more complex power-ups, such as a power-up that makes the player invincible for a short period of time, or different kind of projectiles patterns.
+In this step, we added a power-up to the game. When the player collides with the power-up, the player's weapon will shoot more projectiles. This system is simple but can be extended to other power-ups (invincibility, different projectile patterns, etc.).
 
-In the next step, we will manage the enemies' movements and behaviors.
+In the next step, we will manage enemies' movements and behaviors.

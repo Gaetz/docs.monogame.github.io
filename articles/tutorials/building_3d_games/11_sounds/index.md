@@ -7,13 +7,13 @@ description: Improve the game feeling with sounds.
 
 ## Objective
 
-In this step, we will add some sounds to the game. Sounds are a great way to improve the game feeling, for they emphasize player's action and world rections. We will add sounds for the player shooting, for the player and enemy getting hit, when the enemy explodes and when the player gets a powerup.
+In this step, we will add some sounds to the game. Sounds are a great way to improve the game feeling, as they emphasize the player's actions and world reactions. We will add sounds for the player shooting, for the player and enemy getting hit, when the enemy explodes and when the player gets a power-up.
 
 > [!WARNING]
 >
-> You are supposed to have read lessons 14 of the MonoGame's 2D basic tutorial. You should know about the `SoundEffect` and `Song` class. You can improve the code we will write in this lesson by reading chapter 15.
+> You are supposed to have read lesson 14 of MonoGame's 2D tutorial. You should know about the `SoundEffect` and `Song` classes. You can improve the code we will write in this lesson by reading chapter 15.
 
-|   Sum up                |     Content                                                           |       Link                      |
+|   Summary                |     Content                                                           |       Link                      |
 | ----------------------- | --------------------------------------------------------------------- | ------------------------------- |
 | SoundEffects and Music  | Learn how to load and play sound effects and background music         | [2D games chapter 14](https://docs.monogame.net/articles/tutorials/building_2d_games/14_soundeffects_and_music/index.html)          |
 | Audio Controller        | A reusable audio controller class to manage sound effects and music   | [2D games chapter 15](https://docs.monogame.net/articles/tutorials/building_2d_games/15_audio_controller/index.html)          |
@@ -42,7 +42,7 @@ internal class Player : Entity
 }
 ```
 
-> [!IMPORTANT] Requierements
+> [!IMPORTANT] Requirements
 >
 > It is important to load the sound in the `Load` method and not just before playing it, because loading a sound takes some time.
 
@@ -76,13 +76,13 @@ We can now play the sound when the player shoots.
   }
 ```
 
-That's it! The MonoGame framework is straightforward when it comes to sound.
+That's it! MonoGame makes sound handling straightforward.
 
 ## Sounds in the Game1 class
 
 ### Sound fields and loading
 
-As for the `Player`, we need to add some sound fields to the `Game1` class and to load their content.
+As for the `Player`, we need to add some sound fields to the `Game1` class and load them in `LoadContent`.
 
 ```csharp
 public class Game1 : Game
@@ -116,9 +116,9 @@ public class Game1 : Game
 }
 ```
 
-### Playing powerup's sound
+### Playing power-up sound
 
-This is very simple, we call the sound's `Play` function when the player picks up a powerup.
+This is very simple: call the sound's `Play` function when the player picks up a power-up.
 
 ```csharp
   private void UpdatePowerUps(double dt)
@@ -142,9 +142,9 @@ This is very simple, we call the sound's `Play` function when the player picks u
   }
 ```
 
-### Playing enemy's sounds
+### Playing enemy sounds
 
-First, we remove the explosion particle system addition from `UpdateEnemies`. We will actually add it at the same place where we will play the sound: when the player's projectile hit the enemy.
+First, we remove the explosion particle system addition from `UpdateEnemies`. We will actually add it at the same place where we will play the sound: when the player's projectile hits the enemy.
 
 ```csharp
   private void UpdateProjectiles(double dt)
@@ -194,10 +194,10 @@ First, we remove the explosion particle system addition from `UpdateEnemies`. We
   }
 ```
 
-As you have seen, we played the `smallExplosion` sound when the player or enemy is hit (but not dead). If the enemy dies from the hit, we play the `explosion` sound and add the associated particle system.
+As shown, we play `smallExplosion` when the player or enemy is hit (but not dead). If the enemy dies from the hit, we play `explosion` and add the larger particle system.
 
 ## Conclusion
 
-Nothing to add! In this very short step we added somes sounds in the game and play them. Even if the code is simple, the impact on the game's feeling will be huge. Remember it: sounds are paramount in a game.
+In this short step we added sounds to the game and played them in appropriate places. Even small sound additions have a large impact on game feeling.
 
-In the next step, we will go further in the use of `BasicEffect` to improve our game's feedbacks.
+In the next step, we will use `BasicEffect` further to improve the game's visual feedback.

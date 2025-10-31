@@ -9,23 +9,23 @@ description: Use inputs to move the player in a graceful way
 
 In this chapter, we will learn how to move the player using inputs.
 
-The player will be able to move in left/right and up/down directions, along a plane that will be set up at 250 units from the camera. Such move will allow the player to position itself to shoot and to avoid incoming bullets.
+The player will be able to move left/right and up/down along a plane that will be set at 250 units from the camera. Such movement will allow the player to position itself to shoot and to avoid incoming bullets.
 
 Rather than just moving the ship around, we will make the movement smooth and graceful. We will also add a bit of inertia to the movement, so that the player will not stop immediately when the input is released. This will be accomplished by creating a concept of **velocity** and **acceleration**.
 
-We will also restrict the player movement to the screen boundaries, so that the player will not be able to move outside the screen.
+We will also restrict the player's movement to the screen boundaries, so that the player will not be able to move outside the screen.
 
 > [!WARNING]
 >
-> For this lesson, you are supposed to know how keyboard inputs work in MonoGame. You would find a wonderful reference in the Building 2D Games tutorial's chapter 10:
+> For this lesson, you are supposed to know how keyboard inputs work in MonoGame. You can find a useful reference in the Building 2D Games tutorial's chapter 10:
 
-|   Sum up                |     Content                                                           |       Link                      |
+|   Summary                |     Content                                                           |       Link                      |
 | ----------------------- | --------------------------------------------------------------------- | ------------------------------- |
-| Handling input          | They way to use keyboard, mouse and controller in MonoGame            | [2D games chapter 10](https://docs.monogame.net/articles/tutorials/building_2d_games/10_handling_input/index.html)  |
+| Handling input          | The way to use keyboard, mouse and controller in MonoGame            | [2D games chapter 10](https://docs.monogame.net/articles/tutorials/building_2d_games/10_handling_input/index.html)  |
 
 ## Moving the player
 
-All input related code will be placed in a `HandleInput` function. Let's define it and call it from Update.
+All input-related code will be placed in a `HandlingInput` function. Let's define it and call it from Update.
 
 ```csharp
     private void HandlingInput(double dt)
@@ -46,7 +46,7 @@ All input related code will be placed in a `HandleInput` function. Let's define 
 
 Speed is the variation of position over time. We will use two variables `speedX` and `speedY` to store the speed of the player. We will also create a constant for maximum speed.
 
-At first, we will change the speed of the player for maximum speed when the input is pressed. We will then use the speed to change the position of the player, taking into account the delta-time `dt`.
+At first, we will change the speed of the player to maximum speed when the input is pressed. We will then use the speed to change the position of the player, taking into account the delta time `dt`.
 
 ```csharp
 class Player
@@ -90,7 +90,7 @@ This will move the player in the x and y directions when the keys are pressed. T
 
 > [!TIP]
 >
-> As you can see, the speed variation is multiplied by the `dt` parameter. This is because the speed is a variation over time, and we want to make sure that the movement frame rate independent.
+> As you can see, the speed variation is multiplied by the `dt` parameter. This is because the speed is a variation over time, and we want to make sure that the movement is frame-rate independent.
 >
 > As a general rule, any variation over time should be multiplied by delta time to ensure consistent behavior across different frame rates.
 
@@ -98,7 +98,7 @@ This will move the player in the x and y directions when the keys are pressed. T
 
 We will now add acceleration to the movement, to make the movement smoother.
 
-Acceleration is the variation of speed over time. We must make the player accelerate when the input is pressed, and decelerate when the input is released. The speed is variating, so we need to multiply it with the delta time.
+Acceleration is the variation of speed over time. We must make the player accelerate when the input is pressed, and decelerate when the input is released. The speed is varying, so we need to multiply it with the delta time.
 
 ```csharp
 class Player
@@ -196,11 +196,11 @@ After each speed change, we check if the absolute value of the speed is greater 
 
 ## Keeping the player inside the screen
 
-Finally, we will restrict the player movement to the screen boundaries. We will use the MonoGame's **[Rectangle](xref:Microsoft.Xna.Framework.Rectangle)** class to store the boundaries values.
+Finally, we will restrict the player movement to the screen boundaries. We will use MonoGame's **[Rectangle](xref:Microsoft.Xna.Framework.Rectangle)** class to store the boundary values.
 
 [Link to MonoGame Rectangle documentation](https://docs.monogame.net/api/Microsoft.Xna.Framework.Rectangle.html)
 
-When the player hit a boundary, we will set the player position to the boundary and set the speed in that direction to 0.
+When the player hits a boundary, we will set the player position to the boundary and set the speed in that direction to 0.
 
 ```csharp
 
@@ -241,7 +241,7 @@ class Player
 }
 ```
 
-That's it! The player can now move around the screen in a smooth and graceful way !
+That's it! The player can now move around the screen in a smooth and graceful way!
 
 | ![Final screenshot](images/ch2_final-screen.png) |
 | :-----------------------------------------------------------------------------------------------: |
@@ -249,6 +249,6 @@ That's it! The player can now move around the screen in a smooth and graceful wa
 
 ## Conclusion
 
-In this chapter, we have learned how to move the player using inputs. Using `Vector3` operations, we have implemented smooth movement with acceleration and deceleration, and we have restricted the player movement to the screen boundaries.
+In this chapter, we have learned how to move the player using inputs. Using `Vector3` operations, we have implemented smooth movement with acceleration and deceleration, and we have restricted the player's movement to the screen boundaries.
 
-In the next chapter, we will add the ability to orientate the player and display a target in the direction the player is aiming.
+In the next chapter, we will add the ability to orient the player and display a target in the direction the player is aiming.

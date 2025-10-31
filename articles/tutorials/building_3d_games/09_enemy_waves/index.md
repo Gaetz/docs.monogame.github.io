@@ -5,15 +5,15 @@ description: Organizing the appearance of enemies with a waves system.
 
 # Step 9: Enemy waves
 
-We now want to organize a chroregraphy of enemies. We will make them enter at a specific time, shoot at us then get out of the screen. We will organize a level as a succession of enemy waves. We will also allow to spawn power-ups in the waves.
+We now want to organize a choreography of enemies. We will make them enter at a specific time, shoot at us then get out of the screen. We will organize a level as a succession of enemy waves. We will also allow spawning power-ups in the waves.
 
-In this step, we will use the MonoGame data system to store the data of the waves. We will create a xml file that will be automatically interpreted as wave data thanks to the *MGCB*.
+In this step, we will use the MonoGame data system to store the data of the waves. We will create an XML file that will be automatically interpreted as wave data thanks to MGCB.
 
 ## Wave data library
 
 ### Create a library project
 
-In order to store the wave data, we need to create a project that *MGCB* will reference and use to interpret the xml file. We will create a new project in the solution. Right click on the solution and select `Add > New Project...`. Select `MonoGame Game Library` and name it (in my case I chose `3D-Tutorial-Data`). You can remove the *.cs* files from the project. This will create a new project in the solution. We will use this project to store the wave data.
+In order to store the wave data, we need to create a project that MGCB will reference and use to interpret the XML file. We will create a new project in the solution. Right-click on the solution and select Add → New Project... Select MonoGame Game Library and name it (in my case I chose `3D-Tutorial-Data`). You can remove the .cs files from the project. This will create a new project in the solution. We will use this project to store the wave data.
 
 ### The wave data class
 
@@ -73,31 +73,31 @@ namespace Tutorial_Data
 
 Notice this class is in a namespace called `Tutorial_Data`.
 
-As you can see, the wave data countains an id (a simple int that will grow with each wave), a time (the time at which the wave will appear), and the number of elements in the wave. An element can be either an enemy or a power up, and we want a maximum of 5 element per wave. Each element has a type (a string that will be used to identify if it is an enemy or a power-up), an enter side (a string that will be used to identify the side from which the enemy will enter), an exit side (a string that will be used to identify the side from which the enemy will exit), a position (x, y, z) and a duration (the duration of the enemy's main phase).
+As you can see, the wave data contains an id (a simple int that will grow with each wave), a time (the time at which the wave will appear), and the number of elements in the wave. An element can be either an enemy or a power-up, and we want a maximum of 5 elements per wave. Each element has a type (a string that will identify whether it is an enemy or a power-up), an enter side (a string used to identify the side from which the enemy will enter), an exit side (a string used to identify the side from which the enemy will exit), a position (x, y, z) and a duration (the duration of the enemy's main phase).
 
-Note that with the same data file, we could describe other types of enemies, or give additionnal properties to power-ups. In this lesson, we will stay simple so you can understand the concepts, but feel free to extend it!
+Note that with the same data file, we could describe other types of enemies or give additional properties to power-ups. In this lesson, we will stay simple so you can understand the concepts, but feel free to extend it!
 
-Once you have created the class, compile the project by right-clicking on the project and selecting `Build`. This will create a dll file in the `bin/Debug` folder of the project. We will use this dll file to load the wave data in the main project.
+Once you have created the class, compile the project by right-clicking on the project and selecting Build. This will create a DLL file in the `bin/Debug` folder of the project. We will use this DLL file to load the wave data in the main project.
 
 ### Reference the dll file in MGCB
 
-Now we need to reference the dll file in our main project's MGCB. Open the MGCB file from your main project - do not use the MGCB file from the library project. Click on `Content` on the top left `Project explorer`. In the `Properties` panel, go all the way down and click on `Reference`. In the `Reference` explorer, click on `Add`. Browse to the `bin/Debug` folder of the library project and select the dll file. This will add a reference to the dll file in MGCB.
+Now we need to reference the DLL file in our main project's MGCB. Open the MGCB file from your main project — do not use the MGCB file from the library project. Click on Content in the Project explorer. In the Properties panel, go down and click Reference. In the Reference explorer, click Add. Browse to the `bin/Debug` folder of the library project and select the DLL file. This will add a reference to the DLL file in MGCB.
 
 | ![References](images/ch9_references.png) |
 | :-----------------------------------------------------------------------------------------------: |
-| **Figure 9-1: Referencing the dll** |
+| **Figure 9-1: Referencing the DLL** |
 
 > [!NOTE]
 >
-> For MonoGame 3.8.2 or below the library project must be compiled with .NET 6.0 and not with .NET 8.0. To ensure that, right click on the data library, select `Properties`, and in the `Application` tab, select `.NET 6.0` in the `Target framework` dropdown. Then recompile the project. You will notice a `net6.0` folder in the `bin/Debug` folder of the library project in addition to the `net8.0` folder. This is the folder that MGCB will use to load the dll file.
+> For MonoGame 3.8.2 or below the library project must be compiled with .NET 6.0 and not with .NET 8.0. To ensure that, right-click on the data library, select Properties, and in the Application tab select `.NET 6.0` in the Target framework dropdown. Then recompile the project. You will notice a `net6.0` folder in the `bin/Debug` folder of the library project in addition to the `net8.0` folder. This is the folder that MGCB will use to load the DLL file.
 
 ### Reference the data library in the main project
 
-In order to use the data library in the main project, we need to reference it in the main project. Right-click on the main project and select `Add > Project Reference...`. In the Reference Manager, check the library project. Click `OK`. This will add a reference to the library project in the main project. You can now use the `Tutorial_Data.WaveData` class in the main project.
+In order to use the data library in the main project, we need to reference it in the main project. Right-click on the main project and select Add → Project Reference... In the Reference Manager, check the library project. Click OK. This will add a reference to the library project in the main project. You can now use the `Tutorial_Data.WaveData` class in the main project.
 
 ### Create the xml file
 
-We now need to create and populate the xml file that will be used to store the wave data. In the main project's Content folder, create a new xml file (Right click on the Content folder and select `Add > New Item...` and select xml file). Name it `Level0.xml`. The file should look like this:
+We now need to create and populate the XML file that will be used to store the wave data. In the main project's Content folder, create a new XML file (Right-click on the Content folder and select Add → New Item... and select XML file). Name it `Level0.xml`. The file should look like this:
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
@@ -485,8 +485,8 @@ The `UpdateWaves` function will check if the current wave is ready to be launche
 
 ## Conclusion
 
-In this step, we have created a new project to store the wave data. We have created a new class to load and use the wave data. We have modified the `Enemy` class to allow it to be created from the wave data. We have also modified the `Game1` class to load and use the wave data.
+In this step, we have created a new project to store the wave data. We have created a class to load and use the wave data. We have modified the `Enemy` class to allow it to be created from the wave data. We have also modified the `Game1` class to load and use the wave data.
 
 The MonoGame content pipeline is a powerful tool that allows us to load and use custom data in our game. We have seen how to use it to load xml files and use them directly in our game. This is actually the simplest way to load data in MonoGame. There are two types of classes called `ContentImporter` and `ContentProcessor` that would allow to import more complex data. Nevertheless, this would go too far for this basic 3D tutorial. You can check the [MonoGame documentation about the Content Pipeline](https://docs.monogame.net/articles/getting_to_know/whatis/content_pipeline/index.html) for more information on this.
 
-Now that our gameplay is ready, we will dedicate the three next steps to improve the graphics of our game, starting with particles in the next lesson.
+Now that our gameplay is ready, we will dedicate the next three steps to improve the graphics of our game, starting with particles in the next lesson.
