@@ -7,15 +7,21 @@ description: Improve the game feeling with particles.
 
 ## Objectives
 
-Now the rules of our game are set up, we will improve the feeling and the appearance of interactions. We fill first focus on one crucial tool in the belt of 3d developers: particles.
+Now the rules of our game are set up, we will improve the feeling and the appearance of interactions. We fill first focus on one crucial tool in the belt of 3D developers: particles.
 
 We will create a custom particle management system and use it to signal when either the enemies or the player are hit. Also we will create a impressive particle explosion when an enemy ship is destroyed.
 
 ## The particle
 
-A particle is usually a simple 2d sprite or simple 3d model that is drawn repeatively by the GPU, so it does not consume too much resources. In our case, we will take profit of our trustfull `Quad` class to display a single particle. Additionnally, a particle is positionned and drawn in the game, so it will be an `Entity`.
+A particle is usually a simple 2D sprite or simple 3D model that is drawn repeatively by the GPU, so it does not consume too much resources. In our case, we will take profit of our trustfull `Quad` class to display a single particle. Additionnally, a particle is positionned and drawn in the game, so it will be an `Entity`.
 
 Particles usually move, and can have several parameters. In our case, we will decide the particle has a movement velocity, a lifetime (duration after which it disappears), and age which will track the life duration, a color at start and an other at the end of its lifespan. The color will progressively shift between the two colors thanks to a *linear interpolation* (also called *lerp*). We will create a property to check if the lifetime is over and to manage velocity.
+
+> [!NOTE]
+>
+> **Linear interpolation** is a common technique in gameplay and computer graphics to progressively shift a value between two other values. It is often used for colors, positions, scales, rotations, etc. It is often implemented in a `Lerp` function that takes three parameters: the start value, the end value, and a proportion (between 0 and 1) that indicates how far we are between the two values.
+>
+> For rotations, there is a similar technique called **spherical linear interpolation** (or *slerp*), that takes into account the circular nature of rotations.
 
 Create a `Particle.cs` file:
 
@@ -85,7 +91,7 @@ The `Update` function accomplish three things:
 
 - It changes the particle's age.
 - It applies some modification on the velocity: first we multiply it by a number inferior to `1f` in order to progressively slow it, then we apply a sort of gravity to make the particle accelerate downward. This will improve the feeling of our particles explosions.
-- It compute a proportion of the elapsed lifetime (a number between 0 and 1), then it uses this number to *linearly-interpolate* (lerp) between the start color and the end color. When `lerpAmount` is at zero, the color is the start color, when it is one, it is the end color. Between those two moments, it has a proportionate mix of the two colors. This color is finally used to replace the `BasicEffect` diffuse color, so the texture color will be multiplied by this color. Because the texture color is white, the final result is the diffuse color itself.
+- It compute a proportion of the elapsed lifetime (a number between 0 and 1), then it uses this number to *linearly-interpolate* (lerp) between the start color and the end color. When `lerpAmount` is at zero, the color is the start color, when it is one, it is the end color. Between those two moments, it has a proportionate mix of the two colors. This color is finally used to replace the `BasicEffect` diffuse color, so the texture color will be multiplied by this color. Because the texture color is white (1f, 1f, 1f), we multiply all values of the diffuse color by one, so the final result is the diffuse color itself.
 
 The `Draw` function just draws the `Quad`.
 
@@ -286,7 +292,9 @@ There are two places where we want to spawn particle systems:
 
 We choose different colors, speed, sizes and duration in function of the situation. That's it! We have impressive explosions.
 
-![Particles!](images/ch10_final-screen.gif)
+| ![Particles!](images/ch10_final-screen.gif) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 10-1: Final screenshot, particles!** |
 
 ## Conclusion
 

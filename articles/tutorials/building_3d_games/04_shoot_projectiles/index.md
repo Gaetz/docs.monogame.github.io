@@ -142,7 +142,7 @@ class PlayerAim : Entity
 }
 ```
 
-Note that, in this case, we do not need to use the ``Entity``'s ``Load`` or ``Draw`` function.
+Same as before, we do not need to use the ``Entity``'s ``Load`` or ``Draw`` function.
 
 ## The projectile
 
@@ -150,7 +150,7 @@ Our projectile will be a simple cube. Add the *Cube.fbx* file in MGCB.
 
 ### The projectile class
 
-Now we will create the *Projectile.cs* file. ``Projectile`` will inherit from the ``Entity`` class.
+Now you will create the *Projectile.cs* file. ``Projectile`` will inherit from the ``Entity`` class.
 
 The projectile will borrow its direction and its position from its shooter. It will have a constant speed and a bool variable to tell if the projectile is issued from the player or from an enemy.
 
@@ -300,7 +300,10 @@ class Player : Entity
 
 That's it! You can now shoot projectiles from the player's position to the target. You can now move the player and aim with the mouse, and shoot with the left mouse button.
 
-![The player shoots](images/ch04_final-screen.gif)
+
+| ![The player shoots](images/ch04_final-screen.gif) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 4-1: Final screenshot, the player shoots** |
 
 ### Conclusion
 

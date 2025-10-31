@@ -50,7 +50,7 @@ class Player
 
 ### Loading the Model
 
-The **[Model](xref:Microsoft.Xna.Framework.Graphics.Model)** class can contain a 3D model, composed of one or several **meshes**. A **mesh** file usually contains geometrical data related to the 3d model, plus additional information for textures placement, animations etc. We will use this class to store our player's model.
+The **[Model](xref:Microsoft.Xna.Framework.Graphics.Model)** class can contain a 3D model, composed of one or several **meshes**. A **mesh** file usually contains geometrical data related to the 3D model, plus additional information for textures placement, animations etc. We will use this class to store our player's model.
 
 #### Add the model in MGCB
 
@@ -110,9 +110,9 @@ Vector3 contains 3 coordinates, x, y, z, along 3 axis:
 - Y-axis: Runs vertically (up and down)
 - Z-axis: Runs depth-wise (forward and backward, z towards us)
 
-| ![Figure 1-2: 3d cartesian coordinates](./images/ch1_3D-coordinates.png)  |
+| ![Figure 1-2: 3D cartesian coordinates](./images/ch1_3D-coordinates.png)  |
 | :-----------------------------------------------------------------------------------------------: |
-| **Figure 1-2: 3d cartesian coordinates** |
+| **Figure 1-2: 3D cartesian coordinates** |
 
 We decide a special point is the origin: the point where x, y and z coordinates are zero. So, when we position a vector to certain coordinates, we are positioning it relatively to this origin point.
 
@@ -323,7 +323,7 @@ Rotations will be handled in a latter lesson.
 
 Lastly, the scale is extension of a 3D element in the three x, y, and z directions. With the scale, you can expand or shrink a 3D element in those directiions.
 
-By defaut, the scale is `Vector3(1f, 1f, 1f)`, which mean 1 for x, y and z scales. If, for instance, you change the y scale to make it equal to 2 (`Vector3(1f, 2f, 1f)`), your 3d element will be stretched in the vertical direction, doubling its vertical size, while the other sizes will remain the same.
+By defaut, the scale is `Vector3(1f, 1f, 1f)`, which mean 1 for x, y and z scales. If, for instance, you change the y scale to make it equal to 2 (`Vector3(1f, 2f, 1f)`), your 3D element will be stretched in the vertical direction, doubling its vertical size, while the other sizes will remain the same.
 
 In our case, we will make our ship's scale equal to `Vector3(2f, 2f, 2f)`, which will double its size, while conserving the proportions.
 
@@ -351,7 +351,7 @@ A [**Matrix**](xref:Microsoft.Xna.Framework.Matrix) in an algebraic structure (a
 
 Why do we want to transform a vector in an other vector?
 
-A 3D Model is composed multiple vertices - each "point" of the mesh. You have to understand that each vertex of a 3D object is represented by a `Vector3`, with coordinates set from its origin (the point (0, 0, 0) in blender for instance). To insert this 3d object in the game world, where the object is probably set at a specific position, rotation and scale, we need to convert each vertex coordinate from the **object space** to the **world space**. To achieve that, we multiply each vertex by a matrix, called the **world matrix** or **model matrix**, that combine translation, rotation and scale operations. The result is a new `Vector3`, which is the transformed vertex, with its coordinates expressed relatively to the world origin.
+A 3D Model is composed multiple vertices - each "point" of the mesh. You have to understand that each vertex of a 3D object is represented by a `Vector3`, with coordinates set from its origin (the point (0, 0, 0) in blender for instance). To insert this 3D object in the game world, where the object is probably set at a specific position, rotation and scale, we need to convert each vertex coordinate from the **object space** to the **world space**. To achieve that, we multiply each vertex by a matrix, called the **world matrix** or **model matrix**, that combine translation, rotation and scale operations. The result is a new `Vector3`, which is the transformed vertex, with its coordinates expressed relatively to the world origin.
 
 | ![From object to world space](images/ch1_world-space.png) |
 | :-----------------------------------------------------------------------------------------------: |

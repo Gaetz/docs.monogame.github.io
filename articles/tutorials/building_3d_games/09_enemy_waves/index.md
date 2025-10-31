@@ -81,9 +81,11 @@ Once you have created the class, compile the project by right-clicking on the pr
 
 ### Reference the dll file in MGCB
 
-Now we need to reference the dll file in MGCB. Open the MGCB file from your main project - do not use the MGCB file from the library project. Click on `Content` on the top left `Project explorer`. In the `Properties` panel, go all the way down and click on `Reference`. In the `Reference` explorer, click on `Add`. Browse to the `bin/Debug` folder of the library project and select the dll file. This will add a reference to the dll file in MGCB.
+Now we need to reference the dll file in our main project's MGCB. Open the MGCB file from your main project - do not use the MGCB file from the library project. Click on `Content` on the top left `Project explorer`. In the `Properties` panel, go all the way down and click on `Reference`. In the `Reference` explorer, click on `Add`. Browse to the `bin/Debug` folder of the library project and select the dll file. This will add a reference to the dll file in MGCB.
 
-![References](images/ch9_references.png)
+| ![References](images/ch9_references.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 9-1: Referencing the dll** |
 
 > [!NOTE]
 >
@@ -370,7 +372,7 @@ public class Game1 : Game
 }
 ```
 
-The level data will countain the raw data from the xml file. The waves list will countain the waves that we will create from the level data. The current wave will be used to know which wave we are currently in, and the wave timer will be used to know when to launch the next wave.
+The `levelData` variable will countain the raw data from the xml file. The waves list will countain the waves that we will create from the level data. The current wave will be used to know which wave we are currently in, and the wave timer will be used to know when to launch the next wave.
 
 We will need a `LoadWaves` function that will take the `levelData` as a parameter and build the list of `Waves`:
 
@@ -477,12 +479,14 @@ We will finally modify our `Update` function to call the waves. We will add a ne
 
 The `UpdateWaves` function will check if the current wave is ready to be launched. If it is, it will call the `Launch` function of the `Wave` class. The `currentWave` variable will be incremented to the next wave. The `waveTimer` variable will be used to know when to launch the next wave.
 
-![Waves!](images/ch09_final-screen.gif)
+| ![Waves!](images/ch09_final-screen.gif) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 9-2: Final screenshot, waves of enemies** |
 
 ## Conclusion
 
 In this step, we have created a new project to store the wave data. We have created a new class to load and use the wave data. We have modified the `Enemy` class to allow it to be created from the wave data. We have also modified the `Game1` class to load and use the wave data.
 
-The MonoGame content pipeline is a powerful tool that allows us to load and use custom data in our game. We have seen how to use it to load xml files and use them directly in our game. This is actually the simplest way to load data in MonoGame. There are two types of classes called `ContentImporter` and `ContentProcessor` that would allow to import more complex data. Nevertheless, this would go too far for this basic 3D tutorial. You can check the MonoGame documentation for more information on this.
+The MonoGame content pipeline is a powerful tool that allows us to load and use custom data in our game. We have seen how to use it to load xml files and use them directly in our game. This is actually the simplest way to load data in MonoGame. There are two types of classes called `ContentImporter` and `ContentProcessor` that would allow to import more complex data. Nevertheless, this would go too far for this basic 3D tutorial. You can check the [MonoGame documentation about the Content Pipeline](https://docs.monogame.net/articles/getting_to_know/whatis/content_pipeline/index.html) for more information on this.
 
 Now that our gameplay is ready, we will dedicate the three next steps to improve the graphics of our game, starting with particles in the next lesson.

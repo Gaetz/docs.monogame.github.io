@@ -15,7 +15,7 @@ This step will allow us to go further with the use of the `BasicEffect` class. W
 
 ### Color flash management
 
-First, we need to manage color modification on our player and enemies. Because this special effect could actually happen for any 3d model in the game, we will setup everything in the `Entity` class.
+First, we need to manage color modification on our player and enemies. Because this special effect could actually happen for any 3D model in the game, we will setup everything in the `Entity` class.
 
 The general idea for our flash effect is to set the `BasicEffect` emissive color to a certain value, and then allows it to go back to normal (transparent) over a certain duration. This will automaically add a color to the model then make it progressively disappear. We will need to store the flash color and the flash duration, as well as the current color and the flash timer.
 

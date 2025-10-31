@@ -17,11 +17,13 @@ Because both the player and the enemies will shoot projectiles, we need to move 
 
 To orientate the projectile, we will build an orientation matrix. This is very similar to what we did to orientate the player in the Chapter 3.
 
-We will start with the projectile's direction - which will be the subtraction of the target's position and shooter position. We normalize it. We then build a perpendicular vector to this vector, by executing a cross product between our normalized direction vector and the world's up vector. We normalize the result. Finally, we create a last normilized perpendicular vector - this time perpendicalar to both the direction and the second vector. Those three normalized vector create a coordinate system specific to the projectile direction. The following diagram reprensents the coordinate system we just created:
+We will start with the projectile's direction - which will be the subtraction of the target's position and shooter position. We normalize it. We then build a perpendicular vector to this vector, by executing a cross product between our normalized direction vector and the world's up vector. We normalize the result. Finally, we create a last normalized perpendicular vector - this time perpendicular to both the direction and the second vector. Those three normalized vector create a coordinate system specific to the projectile direction. The following diagram reprensents the coordinate system we just created:
 
-![Orientation matrix](images/ch8_orientation-matrix.png)
+| ![Orientation matrix](images/ch8_orientation-matrix.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 8-1: Orientation matrix** |
 
-We can use the coordinates of those three vectors to create a matrix that represent the transformation leading to this coordinate system. We then create a quaternion from this matrix.
+We can use the coordinates of those three vectors to create a matrix that represent the transformation leading to this coordinate system. We then create a quaternion from this matrix, since our rotations are stored as quaternions.
 
 ```csharp
 internal class Projectile : Entity
@@ -318,7 +320,9 @@ You will need to import the *CubeRed* model in the `Content` manager.
 
 In this step, we added the ability for the enemies to shoot projectiles at the player.
 
-![A shooting enemy](images/ch08_final-screen.png)
+| ![A shooting enemy](images/ch08_final-screen.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 8-2: Final screenshot, a shooting enemy** |
 
 We also added a `hp` field to the player, and a `RemoveHp` function to handle the player's health. The enemy main phase now has a state machine to handle the shooting logic. We also added a `GameOver` function to the `Game1` class, which is called when the player's hp reaches 0.
 

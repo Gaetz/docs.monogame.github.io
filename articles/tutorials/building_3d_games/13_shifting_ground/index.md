@@ -205,7 +205,7 @@ In the `Game1.cs` class, we will create two instances of the `ShiftingTexture` c
 
 > [!NOTE]
 >
-> We shall orientate the shifting speed in opposite directions, for the ground and the sky quads will be orientated upside down, along the x-axis. This is because *face culling*: a 3d model is not rendered if it is not facing the camera. This is a performance optimization that is used in most 3D engines.
+> We shall orientate the shifting speed in opposite directions, for the ground and the sky quads will be orientated upside down, along the x-axis. This is because *face culling*: a 3D model is not rendered if it is not facing the camera. This is a performance optimization that is used in most 3D engines.
 
 ```csharp
 public class Game1 : Game

@@ -80,7 +80,7 @@ All assets for the game are provided in this [Resources](./Resources.zip) zipped
 Authoring:
 
 - Musics are created by [Bertrand Toupet](https://soundcloud.com/merune) 
-- The Beach Ball 3d asset and textures is from [RB Whitaker model library](http://rbwhitaker.wikidot.com/model-library)
+- The Beach Ball 3D asset and textures is from [RB Whitaker model library](http://rbwhitaker.wikidot.com/model-library)
 - 3D ships and sound effects are made by myself with Asset Forge and bfxr
 
 ## About this documentation

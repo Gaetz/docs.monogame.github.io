@@ -11,7 +11,11 @@ We will now make the projectiles collide with a target. The target will be our e
 
 However, we will not directly use our models to detect collisions. We will create bounding box (an invisible mathematical cube) around both the projectile and the target, and check if those bounding boxes are colliding. Testing for collisions with bounding boxes is much faster than testing for collisions with models, and it is also more forgiving, as the bounding boxes can be larger than the actual models.
 
-![Axis-Aligned Bounding Box](images/ch5_bounding-box.png)
+Bounding boxes come in two flavours. The first one is called **Axis-Aligned Bounding Box** (AABB). It is a box that is always aligned with the world axes (X, Y, Z). The second one is called **Oriented Bounding Box** (OBB). It is a box that can be rotated in any direction. Compoting collisions with OBBs is more costly than with AABBs ans requires more complex math, so we will use AABBs for this tutorial.
+
+| ![Axis-Aligned Bounding Box](images/ch5_bounding-box.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 5-1: An example of an AABB** |
 
 Let's start by creating the target.
 
@@ -22,6 +26,8 @@ Add the `Saucer.fbx` model to MGCB.
 ### An Enemy class blueprint
 
 Create an *Enemy.cs* file. The ``Enemy`` will inherit from ``Entity``.
+
+We will use the [**BoundingBox**](Microsoft.Xna.Framework.BoundingBox) structure provided by MonoGame to create our bounding box. It countains useful properties and functions we will make a good use of.
 
 ```csharp
 class Enemy : Entity
@@ -63,7 +69,7 @@ class Enemy : Entity
 }
 ```
 
-A bounding box is most of the time created from a minimum and a maximum point. In our case, we create a bounding box that is centered on the enemy model, with a size of 30 units in each direction (X, Y, Z).
+A bounding box is most of the time created from a minimum and a maximum point. If you imagine a cube, you can think the minimum point as the bottom-left-front corner and the maximum point as the top-right-back corner. In our case, we create a bounding box that is centered on the enemy model, with a size of 30 units in each direction (X, Y, Z).
 
 > [!TIP]
 >
@@ -155,9 +161,11 @@ The ``UpdateProjectiles`` function will be written later to handle collisions.
 
 The projectile will also need a bounding box.
 
-Because the projectile can have a rotation and our bounding boxes are aligned with axes (*AABB*), we will need to create a bounding box that is big enough to contain the projectile at any rotation. The idea will be to transform each corner of the projectile's bounding box by the projectile's world matrix, and then create a new bounding box from these transformed points.
+Because the projectile can have a rotation and our bounding boxes are aligned with axes (*AABB*), we will need to create a bounding box that is big enough to contain the projectile at any rotation. The idea will be to transform each corner of the projectile's bounding box by the projectile's world matrix - which contains the rotation - and then create a new bounding box from these transformed points.
 
-![Rotated bounding box](images/ch5_rotated-bounding-box.png)
+| ![Rotated bounding box](images/ch5_rotated-bounding-box.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 5-2: A new bounding box for a rotated projectile** |
 
 MonoGame provides a function to create a bounding box from a list of points, so that any point inside this list is also inside the bounding box.
 
@@ -235,7 +243,9 @@ Also, we will remove projectiles that are out of bounds.
 
 That's it! You can now shoot at the enemy model and see it move to a different position when hit.
 
-![Shooting at an enemy](images/ch05_final-screen.gif)
+| ![Shooting at an enemy](images/ch05_final-screen.gif) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 5-3: Final screenshot, shooting at an enemy** |
 
 ## Conclusion
 

@@ -115,11 +115,15 @@ Now that we have a `PowerUp` class, we need to modify the player's shooting mech
 
 The projectiles will be positionned on a circle in front of the player. In order to achieve that, we will use basic trigonometry: the player will shoot `projectileNumber` projectiles, each one at an angle of `2 * PI / projectileNumber` from the previous one. For instance, if we have 5 projectiles, the third projectile will be positionned at the angle `2 * 2 * PI / 5`:
 
-![Projectiles on a circle](images/ch6_projectile-on-circle.png)
+| ![Projectiles on a circle](images/ch6_projectile-on-circle.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 6-1: How we will compute projectile positions on a circle** |
 
 Once we have this angle, if we consider a cercle of radius 1, the projectile x coordinate is the cosine of the angle, and the y coordinate is the sine of the angle.
 
-![Coordinates on a circle](images/ch6_circle-coordinates.png)
+| ![Coordinates on a circle](images/ch6_circle-coordinates.png) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 6-2: Usage of cosine and sine to compute projectile positions** |
 
 Because we want a circle bigger than 1, the circle will be given a `PROJECTILES_RADIUS`, to make the circle bigger. We just have to multiply the projectiles coordinate by this radius.
 
@@ -275,10 +279,12 @@ public class Game1 : Game
 
 Now, power-ups appear at a regular rate. You can use them to check that our projectile system is working as expected.
 
-![Effect of a power up](images/ch06_final-screen.gif)
+| ![Effect of a power up](images/ch06_final-screen.gif) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 6-3: Final screenshot, effect of a power up** |
 
 ## Conclusion
 
-In this step, we have added a power-up to the game. When the player collides with the power-up, the player's weapon will shoot more projectiles. This system is quite simple, but could easylly be extended to more complex power-ups, such as a power-up that makes the player invincible for a short period of time, or different kind of projectiles patterns.
+In this step, we have added a power-up to the game. When the player collides with the power-up, the player's weapon will shoot more projectiles. This system is quite simple, but could easily be extended to more complex power-ups, such as a power-up that makes the player invincible for a short period of time, or different kind of projectiles patterns.
 
 In the next step, we will manage the enemies' movements and behaviors.

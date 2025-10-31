@@ -64,7 +64,7 @@ internal class Enemy : Entity
   ...
 ```
 
-The `targetPosition` will be the position the enemy will move to during the `Enter` and `Exit` phases. The `velocity` will be the speed at which the enemy will move. The `phase` will be the current phase of the enemy. The `screenSideEnter` and `screenSideExit` will be the side of the screen the enemy will enter and exit from. The `mainPhaseDuration` will be the duration of the `Main` phase. The `mainPhaseCounter` will be a counter that will be used to know when the Main Phase is over.
+The `targetPosition` will be the position the enemy will move to during the `Enter` and `Exit` phases. The `velocity` will be the 3D speed at which the enemy will move, and the `speed` variable is the actual rate of this movement. The `phase` will be the current phase of the enemy. The `screenSideEnter` and `screenSideExit` will be the side of the screen the enemy will enter and exit from. The `mainPhaseDuration` will be the duration of the `Main` phase. The `mainPhaseCounter` will be a counter that will be used to know when the Main Phase is over.
 
 The `hp` will be the enemy's hit points. The `isDead` variable will be used to know if the enemy is dead. This last variable will be also useful when the enemy will go out of the screen during the `Exit` phase. When the enemy is out of the screen, it will be set to dead so it can be destroyed.
 
@@ -328,6 +328,8 @@ We will remove the power-up test timer we implemented in the previous chapter. W
 
 We have learned how to implement a simple enemy state machine. We have created an enemy that enters the game, waits for a few seconds, and then exits. When the enemy is hit by a projectile, it will lose 1 hp. When the hp reaches 0, the enemy will be destroyed.
 
-![A moving enemy](images/ch07_final-screen.gif)
+| ![A moving enemy](images/ch07_final-screen.gif) |
+| :-----------------------------------------------------------------------------------------------: |
+| **Figure 7-1: Final screenshot, a moving enemy** |
 
 In the next step, we will make the enemy shoot at the player during its main phase!

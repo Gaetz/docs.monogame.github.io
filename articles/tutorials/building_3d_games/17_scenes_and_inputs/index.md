@@ -162,7 +162,7 @@ You can see how we use the input manager. We update it with the key state at the
 
 ## The menu scene
 
-For our `SceneMenu.cs` we will make something beautiful. We will have a 3d scene with a lateral view of the player's ship, moving above the ground. Displayed over it, two menu options: start the game and quit.
+For our `SceneMenu.cs` we will make something beautiful. We will have a 3D scene with a lateral view of the player's ship, moving above the ground. Displayed over it, two menu options: start the game and quit.
 
 The following code will implement that. You will see that we orientated the camera in a different way than in the `SceneGame`. The ship position and orientation will oscillate to give a more dynamic look.
 
