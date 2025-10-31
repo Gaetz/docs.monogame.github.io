@@ -1,17 +1,17 @@
 ---
 title: "Step 14: A laser aim"
-description: Replace the TargetAim by a cube that imitate the laser aim.
+description: Replace the TargetAim with a cube that imitates the laser aim.
 ---
 
 # Step 14: A laser aim
 
 ## Objective
 
-In order to solve the bug introduced in the previous step, we will change our game's aiming system. We will get rid of the target quad and raher use a laser that will display to the player the trajectory of its projectiles.
+In order to solve the bug introduced in the previous step, we will change our game's aiming system. We will replace the target quad with a laser that displays the trajectory of its projectiles.
 
 ## Deactivate the TargetAim
 
-First, we need to deactivate the `PlayerAim.cs` rendering that is now useless. We will just comment out its call to the quad's draw function.
+First, we need to deactivate the `PlayerAim.cs` rendering, which is now unnecessary. We will just comment out its call to the quad's draw function.
 
 ```csharp
   public override void Draw(Matrix view, Matrix projection)
@@ -50,24 +50,28 @@ internal class Player : Entity
 
 ### Updating and repositioning the laser aim
 
-We could have thought that the laser aim's cube just needed to be scaled once and orientated in the aiming direction, as the player's ship. Actually, if we do that, we will encounter some problems:
+We could have thought that the laser aim's cube just needed to be scaled once and oriented in the aiming direction, as the player's ship. Actually, if we do that, we will encounter some problems:
 
-- The laser will not be position right when we orientate the ship toward the screen's sides.
+- The laser will not be positioned correctly when we orient the ship toward the sides of the screen.
 - The laser will not be long enough in those cases.
 
-In order to solve those problemes, we need to update the laser position and scale each frame.
+In order to solve those problems, we need to update the laser position and scale each frame.
 
 The laserAim position should be set to the middle of the distance between the player and the aim: the default position of a cube is at its center, so this is the simplest way to position it.
 
-![Laser position](images/ch14_laser-position.png)
+| ![Laser position](images/ch14_laser-position.png)  |
+| :-----------------------------------------------------------------------------------------------: |
+|                  **Figure 14-2: Laser position, between the player and the aim**                  |
 
-We orientate the laser aim with the same quaternion as the player.
+We orient the laser aim with the same quaternion as the player.
 
-The laser aim should be scaled in the Z direction. Its default length is set to 2400f, but we multiply it by the ratio between the current direction length and the default distance, when the player is centered and neutrally oriented. This way, the laser aim will always appear to be the same length, no matter how the player is oriented.
+The laser aim should be scaled in the Z direction. Its default length is set to 2400f, but we need to multiply it by the ratio between the current direction length and the default distance, when the player is centered and neutrally oriented. This way, the laser aim will always appear to be the same length, no matter how the player is oriented.
 
-![Laser scale](images/ch14_laser-scale.png)
+| ![Laser scale](images/ch14_laser-scale.png)  |
+| :-----------------------------------------------------------------------------------------------: |
+|                  **Figure 14-3: Laser scale, adjusted for player orientation**                  |
 
-We will implement that in the player's `HandleAiming` function:
+Now implement that in the player's `HandleAiming` function:
 
 ```csharp
   ...
@@ -89,7 +93,7 @@ We will implement that in the player's `HandleAiming` function:
 
 ### Drawing the laser aim
 
-Finally, we need to draw the laser aim in the `Player` class. We will do that in the `Draw` function, just after the player is drawn:
+Finally, we need to draw the laser aim in the `Player` class. Do that in the `Draw` function, just after the player is drawn:
 
 ```csharp
   public override void Draw(Matrix view, Matrix projection)
@@ -108,8 +112,10 @@ Finally, we need to draw the laser aim in the `Player` class. We will do that in
 
 ## Conclusion
 
-Now, the player has a laser aim that is always pointing to where they aim. It replaces our former target quad. The laser aim is a cube that is stretched in the Z direction, and its length is adjusted according to the player's orientation.
+Now, the player has a laser aim that always points to where they aim. It replaces our former target quad. The laser aim is a cube that is stretched in the Z direction, and its length is adjusted according to the player's orientation.
 
-![Laser aim](images/ch14_final-screen.png)
+| ![Laser aim](images/ch14_final-screen.png)  |
+| :-----------------------------------------------------------------------------------------------: |
+|                  **Figure 14-3: Final screenshot, laser aim!**                  |
 
 Our feedback and graphics improvement pass is finished! In the next two steps, we will focus on UI. First, add a message system to introduce some narration, then wrap up the game with a main menu and a game over screen.

@@ -15,7 +15,9 @@ Let's make the game's graphics better. For now our background fills too empty. L
 
 As stated above, our background will be composed of two textures, placed in the way that one will represent the ground, and the other the sky.
 
-![Ground and sky](images/ch13_ground-and-sky.png)
+| ![Ground and sky](images/ch13_ground-and-sky.png)  |
+| :-----------------------------------------------------------------------------------------------: |
+|                  **Figure 13-1: Ground and sky textures**                  |
 
 Textures are 2D images that are mapped onto 3D objects to give them a more realistic appearance. In our case, the texture is mapped on a simple quad. If you check the code we used to setup `Quad.cs`:
 
@@ -50,9 +52,11 @@ Textures are 2D images that are mapped onto 3D objects to give them a more reali
   }
 ```
 
-You see that the texture is mapped on the quad using the `TextureCoordinate` property of the vertices. The texture coordinates are in the range [0, 1], where (0, 0) is the upper left corner of the texture and (1, 1) is the lower right corner. In our case, we are saying thaht the upper left corner of the texture is mapped to the upper left corner of the quad, and the lower right corner of the texture is mapped to the lower right corner of the quad. This means that the texture will be stretched to fit the quad.
+You see that the texture is mapped on the quad using the `TextureCoordinate` property of the vertices. The texture coordinates are in the range [0, 1], where (0, 0) is the upper left corner of the texture and (1, 1) is the lower right corner. In our case, we are saying that the upper left corner of the texture is mapped to the upper left corner of the quad, and the lower right corner of the texture is mapped to the lower right corner of the quad. This means that the texture will be stretched to fit the quad.
 
-![Texture coordinates](images/ch13_texture-coordinates.png)
+| ![Texture coordinates](images/ch13_texture-coordinates.png)  |
+| :-----------------------------------------------------------------------------------------------: |
+|                  **Figure 13-2: How texture coordinates allow to map the texture on a quad**                  |
 
 Now, this actually opens a possibility for us: we can modify the texture coordinates of the vertices to make the texture move. Indeed, if we modify the texture coordinates of the vertices, the texture will move on the quad. This is a common technique used in games to create a moving background or a shifting texture effect.
 
@@ -60,7 +64,7 @@ But how to use this effect to figure out the ground and sky? The idea is the gro
 
 > [!NOTE]
 >
-> Texture coordinates are often called *UVs*. That's because we often use xyz for 3D position coordinates, so we needed two additional letters for the texture coordinates. We took the closest. Thus U - horizontal texture coordinate - and V - vertical texture coordinate. Some engines or frameworks also use S and T.
+> Texture coordinates are often called *UVs*. That's because we often use xyz for 3D position coordinates, so we needed two additional letters for the texture coordinates. We took the closest. Thus U - horizontal texture coordinate - and V - vertical texture coordinate. Some game engines or frameworks also use S and T.
 
 ### Updating the quad class
 
@@ -165,7 +169,7 @@ internal class ShiftingTexture : Entity
 
 This class will hold a `Quad` and will be responsible for updating the texture shift speed. The `Load` method will load the texture and set the effect. The `Update` method will update the texture shift speed based on the time elapsed since the last frame. The `Draw` method will call the `Draw` method of the `Quad` class.
 
-In the `Load` method, we set a new effect: the fog effect. The fog effect is a common technique used in games to create a sense of depth and distance. The `FogStart` and `FogEnd` properties define the distance at which the fog starts and is total, and the `FogColor` property defines the color of the fog.
+In the `Load` method, we set a new effect: the fog effect. The fog effect is a common technique used in games to create a sense of depth and distance. The `FogStart` and `FogEnd` properties define the distance at which the fog starts and is total, and the `FogColor` property defines the color of the fog. As you have understood, this fog effect is pre-programmed in the `BasicEffect` shader.
 
 ### Some more Entity properties
 
@@ -328,6 +332,8 @@ We set the fog effect to be enabled, and we set the same values as for the groun
 
 We have added a shifting texture for the ground and sky, and we have applied a fog effect entities. This makes the game look much better and more immersive.
 
-![Shifting background!](images/ch13_final-screen.gif)
+| ![Shifting background!](images/ch13_final-screen.gif)  |
+| :-----------------------------------------------------------------------------------------------: |
+|                  **Figure 13-3: Final screenshot, shifting background!**                  |
 
 Nevertheless, we have created a bug: the player's target aim can no longer be seen behind the sky and ground quads. In the next step we will modify our target system to rather use a kind of laser helper in order to aim.

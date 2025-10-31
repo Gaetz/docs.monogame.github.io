@@ -17,15 +17,15 @@ This step will allow us to go further with the use of the `BasicEffect` class. W
 
 First, we need to manage color modification on our player and enemies. Because this special effect could actually happen for any 3D model in the game, we will setup everything in the `Entity` class.
 
-The general idea for our flash effect is to set the `BasicEffect` emissive color to a certain value, and then allows it to go back to normal (transparent) over a certain duration. This will automaically add a color to the model then make it progressively disappear. We will need to store the flash color and the flash duration, as well as the current color and the flash timer.
+The general idea for our flash effect is to set the `BasicEffect` emissive color to a certain value, and then allows it to go back to normal (transparent) over a certain duration. This will automatically add a color to the model then make it progressively disappear. We will need to store the flash color and the flash duration, as well as the current color and the flash timer.
 
 > [!NOTE]
 >
 > Emissive and diffuse color are color that will automatically modify the model's texture color thanks to the `BasicEffect`.
 >
-> Emissive color is supposed to be a color that is emitted by the 3D object, and as such modify the texture color in an *additive* way. That is to say that the emissive color's components are added to the already existing color of the texture.
+> **Emissive color** is supposed to be a color that is emitted by the 3D object, and as such modify the texture color in an *additive* way. That is to say that the emissive color's components are added to the already existing color of the texture.
 >
-> Diffuse color is supposed to be the color of the object itself. It is usually multiplied with the texture's color in order to mix the texture's and the diffuse's color. It is called *diffuse* because it represents a statistical approximation of a lighting on an homogeneous surface. The light particules are supposed to bounce in a random direction, which diffuses them, and thus gives an uniform color.
+> **Diffuse color** is supposed to be the color of the object itself. It is usually multiplied with the texture's color in order to mix the texture's and the diffuse's color. It is called *diffuse* because it represents a statistical approximation of a lighting on an homogeneous surface. The light particules are supposed to bounce in a random direction, which diffuses them, and thus gives an uniform color.
 
 It's time to implement our flash. Modify `Entity.cs` as follows:
 
@@ -182,6 +182,9 @@ I decided that shaders will be outside the scope of this first 3D tutorial, for,
 
 In this step, we added a color flash effect to the player and enemies when they are hit. This effect is achieved by modifying the `BasicEffect` emissive color in the `Draw` method of the entity. We also added a `Flash` method to manage the flash effect and a `UpdateFlash` method to update the current flash color over time. All this allowed us to learn more about the `BasicEffect` class.
 
-![Flash!](images/ch12_final-screen.gif)
+| ![Flash!](images/ch12_final-screen.gif)  |
+| :-----------------------------------------------------------------------------------------------: |
+|                  **Figure 12-1: Flashes on enemies and player**                  |
+
 
 Overall, our game's feedback starts to be really good. We have sounds, particles and colors to communicate the game state to the player. The game is starting to feel like a real game! In the next step we will improve the graphical aspect by using a neat trick to create a dynamic level background.
