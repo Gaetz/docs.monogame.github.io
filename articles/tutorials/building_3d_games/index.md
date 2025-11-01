@@ -11,7 +11,7 @@ Hi! Welcome to this MonoGame 3D beginner tutorial. Our goal will be to create a 
 
 To differ from Star Fox, we will set our game inside the internal core of a fantasy computer, where our pilot heroine will rush her miniaturized virtual spaceship to shoot and destroy nasty bugs! Our final result will look like this:
 
-[gameplay video or image]
+![Project demo](./project-demo.gif)
 
 Before we start coding, let's review what you need to know.
 
