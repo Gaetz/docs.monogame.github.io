@@ -1,21 +1,21 @@
 ---
 title: "Step 15: Message system"
-description: Replace the TargetAim by a cube that imitate the laser aim.
+description: Add a message system to display character dialogue and narration in the game.
 ---
 
 # Step 15: Message system
 
 ## Objective
 
-Let's add some narration in our game. In a 3D shooter game, we can imagine the pilot of the ship will discuss with other people: it can be teammates, enemies or even the ship's computer. We will use a message system to display those messages, along with a caption of the speaking character face.
+Let's add some narration to our game. In a 3D shooter game, we can imagine the pilot of the ship will communicate with other people: teammates, enemies, or even the ship's computer. We will use a message system to display those messages, along with a portrait of the speaking character's face.
 
-Our message system will be, in a way, similar to the wave system we already have. We will create a xml file containning the messages' content and the time they will be displayed. The lesson will start with that.
+Our message system will be, in a way, similar to the wave system we already have. We will create an XML file containing the messages' content and the time they will be displayed. The lesson will start with that.
 
 > [!WARNING]
 >
-> In this lesson, you are supposed to know how to create a sprite font. If it is not the case, please refer to the following 2D tutorial lesson:  
+> In this lesson, you are supposed to know how to create a sprite font. If not, please refer to the following 2D tutorial lesson:
 
-|   Sum up                |     Content                                                           |       Link                      |
+|   Summary               |     Content                                                           |       Link                      |
 | ----------------------- | --------------------------------------------------------------------- | ------------------------------- |
 | Working with SpriteFonts| How to use fonts and text                                             | [2D games chapter 16](https://docs.monogame.net/articles/tutorials/building_2d_games/16_working_with_spritefonts/index.html)  |
 
@@ -23,7 +23,7 @@ Our message system will be, in a way, similar to the wave system we already have
 
 ### Data in the library project
 
-First, create a `MessageData` class in the library project. It will allow us to create the xml file containing the messages.
+First, create a `MessageData` class in the library project. It will allow us to create the XML file containing the messages.
 
 ```csharp
 namespace Tutorial_Data
@@ -39,9 +39,9 @@ namespace Tutorial_Data
 }
 ```
 
-The `id` is the message's id, the `time` is the time when the message will be displayed, the `duration` is the time it will be displayed, the `portrait` is the name of the character face (*none* if nothing to display) to display and the `message` is the text to display.
+The `id` is the message's id, the `time` is when the message will be displayed, the `duration` is how long it will be displayed, the `portrait` is the name of the character face (*none* if nothing to display), and the `message` is the text to display.
 
-Let's now create a file `Level0Messages.xml` in our main's project Content folder.  The file will be like this:
+Let's now create a file `Level0Messages.xml` in our main project's Content folder. The file will look like this:
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
@@ -59,14 +59,14 @@ Let's now create a file `Level0Messages.xml` in our main's project Content folde
       <time>3.0</time>
       <duration>3.0</duration>
       <portrait>robot</portrait>
-      <message>The motherboard has been overtaken by agressive malignant programs. Unfortunalely, they threaten both the system's data and our corporeal integrity.</message>
+      <message>The motherboard has been overtaken by aggressive malignant programs. Unfortunately, they threaten both the system's data and our corporeal integrity.</message>
     </Item>
     <Item>
       <id>0</id>
       <time>6.0</time>
       <duration>2.5</duration>
       <portrait>robot</portrait>
-      <message>I recommand a cautious approach so we can keep the ship's repairs to a minimum.</message>
+      <message>I recommend a cautious approach so we can keep the ship's repairs to a minimum.</message>
     </Item>
     <Item>
       <id>0</id>
@@ -94,7 +94,7 @@ Let's now create a file `Level0Messages.xml` in our main's project Content folde
 </XnaContent>
 ```
 
-This small dialog introduce the characters and the game setting. Now add the file in the MGCB (with Add / Existing file) and build the content.
+This small dialog introduces the characters and the game setting. Now add the file to MGCB (with Add → Existing file) and build the content.
 
 ### A class representing the messages
 
@@ -143,12 +143,12 @@ We will tackle the `DisplayedCharacter` enum and the `Game1.DisplayMessage` func
 
 Once we have the message data, we need a place to display it. We will create a `DialogBox.cs` class that will be used to display the messages and the character's face.
 
-Please be sure you have imported in the MBCB all resources needed for the dialog box:
+Please be sure you have imported in MGCB all resources needed for the dialog box:
 
 - The dialog box texture (a simple rectangle): `DialogBox.png`
 - The character's face textures: `pilot.png` and `robot.png`
 
-You also need to create in the MGCB a new `Arial.spritefont` file, so we can use this font.
+You also need to create in MGCB a new `Arial.spritefont` file, so we can use this font.
 
 ### Dialog box content and loading
 
@@ -160,7 +160,7 @@ Our dialog box will be able to:
 - Stay visible for a certain duration
 - Have a background
 
-The lines of text and character's face should be positionned gracefully in the dialog box.
+The lines of text and character's face should be positioned gracefully in the dialog box.
 
 Here is the start of the `DialogBox` class:
 
@@ -203,13 +203,13 @@ internal class DialogBox
   ...
 ```
 
-Most variables are self explanatory. The `portraitTexture` will be the currently displayed character's face. The other texture are just preloaded so we don't have to load them each time we need to display a message.
+Most variables are self-explanatory. The `portraitTexture` will be the currently displayed character's face. The other textures are preloaded so we don't have to load them each time we need to display a message.
 
-`MAX_LINE_CHARACTERS` is the maximum number of characters we will display in a line. We will use it to split the message in several lines if needed. `LINE_SEPARATION` is the distance between two lines.
+`MAX_LINE_CHARACTERS` is the maximum number of characters we will display in a line. We will use it to split the message into several lines if needed. `LINE_SEPARATION` is the distance between two lines.
 
 ### Displaying and updating the dialog box
 
-The `DisplayMessage` function will used by the `Game1` class to setup the `DialogBox` before displaying it. The `Update` function will be used to manage the `displayTimer` and set the visibility to false when it the display duration is elapsed.
+The `DisplayMessage` function will be used by the `Game1` class to set up the `DialogBox` before displaying it. The `Update` function will be used to manage the `displayTimer` and set the visibility to false when the display duration has elapsed.
 
 ```csharp
   ...
@@ -249,11 +249,11 @@ The `DisplayMessage` function will used by the `Game1` class to setup the `Dialo
 ...
 ```
 
-### Drawing the dislog box
+### Drawing the dialog box
 
-Contrary to what we did until now, we will use 2D rendering to draw the dialog box. It will be displayed above our 3D scene - so will be drawn last.
+Contrary to what we did until now, we will use 2D rendering to draw the dialog box. It will be displayed above our 3D scene — so will be drawn last.
 
-With MonoGame, as you already know form the Basic 2D Tutorial, 2D elements are drawn with the `Spritebatch`. That is why the dialog box's `Draw` function and its related functions will use `Spritebatch` as a parameter.
+With MonoGame, as you already know from the Basic 2D Tutorial, 2D elements are drawn with the `SpriteBatch`. That is why the dialog box's `Draw` function and its related functions will use `SpriteBatch` as a parameter.
 
 ```csharp
   ...
@@ -281,7 +281,7 @@ With MonoGame, as you already know form the Basic 2D Tutorial, 2D elements are d
 
   private void DrawMessage(SpriteBatch spriteBatch)
   {
-    // Divide the message in lines
+    // Divide the message into lines
     string[] words = message.Split(' ');
     List<string> lines = new List<string>();
     StringBuilder line = new StringBuilder();
@@ -309,9 +309,9 @@ With MonoGame, as you already know form the Basic 2D Tutorial, 2D elements are d
 }
 ```
 
-`DrawDialogBox` draws the dialog box with a transparent color. The `DrawCharacter` function is straightforward, it just draws the character's face.
+`DrawDialogBox` draws the dialog box with a transparent color. The `DrawCharacter` function is straightforward; it just draws the character's face.
 
-The `DrawMessage` function is more interesting. It splits the message in words then build a line by adding words in it, keeping the count of the words' characters. When the line is too long, it adds the line to the list of lines and starts a new line. At the end, it must add the line that is currently being built. Finally, it draws each line with a vertical separation.
+The `DrawMessage` function is more interesting. It splits the message into words then builds a line by adding words to it, keeping count of the words' characters. When the line is too long, it adds the line to the list of lines and starts a new line. At the end, it must add the line that is currently being built. Finally, it draws each line with vertical separation.
 
 We can now use our new classes in the `Game1` class.
 
@@ -319,7 +319,7 @@ We can now use our new classes in the `Game1` class.
 
 ### Loading the message data
 
-We will manage the message data in the `Game1` class the same way we managed the waves. We need some variable and will load the data in the `LoadContent` function. This last function will use a `LoadMessages` function to load the messages from the xml file.
+We will manage the message data in the `Game1` class the same way we managed the waves. We need some variables and will load the data in the `LoadContent` function. This function will use a `LoadMessages` function to load the messages from the XML file.
 
 ```csharp
 public class Game1 : Game
@@ -359,7 +359,7 @@ public class Game1 : Game
 
 ### Updating and drawing the message system
 
-On one hand we will need an `UpdateMessages` function to manage the message schudule. On the other hand, we will update the dialog box it self to display the messages when it is supposed to be visible. We also need a `DisplayMessage` function to forward the message to the dialog box.
+On one hand we will need an `UpdateMessages` function to manage the message schedule. On the other hand, we will update the dialog box itself to display the messages when it is supposed to be visible. We also need a `DisplayMessage` function to forward the message to the dialog box.
 
 ```csharp
   ...
@@ -448,11 +448,11 @@ We can now draw the dialog box.
   }
 ```
 
-Test the game now. It works... but it seems the rendering is completely broken. The 3D objects superpose themselves and after a certain time, the ground and sky textures stop repeating. We need to fix that.
+Test the game now. It works... but it seems the rendering is completely broken. The 3D objects superimpose themselves and after a certain time, the ground and sky textures stop repeating. We need to fix that.
 
-### Fixing spritebatch issues
+### Fixing SpriteBatch issues
 
-The problem is that we are using the `Spritebatch` to draw the dialog box, it silently changes some values in the `GraphicsDevice`. More precisely, we are not resetting the `SamplerState` (which manage texture repetition) and `DepthStencilState` (which manage depth, so superposition) to their default 3D rendering values. We will fix that by adding two lines of code after the call to the `Spritebatch`.
+The problem is that we are using the `SpriteBatch` to draw the dialog box, which silently changes some values in the `GraphicsDevice`. More precisely, we are not resetting the `SamplerState` (which manages texture repetition) and `DepthStencilState` (which manages depth, so superposition) to their default 3D rendering values. We will fix that by adding two lines of code after the call to the `SpriteBatch`.
 
 ```csharp
   protected override void Draw(GameTime gameTime)
@@ -473,15 +473,17 @@ That's it! Now the dialog box is displayed correctly and the game is back to nor
 
 ## Conclusion
 
-We have now a message system that can be used to display messages in the game.
+We now have a message system that can be used to display messages in the game.
 
-![Dialog box](images/ch15_final-screen.png)
+| ![Dialog box](images/ch15_final-screen.png)  |
+| :-----------------------------------------------------------------------------------------------: |
+|                  **Figure 15-1: Final screenshot, dialog box!**                  |
 
-Even if text is not mandatory in games, narration can add a whole layer of involvement to players that are sensible to it. What is super cool is that the timing of the messages is independant from the timing of the waves. It could allow us to have our characters discuss while the player is fighting.
+Even though text is not mandatory in games, narration can add a whole layer of involvement for players who are receptive to it. What is super cool is that the timing of the messages is independent from the timing of the waves. This could allow us to have our characters discuss while the player is fighting.
 
-Note that this message system implementation is a super simple UI. If you want to go further and implement a full UI with many options regarding the size and resolution of your game, please refer to the following chapters in the basic 2D tutorial:
+Note that this message system implementation is a very simple UI. If you want to go further and implement a full UI with many options regarding the size and resolution of your game, please refer to the following chapters in the basic 2D tutorial:
 
-|   Sum up                     |     Content                                                           |       Link                      |
+|   Summary                     |     Content                                                           |       Link                      |
 | ---------------------------- | --------------------------------------------------------------------- | ------------------------------- |
 | User Interface Fundamentals  | Learn the basics of user interface design in MonoGame                 | [2D games chapter 19](https://docs.monogame.net/articles/tutorials/building_2d_games/19_user_interface_fundamentals/index.html)  |
 | Implementing UI with Gum     | Use Gum, a specialized framework that simplifies many aspects of UI   | [2D games chapter 20](https://docs.monogame.net/articles/tutorials/building_2d_games/20_implementing_ui_with_gum/index.html)  |

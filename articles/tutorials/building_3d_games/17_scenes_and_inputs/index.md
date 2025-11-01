@@ -7,13 +7,13 @@ description: Create a menu and a gameover scene to wrap up the game.
 
 ## Objective
 
-In this lesson, we will implement the `SceneMenu.cs` and `SceneGameOver.cs` class. For both those scene, we will need to detect a *Pressed* input, that is an input you press and that was pressed the frame before. We wil create a simple `InputManager.cs` class to do that.
+In this lesson, we will implement the `SceneMenu.cs` and `SceneGameOver.cs` classes. For both of those scenes we will need to detect a "pressed" input — that is, an input that is pressed this frame but was not pressed in the previous frame — in order to switch scenes. We will create a simple `InputManager.cs` class to do that. Additionally, because we will use a different view angle for the menu scene, we will also implement a `Camera` class.
 
-We will then use this input manager to allow our game to be ported to other platform. MomoGame will handle the heavy lifting, but we will still need to indicate which inputs we want to use on each of those platforms.
+We will then use this input manager to make our game easier to port to other platforms. MonoGame will handle the heavy lifting, but we will still need to indicate which inputs we want to use on each of those platforms.
 
 > [!WARNING]
 >
-> Input management has already be explained in the basic 2D tutorial. You can refer to it if you want additional information.
+> Input management has already been explained in the basic 2D tutorial. You can refer to it if you want additional information.
 
 |   Sum up                |     Content                                                           |       Link                      |
 | ----------------------- | --------------------------------------------------------------------- | ------------------------------- |
@@ -23,7 +23,7 @@ We will then use this input manager to allow our game to be ported to other plat
 
 ### Switching to Menu and GameOver in the Game1 class
 
-First, we will prepare the capability to change to our two new scenes in the `Game1.cs` file. We will also create two new public functions for this.
+First, we will prepare the capability to change to our two new scenes in the `Game1.cs` file. We will also add two new public functions for this.
 
 ```csharp
 public class Game1 : Game
@@ -71,11 +71,11 @@ public class Game1 : Game
 }
 ```
 
-In order to switch from the menu to the game scene, we need to ba able to detect specific types of key presses. We will handle that by implementing an input manager.
+In order to switch from the menu to the game scene, we need to be able to detect specific types of key presses. We will handle that by implementing an input manager.
 
 ### Managing pressed keys
 
-We can distinguish two ways to press a key: holding it dowm (we will call `IsKeyDown` the function that detect it) and pressing it, which will only detect the first frame when the key is pressed (we will call it `IsKeyPressed`). To make this distinction, we need to keep track of the current key state and the one from the frame before, which will be called `previousKeyboardState`.
+We can distinguish two ways to press a key: holding it down (we call `IsKeyDown` the function that detects it) and pressing it, which detects only the first frame when the key is pressed (we call it `IsKeyPressed`). To make this distinction, we need to keep track of the current key state and the one from the previous frame, which we will call `previousKeyboardState`.
 
 Create the `InputManager.cs` file:
 
@@ -112,11 +112,11 @@ internal class InputManager
 }
 ```
 
-We added the `isPreviousStateNull` boolean to manage the first frame of a scene. It may happen that a scene is loaded while a key is being held down - because the player still has its finger on the key after the scene is loaded. We need `IsKeyPressed` to return `false` in this case.
+We added the `isPreviousStateNull` boolean to handle the first frame of a scene. It may happen that a scene is loaded while a key is being held down — because the player still has their finger on the key after the scene is loaded. We need `IsKeyPressed` to return `false` in that case.
 
 ## The game over scene
 
-Our `SceneGameOver.cs` class will be very simple. It will only display an image and wait for the player to press *Enter* or *Space*, to come back to the main menu.
+Our `SceneGameOver.cs` class will be very simple. It will only display an image and wait for the player to press *Enter* or *Space* to return to the main menu.
 
 ```csharp
 internal class SceneGameOver : Scene
@@ -158,15 +158,15 @@ internal class SceneGameOver : Scene
 }
 ```
 
-You can see how we use the input manager. We update it with the key state at the beginning of the frame, and use `EndUpdate` to save the key state for next frame.
+You can see how we use the input manager. We update it with the key state at the beginning of the frame, and use `EndUpdate` to save the key state for the next frame.
 
 ## The menu scene
 
-For our `SceneMenu.cs` we will make something beautiful. We will have a 3D scene with a lateral view of the player's ship, moving above the ground. Displayed over it, two menu options: start the game and quit.
+For our `SceneMenu.cs` we will make something beautiful. We will have a 3D scene with a lateral view of the player's ship moving above the ground. Displayed over it are two menu options: Start and Quit.
 
-The following code will implement that. You will see that we orientated the camera in a different way than in the `SceneGame`. The ship position and orientation will oscillate to give a more dynamic look.
+The following code implements that. You will see that we orient the camera differently than in `SceneGame` by changing the view matrix. The ship's position and orientation oscillate to give a more dynamic look.
 
-The `menuItem` selector is used to know what to do when a validation key is pressed. It can have value 0 or 1, because we only have two menu options. When the validation is pressed while `menuItem` is 0, the game will be loaded. When `menuItem` is 1, we will quit our game.
+The `menuItem` selector is used to know what to do when a validation key is pressed. It can have value 0 or 1, because we only have two menu options. When validation is pressed while `menuItem` is 0, the game will start. When `menuItem` is 1, we will quit the game.
 
 ```csharp
 internal class SceneMenu : Scene
@@ -285,21 +285,229 @@ internal class SceneMenu : Scene
 }
 ```
 
-Because this scene mix 3D and 2D, so we need to reset the graphics device after we use the `SpriteBatch`, as in the `SceneGame`.
+Because this scene mixes 3D and 2D, we need to reset the graphics device after we use the `SpriteBatch`, as in `SceneGame`.
+
+## A camera class
+
+We now have two different view angles: one for the game and one for the menu. If we wanted to add more scenes or create cinematic viewpoint animations, we would need a better way to manage the camera. That is why we will create a `Camera.cs` class.
+
+### Creating the Camera class
+
+Our camera class will be very simple. It will manage the view and projection matrices and provide a convenient constructor and properties to update the camera.
+
+```csharp
+internal class Camera
+{
+    private Matrix view;
+    private Matrix projection;
+
+    public Matrix View => view;
+    public Matrix Projection => projection;
+
+    private Vector3 position;
+    private Vector3 target;
+    private Vector3 up;
+    private float fieldOfView;
+    private float aspectRatio;
+    private float nearPlane;
+    private float farPlane;
+
+
+    public Camera(Vector3 position, Vector3 target, Vector3 up, 
+                float fieldOfViewDegrees, float aspectRatio = 800f / 480f, 
+                float nearPlane = 1f, float farPlane = 10000f)
+    {
+        this.position = position;
+        this.target = target;
+        this.up = up;
+        this.fieldOfView = MathHelper.ToRadians(fieldOfViewDegrees);
+        this.aspectRatio = aspectRatio;
+        this.nearPlane = nearPlane;
+        this.farPlane = farPlane;
+
+        UpdateMatrices();
+    }
+
+    private void UpdateMatrices()
+    {
+        view = Matrix.CreateLookAt(position, target, up);
+        projection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, aspectRatio, nearPlane, farPlane);
+    }
+
+    public float FieldOfView
+    {
+        get => MathHelper.ToDegrees(fieldOfView);
+        set
+        {
+            fieldOfView = MathHelper.ToRadians(value);
+            UpdateMatrices();
+        }
+    }
+
+    public Vector3 Position
+    {
+        get => position;
+        set
+        {
+            position = value;
+            UpdateMatrices();
+        }
+    }
+
+    public Vector3 Target
+    {
+        get => target;
+        set
+        {
+            target = value;
+            UpdateMatrices();
+        }
+    }
+
+    public Vector3 Up
+    {
+        get => up;
+        set
+        {
+            up = value;
+            UpdateMatrices();
+        }
+    }
+
+    public float AspectRatio
+    {
+        get => aspectRatio;
+        set
+        {
+            aspectRatio = value;
+            UpdateMatrices();
+        }
+    }
+
+    public float NearPlane
+    {
+        get => nearPlane;
+        set
+        {
+            nearPlane = value;
+            UpdateMatrices();
+        }
+    }
+
+    public float FarPlane
+    {
+        get => farPlane;
+        set
+        {
+            farPlane = value;
+            UpdateMatrices();
+        }
+    }
+
+}
+```
+
+As you can see, the camera class automatically updates its view and projection matrices when one of its properties changes.
+
+The public properties `View` and `Projection` will allow us to get those matrices to use them in our drawing functions.
+
+### Using the camera class
+
+Now replace the view and projection matrices in `SceneGame.cs` and `SceneMenu.cs` with a `Camera` instance, and update the drawing functions accordingly.
+
+In `SceneGame.cs`:
+
+```csharp
+public class SceneGame : Scene
+{
+    private Game1 game;
+    private ContentManager content;
+    private Camera camera = new Camera(new Vector3(0, 0, 100), new Vector3(0, 0, 0), Vector3.Up, 45f);
+    ...
+
+    public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+    {
+        ...
+        ground.Draw(camera.View, camera.Projection);
+        sky.Draw(camera.View, camera.Projection);
+        player.Draw(camera.View, camera.Projection);
+
+        foreach (Projectile projectile in projectiles)
+        {
+            projectile.Draw(camera.View, camera.Projection);
+        }
+
+        foreach (Enemy enemy in enemies)
+        {
+            enemy.Draw(camera.View, camera.Projection);
+        }
+
+        foreach (PowerUp powerUp in powerUps)
+        {
+            powerUp.Draw(camera.View, camera.Projection);
+        }
+
+        graphicsDevice.BlendState = BlendState.NonPremultiplied;
+        playerAim.Draw(camera.View, camera.Projection);
+        foreach (ParticleSystem particles in particleSystems)
+        {
+            particles.Draw(camera.View, camera.Projection);
+        }
+        ...
+    }
+}
+```
+
+In `SceneMenu.cs`:
+
+```csharp
+internal class SceneMenu : Scene
+{
+    private Game1 game;
+    private Camera camera = new Camera(new Vector3(-200, 100, -300), new Vector3(100, -100, 0), Vector3.Up, 45f);
+    ...
+
+    public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+    {
+        ...
+        ground.Draw(camera.View, camera.Projection);
+        sky.Draw(camera.View, camera.Projection);
+        ship.Draw(camera.View, camera.Projection);
+
+        spriteBatch.Begin();
+        if (menuItem == 0)
+        {
+            spriteBatch.Draw(playButtonSelected, new Vector2(300, 300), Color.White);
+            spriteBatch.Draw(quitButton, new Vector2(300, 380), Color.White);
+        }
+        else
+        {
+            spriteBatch.Draw(playButton, new Vector2(300, 300), Color.White);
+            spriteBatch.Draw(quitButtonSelected, new Vector2(300, 380), Color.White);
+        }
+        spriteBatch.End();
+        ...
+    }
+}
+```
+
+Run the game: if nothing has changed, you did everything right!
+
+Now, if you want to change the camera position or target in any scene, you can just change the corresponding property of the `Camera` instance. All the matrices will be updated automatically.
 
 ## Allowing to port our game to other platforms
 
-Until now, we would directly call the input manager to ask it in which state such key was. This is very straightforward, but will prove difficult if we want our game to work on several platforms with different input types.
+Until now, we called the input manager directly to ask whether a specific key was down. This is straightforward, but it becomes awkward if we want our game to work on several platforms with different input types.
 
-The solution is to separate the game actions from the input itself. In our input manager will be asked if such action is pressed, and the action itself will test the input.
+The solution is to separate game actions from the physical input. The `InputManager` will expose action checks (e.g., "IsValidationActionPressed"), and the input manager will internally map those actions to keyboard, mouse, or gamepad inputs.
 
 We could implement a very general system to manage any kind of action and input, but you have come this far in the tutorial and you have started to understand I do not like unnecessary abstractions. We will implement what just what we need: getting to know if an action is used, and testing the inputs for this action.
 
 ### More inputs
 
-First, we now need to support other imput systems. Here, we will support first player gamepad and mouse. We will handle them the same way we have handled the keyboard.
+First, we need to support additional input devices. Here, we will support gamepad and mouse in addition to the keyboard. We will handle them the same way we have handled the keyboard.
 
-We also change the input detection functions visibility to `private` and add some for button and mouse handling. Note that we will not manage mouse mouvement.
+We also change the input detection functions' visibility to `private` and add some for button and mouse handling. Note that we will not manage mouse movement.
 
 ```csharp
 internal class InputManager
@@ -378,7 +586,7 @@ internal class InputManager
 
 We made the input detection functions `private`. The goal is to no longer use them outside our `InputManager` class.
 
-Instead, we will create `public` "action" function that will correspond to the different input we want to be associated with one action. For instance, going up will be associated with holding the W, Z or Up keys, or maintaining the gamepad's left thumb stick, or its up directional pad button.
+Instead, we will create `public` action functions that correspond to the different in-game actions. For instance, the Up action can be triggered by pressing W, Z, Up arrow, or the gamepad's DPadUp or left thumbstick up.
 
 ```csharp
 internal class InputManager
@@ -456,11 +664,11 @@ We have thus defined actions for:
 - Up and down buttons pressed for menus
 - Left and right buttons pressed are not used but it does not hurt to define them
 
-Each action can be triggered by the keyboard, the mouse or the gamepad.
+Each action can be triggered by the keyboard, the mouse, or the gamepad.
 
 ### Updating menu and game over scenes
 
-Because we changed the input visibility functions, we now have to use our new action functions in the `SceneMenu` and `SceneGameOver`. The changes are easy to understand.
+Because we changed the input detection function visibility, we now use our action functions in `SceneMenu` and `SceneGameOver`. The changes are straightforward.
 
 For the `SceneMenu`:
 
@@ -507,7 +715,7 @@ internal class SceneMenu : Scene
 }
 ```
 
-We just call `InputManager.IsDownActionPressed`, `InputManager.IsUpActionPressed` and `InputManager.IsValidationActionPressed` instead of the previous input functions.
+We call `InputManager.IsDownActionPressed`, `IsUpActionPressed`, and `IsValidationActionPressed` instead of the previous low-level input checks.
 
 For the `SceneGameOver`:
 
@@ -532,7 +740,7 @@ internal class SceneGameOver : Scene
 
 ### Updating the player
 
-Finally, in the `SceneGame`, inputs are managed by the player - if we exemple the `PlayerAim` move that we will not change here. The `Player` class needs to be updated:
+Finally, in the `SceneGame`, inputs are handled by the player - if we exempt the `PlayerAim` movement that we won't change here. The `Player` class needs to use the input manager:
 
 ```csharp
 internal class Player : Entity
@@ -628,10 +836,10 @@ internal class Player : Entity
 }
 ```
 
-That's it! If you test the game... it should not be different. Except this time you can use a gamepad or easily update your input bindings, thanks to the action functions.
+That's it! If you test the game... nothing should be visibly different, but you can now use a gamepad or change input bindings more easily thanks to the action functions.
 
 ## Conclusion
 
-With the two previous steps, we implemented scene management and our new `SceneMenu` and `SceneGameOver`, and allow the player to control the game with different kinds of input.
+With the two previous steps, we implemented scene management, added `SceneMenu` and `SceneGameOver`, set up a handy `Camera` class, and allowed the player to control the game with different kinds of input.
 
-In the next and last lesson, we will wrap up everything and add the little small details that will make our demo game shine!
+In the next and final lesson, we will wrap up everything and add the small finishing touches that make our demo game shine!

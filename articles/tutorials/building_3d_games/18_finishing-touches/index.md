@@ -7,19 +7,19 @@ description: Setup the music, continue level and fix player's collisions
 
 ## Objective
 
-This last lesson is a conclusion. We will grant to our game prototype the last touches it deserves and conclude on your future journey as a MonoGame game developer!
+This final lesson is a conclusion. We will give our game prototype the last touches it deserves and conclude your future journey as a MonoGame game developer!
 
 ## Polish is wonderful
 
-In video game development, once we have finished the first 90% of a game, we tend to say that we just have to do the "second 90%". That refers to the polish phase, when the developers spend their time adjusting every moving piece of the game to reach a level of feeling and finition that will give the player this mysterious sense of quality and depth. Let's be real: polish is the only way to make your game good - given its core is already fun.
+In video game development, once we have finished the first 90% of a game, we tend to say that we just have to do the "second 90%". That refers to the polish phase, when developers spend their time adjusting every moving piece of the game to reach a level of feeling and finition that will give the player this mysterious sense of quality and depth. Let's be real: polish is the only way to make your game good — given its core is already fun.
 
-In this tutorial, we will not go through a complete polish phase. It would be too long. We will juste change some elements of the game to give you the direction you would have to follow, if you would like to finish the game we started.
+In this tutorial, we will not go through a complete polish phase. It would be too long. We will just change some elements of the game to give you the direction you would have to follow if you would like to finish the game we started.
 
 ### Music
 
-First, we will improve the genersal mood of the game. The best tool for this is music.
+First, we will improve the general mood of the game. The best tool for this is music.
 
-Add the two mp3 files from the resources in the MGCB and build them. We will use one music for the menu scene, one in the game scene, and we will make sure the game over screen stops the music.
+Add the two mp3 files from the resources in MGCB and build them. We will use one music track for the menu scene, one in the game scene, and we will make sure the game over screen stops the music.
 
 Here is for `SceneMenu`:
 
@@ -39,7 +39,7 @@ internal class SceneMenu : Scene
 }
 ```
 
-As you can see, music songs are loaded from the content manager, then we use `MediaPlayer` to play the music - contrary to a `SoundEffect` that plays itself.
+As you can see, music songs are loaded from the content manager, then we use `MediaPlayer` to play the music — contrary to a `SoundEffect` that plays itself.
 
 Now for `SceneGame`:
 
@@ -81,7 +81,7 @@ That's it! If you start the game, your 3D shooter experience will be much more i
 
 > [!TIP]
 >
-> Except if you need to test an ambiance, it is often better to start the game musics at the end of development. Continuously hearing the same music along game development would drive you crazy!
+> Except if you need to test an ambiance, it is often better to start the game music at the end of development. Continuously hearing the same music throughout game development would drive you crazy!
 
 ### Player's collision
 
@@ -109,15 +109,15 @@ internal class Player : Entity
 }
 ```
 
-In the box's vertices creation, we have change the *x* value from *64f* to *60f*, and more importantly, positive *z* value from *77f* to *45f*. This will make the player's collision more accurate.
+In the box's vertices creation, we have changed the *x* value from *64f* to *60f*, and more importantly, the positive *z* value from *77f* to *45f*. This will make the player's collision more accurate.
 
-You can work on collisions for all your game objects. Collisions, when done right, will make your game feels more physical, more grounded in reality.
+You can work on collisions for all your game objects. Collisions, when done right, will make your game feel more physical, more grounded in reality.
 
 ### Expanding the level
 
-Until now, we have two waves of enemies, separated by a power up. You can create other waves with other enemy patterns, main phase timing. The waves system even allows to have several waves present on screen at the same time, provided you time the wave with close enough timings. You can also add commentaries from the robot or from our dauntless pilot.
+Until now, we have two waves of enemies, separated by a power-up. You can create other waves with other enemy patterns and main phase timing. The waves system even allows having several waves present on screen at the same time, provided you time the waves with close enough timings. You can also add commentary from the robot or from our dauntless pilot.
 
-You can also imagine to create other kind of enemies, with different patterns - that is to say, a different internal state machine. A level boss, with infinite (-1) main phase duration, could be such an enemy.
+You can also imagine creating other kinds of enemies, with different patterns — that is to say, a different internal state machine. A level boss, with infinite (-1) main phase duration, could be such an enemy.
 
 Here are two additional waves in the `Level0.xml` file:
 
@@ -343,7 +343,7 @@ Here are two additional waves in the `Level0.xml` file:
             <element3ExitSide>Bottom</element3ExitSide>
             <element3X>-100</element3X>
             <element3Y>-25</element3Y>
-            <element3Z>-750</element3 Z>
+            <element3Z>-750</element3Z>
             <element3Duration>5.0</element3Duration>
 
             <element4Type>enemy</element4Type>
@@ -360,18 +360,18 @@ Here are two additional waves in the `Level0.xml` file:
 
 ### Other ideas
 
-This is just a beginning. In this tutorial, we just set up the main mecanic of our game. It's your turn to think about the rules and variations you want to give to your player, to make sure they have a wonderful experience playing your game. Now you know how to make 3D games: a new dimension of creation literaly just opened up.
+This is just a beginning. In this tutorial, we just set up the main mechanics of our game. It's your turn to think about the rules and variations you want to give to your player, to make sure they have a wonderful experience playing your game. Now you know how to make 3D games: a new dimension of creation literally just opened up.
 
 ## Packaging and publishing your game
 
-MonoGame allows you to create a game executable, that you can share with your players or sell on an online store. The details on how to do so were covered in the [Packaging Your Game for Distribution](https://docs.monogame.net/articles/tutorials/building_2d_games/25_packaging_game/index.html) article, so I will forward you to it :)
+MonoGame allows you to create a game executable that you can share with your players or sell on an online store. The details on how to do so were covered in the [Packaging Your Game for Distribution](https://docs.monogame.net/articles/tutorials/building_2d_games/25_packaging_game/index.html) article, so I will forward you to it :)
 
-If you want to share your game with the world, you could publish your game on the [Itch.io](https://itch.io/) platform, which is a great place to share your indie games. The [Publishing your game on Itch.io](https://docs.monogame.net/articles/tutorials/building_2d_games/26_publishing_game/index.html) article will help you to do so.
+If you want to share your game with the world, you could publish your game on the [Itch.io](https://itch.io/) platform, which is a great place to share your indie games. The [Publishing your game on Itch.io](https://docs.monogame.net/articles/tutorials/building_2d_games/26_publishing_game/index.html) article will help you do so.
 
 ## Conclusion and next steps
 
-Congratulations! You have reach the end of the MonoGame's basic 3D tutorial. I hope you learned useful things and realize how a convenient framework MonoGame is - And I mean it, for I have tested dozens of frameworks and engines. If you have a dream 3D game project, well, go for it. You will learn while making it. If you are not adamant on the kind of game you want to create, I would advise you to create some small and simple gameplay prototypes, so you get use to the 3D thinking. Chances are one of your prototypes will feel funnier than the other to make, and you will create a game out of it!
+Congratulations! You have reached the end of MonoGame's basic 3D tutorial. I hope you learned useful things and realize what a convenient framework MonoGame is — And I mean it, for I have tested dozens of frameworks and engines. If you have a dream 3D game project, well, go for it. You will learn while making it. If you are not set on the kind of game you want to create, I would advise you to create some small and simple gameplay prototypes, so you get used to 3D thinking. Chances are one of your prototypes will feel more fun than the others to make, and you will create a game out of it!
 
-As for myself, I am glad to have accompany you until here. I did my best to create a tutorial that would be at the same time lightweight and informative. Of course, it is far from perfect. If you have suggestions about how to improve it, feel free to post an issue on the monogame documentation github.
+As for myself, I am glad to have accompanied you until here. I did my best to create a tutorial that would be at the same time lightweight and informative. Of course, it is far from perfect. If you have suggestions about how to improve it, feel free to post an issue on the MonoGame documentation GitHub.
 
 Farewell, I wish you a pleasant video game creation journey. See you on the way!

@@ -1,13 +1,13 @@
 ---
 title: "Step 14: A laser aim"
-description: Replace the TargetAim with a cube that imitates the laser aim.
+description: Replace the TargetAim with a cube that imitates a laser aim.
 ---
 
 # Step 14: A laser aim
 
 ## Objective
 
-In order to solve the bug introduced in the previous step, we will change our game's aiming system. We will replace the target quad with a laser that displays the trajectory of its projectiles.
+In order to solve the bug introduced in the previous step, we will change our game's aiming system. We will replace the target quad with a laser that displays the trajectory of the projectiles.
 
 ## Deactivate the TargetAim
 
@@ -57,7 +57,7 @@ One might think that the laser aim's cube only needs to be scaled once and orien
 
 In order to solve those problems, we need to update the laser position and scale each frame.
 
-The laserAim's position should be set to the middle of the distance between the player and the aim: the default position of a cube is at its center, so this is the simplest way to position it.
+The laser aim's position should be set to the middle of the distance between the player and the aim: the default position of a cube is at its center, so this is the simplest way to position it.
 
 | ![Laser position](images/ch14_laser-position.png)  |
 | :-----------------------------------------------------------------------------------------------: |
@@ -112,10 +112,10 @@ Finally, we need to draw the laser aim in the `Player` class. Do that in the `Dr
 
 ## Conclusion
 
-Now, the player has a laser aim that always points to where they aim. It replaces our former target quad. The laser aim is a cube that is stretched in the Z direction, and its length is adjusted according to the player's orientation.
+Now, the player has a laser aim that always points to where they are aiming. It replaces our former target quad. The laser aim is a cube that is stretched in the Z direction, and its length is adjusted according to the player's orientation.
 
 | ![Laser aim](images/ch14_final-screen.png)  |
 | :-----------------------------------------------------------------------------------------------: |
 |                  **Figure 14-3: Final screenshot, laser aim!**                  |
 
-Our feedback and graphics improvement pass is finished! In the next two steps, we will focus on UI. First, add a message system to introduce some narration, then wrap up the game with a main menu and a game over screen.
+Our feedback and graphics improvement pass is finished! In the next two steps, we will focus on UI. First, we'll add a message system to introduce some narration, then wrap up the game with a main menu and a game over screen.

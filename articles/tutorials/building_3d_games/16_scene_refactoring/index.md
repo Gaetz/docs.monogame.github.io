@@ -7,17 +7,17 @@ description: Refactor the game class in order to create a scene system.
 
 ## Objective
 
-We call scene is a specific mode of gameplay in a video game. For example, a game can have a main menu scene (which we will call `SceneMenu`), a game over scene (`SceneGameOver`), and a gameplay scene (`SceneGame`). Each scene can have its own set of rules, graphics, and sounds. The game can switch between these scenes in function of the game situation.
+A scene is a specific mode of gameplay in a video game. For example, a game can have a main menu scene (which we will call `SceneMenu`), a game over scene (`SceneGameOver`), and a gameplay scene (`SceneGame`). Each scene can have its own set of rules, graphics, and sounds. The game can switch between these scenes depending on the current situation.
 
-In this step, we will refactor the game class in order to allow our game to have different scenes. This will be a necessary operation to implement the main menu and the game over scenes in the next step.
+In this step, we will refactor the game class to allow our game to have different scenes. This will be necessary to implement the main menu and the game over scenes in the next step.
 
-We will create a new interface called `Scene` that will be the base for all scenes. The `Scene` will be able `Load`, `Update`, and `Draw` itself. The game will have a current scene that will be updated and rendered in the game loop. The game will also be able to switch between scenes.
+We will create a new interface called `Scene` that will be the base for all scenes. A `Scene` will be able to `Load`, `Update`, and `Draw` itself. The game will hold a current scene that will be updated and rendered in the game loop. The game will also be able to switch between scenes.
 
 ## Creating the SceneGame
 
 ### The Scene interface
 
-The first thing we need to do is to create the `Scene` interface. Create a new `Scene.cs` file:
+The first thing is to create the `Scene` interface. Create a new `Scene.cs` file:
 
 ```csharp
 public enum SceneType
@@ -39,9 +39,9 @@ Note that we will pass the `ContentManager`, `GraphicsDevice`, `SpriteBatch` and
 
 ### Preparing the SceneGame implementation
 
-The `SceneGame` class will contain all the game logic, that was previously in the `Game1` class. Most of the code from ``Game1` will be moved to the `SceneGame` class.
+The `SceneGame` class will implement the game logic that was previously in the `Game1` class. Most of the code from `Game1` will be moved into `SceneGame`.
 
-This will cause some trouble: some functions from other classes reference the `Game1` class in order to call functions managed a level above. For instance, the `Player` calls the `GameOver` function to finish the game. Thus, we will update all the classes that reference the `Game1` class to use the `SceneGame` class instead.
+This will cause some troubles: some functions in other classes reference `Game1` in order to call higher-level functions (for example, `Player` calls `GameOver`). Therefore you must update classes that reference `Game1` to use `SceneGame` instead.
 
 For `Player.cs`:
 
@@ -115,9 +115,9 @@ For `Message.cs`:
 
 ### The SceneGame class
 
-Create the `SceneGame.cs` file. The `SceneGame` class will implement the `Scene` interface and basically contain everything we have coded so far in the `Game1` class. Additionally, it will countain a reference to the `Game1` class in order to call the `GameOver` function.
+Create the `SceneGame.cs` file. The `SceneGame` class will implement the `Scene` interface and basically contain everything we implemented previously in `Game1`. Additionally, it will contain a reference to the `Game1` class so it can call `GameOver` when needed.
 
-The (very long) following code will show the implementation. Use it as a reference if your code do not compiles:
+The (very long) following code shows a complete implementation of `SceneGame`. Use it as a reference if your code does not compile:
 
 ```csharp
 public class SceneGame : Scene
@@ -459,7 +459,7 @@ public class SceneGame : Scene
 
 ## A simple scene management system
 
-Now that we have the `Scene` interface and the `SceneGame` class, we need to create a simple scene management system in the `Game1` class. We want to update and draw a current scene, and to switch between scenes, which will load them.
+Now that we have the `Scene` interface and the `SceneGame` class, we need to create a simple scene management system in the `Game1` class. We want to update and draw the current scene, and to switch between scenes, which will load them.
 
 ```csharp
 public class Game1 : Game
@@ -528,21 +528,20 @@ public class Game1 : Game
 }
 ```
 
-As you can see, we start the game and directly switch to the `SceneGame`. I have made the choice to keep `SwitchScene` private, but we will call it with other public functions, like the `Game1.GameOver` function.
+As you can see, we start the game and directly switch to `SceneGame`. `SwitchScene` is private here by design, but it is invoked from other public functions such as `Game1.GameOver`.
 
-For now, we have commented out the `SceneMenu` and `SceneGameOver` classes. We will implement them in the next step.
+For now, `SceneMenu` and `SceneGameOver` are commented out. We will implement them in the next step.
 
-Test the game: you should have exactly the same behaviour as before.
+Test the game: behavior should be unchanged.
 
 ## Conclusion
 
-In this lesson, we have refactored the game so it can use a scene system. We have created the `Scene` interface and the `SceneGame` class, which contains all the game logic. We have also created a simple scene management system in the `Game1` class.
+In this lesson, we refactored the game to use a scene system. We created the `Scene` interface and the `SceneGame` class, which contains the game logic, and implemented a simple scene manager in `Game1`.
 
-If you want to complete our scene interface implementation, which was written in its simplest shape here, you can refer to the basic 2D tutorial:
+If you want to expand this scene interface implementation, which was written in its simplest shape here, you can refer to the basic 2D tutorial:
 
 |   Sum up                |     Content                                                           |       Link                      |
 | ----------------------- | --------------------------------------------------------------------- | ------------------------------- |
-| Scene management        | The way to create different game scenes (menu, gameplay...)           | [2D games chapter 17](https://docs.monogame.net/articles/tutorials/building_2d_games/17_scenes/index.html)  |
+| Scene management        | How to create different game scenes (menu, gameplay...)               | [2D games chapter 17](https://docs.monogame.net/articles/tutorials/building_2d_games/17_scenes/index.html)  |
 
-
-In the next step, we will implement the main menu and the game over scenes. Additionnaly, we will ensure portability of our game by allowing to use other inputs along with the keyboard.
+In the next step, we will implement the main menu and the game over scenes. Additionally, we will ensure portability by supporting other input devices alongside the keyboard.
